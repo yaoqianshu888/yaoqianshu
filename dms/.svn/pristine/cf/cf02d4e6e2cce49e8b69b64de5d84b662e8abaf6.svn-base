@@ -1,0 +1,193 @@
+package com.landicorp.dms.action.document;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.BasicNodeCont;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.IBasicNodeContService;
+import com.landicorp.dms.service.IDmsPhotoService;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.INodeService;
+import com.landicorp.dms.web.option.Dms;
+
+public class DocumentInsertAction extends BaseActionSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Document document;
+	private INodeService nodeService;
+	private List<Node> nodeList;
+	private List<List<Node>> nodeLists;
+	private IDocumentService documentService;
+	private IBasicNodeContService basicNodeContService;
+	private IDmsPhotoService dmsPhotoService;
+	
+
+	public IDmsPhotoService getDmsPhotoService() {
+		return dmsPhotoService;
+	}
+
+	public void setDmsPhotoService(IDmsPhotoService dmsPhotoService) {
+		this.dmsPhotoService = dmsPhotoService;
+	}
+
+	public IBasicNodeContService getBasicNodeContService() {
+		return basicNodeContService;
+	}
+
+	public void setBasicNodeContService(IBasicNodeContService basicNodeContService) {
+		this.basicNodeContService = basicNodeContService;
+	}
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	public List<List<Node>> getNodeLists() {
+		return nodeLists;
+	}
+
+	public void setNodeLists(List<List<Node>> nodeLists) {
+		this.nodeLists = nodeLists;
+	}
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+	public String prepare() {
+		if(document!=null && document.getTemplate()!=null){
+			nodeList=nodeService.getAllNodesByTidAndType(document.getTemplate().getId());
+			nodeLists=new ArrayList<List<Node>>();
+			for(int i=0;i<nodeList.size();i++){
+				List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+				nodes.get(0).setTitleNo((i+1)+"");
+				for(int j=0;j<nodes.size();j++){
+					int c=1;
+					for(int k=1;k<nodes.size();k++){
+						if(nodes.get(k).getUpNode().getId().equals(nodes.get(j).getId())){
+							nodes.get(k).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+							c++;
+						}
+					}
+				}
+				
+				nodeLists.add(nodes);
+			}
+		}
+		return INPUT;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+	public String insertDocument() throws IOException{
+		HttpServletRequest request=ServletActionContext.getRequest();
+		request.setCharacterEncoding("UTF-8"); 
+		//新增文档
+		//生成编号
+		Calendar calendar = Calendar.getInstance();
+		int seconds = calendar.get(Calendar.SECOND);
+		int max=documentService.getMaxId();
+		document=new Document();
+		document.setNo(max+""+seconds);
+		document.setId(max+1);
+		document.setCreateTime(new Date());
+		document.setCreator(getSessionUser());
+		document.setLastModifier(getSessionUser());
+		document.setLastModifyTime(new Date());
+		document.setVersionId("1.00.00");
+		document.setDocType(Dms.EDIT);
+		document.setAvailable(1);
+		document.setIsNowVer(Dms.IS_NOW_VER);
+		
+		
+		//新增基本节点内容
+		 Map<String,String[]> map = request.getParameterMap();
+	     for(Entry<String, String[]> me : map.entrySet()){
+	       String name = me.getKey();
+	       String [] v = me.getValue();
+	       if(name.equals("document.project.id")){
+	    	   ProjectDoc pDoc=new ProjectDoc();
+	    	   pDoc.setId(Integer.valueOf(v[0]));
+	    	   document.setProject(pDoc);
+	       }else if(name.equals("document.template.id")){
+	    	   Template tem=new Template();
+	    	   tem.setId(Integer.valueOf(v[0]));
+	    	   document.setTemplate(tem);
+	       }else if(name.equals("document.documentName")){
+	    	   document.setDocumentName(v[0]);
+	       }else if(name.equals("document.urlPath")){
+	    	   document.setUrlPath(v[0]);
+	       }else if(name.equals("document.memo")){
+	    	   document.setMemo(v[0]);
+	       }else
+	       {
+	    	   BasicNodeCont basicNodeCont=new BasicNodeCont();
+		       basicNodeCont.setDocument(document);
+		       String[] id=name.split("_");
+		       Node node1=new Node();
+		       node1.setId(Integer.valueOf(id[1]));
+		       basicNodeCont.setNode(node1);
+		       StringBuffer sb=new StringBuffer("");
+	    	   for(int i=0;i<v.length;i++){
+	    		   if((i+1)%4==0){
+	    			   sb.append(v[i]+"☆");
+	    		   }else {
+	    			   sb.append(v[i]+"★");
+	    		   }
+		       }
+	    	   if(sb.length()>0){
+					sb.deleteCharAt(sb.length()-1);
+			   }
+	    	   basicNodeCont.setContent(sb.toString());
+	    	   basicNodeContService.add(basicNodeCont);   //新增内容节点
+	       }
+	       
+	     }
+	    documentService.saveEdit(document);   //新增文档
+	    //将上传的文档基本图片添加到该新建文档
+	    dmsPhotoService.updatePhoto(document.getId());
+	    setWindowReturnValue("ok");
+		return SUCCESS;
+	}
+
+}

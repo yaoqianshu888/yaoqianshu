@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+	default-autowire="byName">
+
+
+	<!-- initTask -->
+
+	<!-- dao -->
+	
+	<!-- service -->
+
+	<!-- struts2 action -->
+	<!-- 功能点管理action -->
+	<bean id="functionSearchAction" class="com.landicorp.dms.action.function.FunctionSearchAction"
+		scope="prototype" />
+	<bean id="functionUpdateAction" class="com.landicorp.dms.action.function.FunctionUpdateAction"
+		scope="prototype" />
+	<bean id="functionInsertAction" class="com.landicorp.dms.action.function.FunctionInsertAction"
+		scope="prototype" />
+	<bean id="functionCheckSearchAction" class="com.landicorp.dms.action.function.FunctionCheckSearchAction"
+		scope="prototype" />
+	<bean id="functionCheckAction" class="com.landicorp.dms.action.function.FunctionCheckAction"
+		scope="prototype" />
+		
+	<!-- 草稿管理action -->
+	<bean id="draftSearchAction" class="com.landicorp.dms.action.draft.DraftSearchAction"
+		scope="prototype" />
+	<bean id="draftUpdateAction" class="com.landicorp.dms.action.draft.DraftUpdateAction"
+		scope="prototype" />
+	<bean id="draftInsertAction" class="com.landicorp.dms.action.draft.DraftInsertAction"
+		scope="prototype" />
+	<bean id="draftDeleteAction" class="com.landicorp.dms.action.draft.DraftDeleteAction"
+		scope="prototype" />
+
+</beans>

@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.picture;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class PictureDetailAction extends BaseActionSupport {
+
+	public String detailPicture(){
+		return "detail";
+	}
+}

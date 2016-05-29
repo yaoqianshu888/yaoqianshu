@@ -1,0 +1,63 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IFunctionDao;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.service.IFunctionService;
+
+public class FunctionServiceImpl extends AbstractBaseServiceImpl<Function, Integer>
+		implements IFunctionService {
+
+	private IFunctionDao functionDao;
+	
+	
+	public IFunctionDao getFunctionDao() {
+		return functionDao;
+	}
+
+	public void setFunctionDao(IFunctionDao functionDao) {
+		this.functionDao = functionDao;
+	}
+
+	@Override
+	public int add(Function arg0) {
+		return functionDao.save(arg0);
+	}
+
+
+	@Override
+	public Function getById(Integer arg0) {
+		return functionDao.getById(arg0);
+	}
+
+	
+
+	@Override
+	public int update(Function arg0) {
+		return functionDao.update(arg0);
+	}
+
+	@Override
+	public List<Function> getAllFunction(Pager pager, Integer moduleId) {
+		if(pager!=null){
+			pager.setTotalCount(functionDao.getAllFunctionCount(moduleId));
+		}
+		return functionDao.getAllFunction(pager, moduleId);
+	}
+
+	@Override
+	public IMyBatisDao<Function, Integer> getMyBatisDao() {
+		return functionDao;
+	}
+
+	@Override
+	public List<Function> getAllFunctionByModuleId(Integer moduleId) {
+		return functionDao.getAllFunctionByModuleId(moduleId);
+	}
+
+}

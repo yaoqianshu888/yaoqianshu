@@ -1,0 +1,364 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<style>
+.divcss5{border:1px solid #F00} 
+</style>
+<link href="${basePath}dms/css/my.css" rel="stylesheet" type="text/css" />
+<script>
+	//测试请求
+	function requestTest(nodeId,chose) {
+	    var functionId="";
+		if(chose==1){
+			functionId=${functionA.id};
+		}else if(chose==2){
+			functionId=${functionB.id};
+		}else if(chose==3){
+			functionId=${function.id};
+		}
+		ldDialog.open("${basePath}dms/functionUpdate!requestTest.action?function.id="+functionId+"&node.id="+nodeId, "模拟测试请求",
+				function(window) {
+					var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.alert("密码：" + returnValue);
+						return true;
+					}
+				});
+	}
+	
+</script>
+</head>
+    
+  
+  <body>
+  <form action="${basePath}dms/functionCheck!pass.action?function.id=${function.id}" method="post" name="pass" id="pass"></form>
+ 
+  <c:if test="${count<1 }">
+  	<div id="bodyContent" class="bodyContent">
+   		<pre>
+功能点名称: ${document.project.projectName } &gt; ${document.documentName } &gt; ${function.module.moduleName } &gt; ${function.functionName }
+创建人:${function.creator.userName }
+创建时间:<f:formatDate value="${function.createTime }" pattern="yyyy-MM-dd  HH:mm:ss" />
+备注:${function.memo }
+</pre>
+	<c:forEach items="${nodeLists}" var="item" varStatus="status">
+		<c:forEach items="${nodeLists.get(status.index)}" var="item1" varStatus="status1">
+			<c:if test="${item1.nodeFormat==1 || item1.nodeFormat==0 }">
+					<h1><b>${item1.titleNo}${item1.title }</b></h1>
+			</c:if>
+			<c:if test="${item1.nodeFormat==2 || item1.nodeFormat==3}">
+					<h2><b>${item1.titleNo}${item1.title }</b></h2>
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${map[item1.id]}</p>
+			</c:if>
+			<c:if test="${item1.nodeFormat==4 }">
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<table border="1" class="dataTable">
+					<tr>
+                         <td>
+                                                                                     参数名
+                         </td>
+                         <td>
+                                                                                    描述
+                         </td>
+                         <td>
+                                                                                     是否必填
+                         </td>
+                         <td>
+                                                                                      说明
+                         </td>
+                     </tr>
+                     <c:forEach items="${map[item1.id].split('☆')}" var="item2" varStatus="status2">
+						<tr>
+							<td align="center">${item2.split('★')[0]}</td>
+							<td>${item2.split('★')[1]}</td>
+							<td>
+							<c:if test="${item2.split('★')[2]==1}">
+							是</td>
+							</c:if>
+							<c:if test="${item2.split('★')[2]==0}">
+							否</td>
+							</c:if>
+							<td>${item2.split('★')[3]}</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</c:if>
+			<c:if test="${item1.nodeFormat==5 }">
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<table border="1" class="dataTable">
+					<tr>
+                         <td>
+                                                                                    序号
+                         </td>
+                         <td>
+                                                                                    返回
+                         </td>
+                         <td>
+                                                                                     描述
+                         </td>
+                     </tr>
+                     <c:forEach items="${map[item1.id].split('☆')}" var="item2" varStatus="status2">
+                     	<tr>
+                     		<td>${item2.split('★')[1]}</td>
+                     		<td>${item2.split('★')[2]}</td>
+                     		<td>${item2.split('★')[3]}</td>
+                     	</tr>
+                     </c:forEach>
+				</table>
+			</c:if>
+			<c:if test="${item1.nodeFormat==6 }">
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<pre id="test">${map[item1.id].split('★')[1]}</pre>
+			</c:if>
+			<c:if test="${item1.nodeFormat==7 }">
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<pre>${map[item1.id].split('★')[1]}</pre>
+			</c:if>
+		</c:forEach>
+	</c:forEach>
+				<form action="${basePath}dms/functionCheck!unPass.action?function.id=${function.id}" method="post" name="unPass" id="unPass">
+ 				<textarea style='border: 1px solid #94BBE2;width:100%;overflow-y:hidden' onfocus="javascript:$(this).val('');"
+ 					onblur="javascript:if($(this).val()==''){$(this).val('驳回理由(通过的无需填写)');}" id="examine.reason" name="examine.reason"
+ 					row=1 onpropertychange='this.style.posHeight=this.scrollHeight'>驳回理由(通过的无需填写)</textarea>
+ 				</form>
+ 				 <input type="button" class="ldBtnGreen" onclick="auditPass();" value="通过"/>
+ 				 <input type="button" class="ldBtnGreen" onclick="audiUnpass();" value="驳回"/>
+</div>
+  </c:if>
+  <c:if test="${count>=1 }">
+  <div id="bodyContent" class="bodyContent">
+    <table border="0" width="100%">
+    	<tr>
+    		<td width="50%">
+    		<pre>
+	功能点名称: ${document.project.projectName } &gt; ${document.documentName } &gt; ${functionA.module.moduleName } &gt; ${functionA.functionName }
+	版本号:审核版本
+			</pre>
+			<td width="50%">
+    		<pre>
+	功能点名称: ${document.project.projectName } &gt; ${document.documentName } &gt; ${functionB.module.moduleName } &gt; ${functionB.functionName }
+	版本号:${functionB.versionId }
+			</pre>
+			</td>
+		</tr>
+		<c:forEach items="${nodeLists}" var="item" varStatus="status">
+		<c:forEach items="${nodeLists.get(status.index)}" var="item1" varStatus="status1">
+			<c:if test="${item1.nodeFormat==1 || item1.nodeFormat==0 }">
+				<tr>
+					<td>
+					<h1><b>${item1.titleNo}${item1.title }</b></h1>
+					</td>
+					<td>
+					<h1><b>${item1.titleNo}${item1.title }</b></h1>
+					</td>
+				</tr>
+			</c:if>
+			<c:if test="${item1.nodeFormat==2 || item1.nodeFormat==3}">
+				<tr>
+					<td>
+					<h2><b>${item1.titleNo}${item1.title }</b></h2>
+					<p style="color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${mapA[item1.id]}</p>
+					</td>
+					<td>
+					<h2><b>${item1.titleNo}${item1.title }</b></h2>
+					<p style="color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${mapB[item1.id]}</p>
+					</td>
+				</tr>
+			</c:if>
+			<c:if test="${item1.nodeFormat==4 }">
+			  <tr>
+			    <td>
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<table border="1" class="dataTable">
+					<tr>
+                         <td>
+                                                                                     参数名
+                         </td>
+                         <td>
+                                                                                    描述
+                         </td>
+                         <td>
+                                                                                     是否必填
+                         </td>
+                         <td>
+                                                                                      说明
+                         </td>
+                     </tr>
+                     <c:forEach items="${mapA[item1.id].split('☆')}" var="item2" varStatus="status2">
+						<tr >
+							<td align="center"><span style="color:red">${item2.split('★')[0]}</span></td>
+							<td><span style="color:red">${item2.split('★')[1]}</span></td>
+							<c:if test="${item2.split('★')[2].equals(\"<font color='black'>1</font>\")}">
+							<td><font color='black'>是</font></td>
+							</c:if>
+							<c:if test="${item2.split('★')[2].equals('1')}"><td>
+							是</td></c:if>
+							<c:if test="${item2.split('★')[2].equals(\"<font color='black'>0</font>\")}">
+							<td>
+							<font color='black'>否</font></td>
+							</c:if>
+							<c:if test="${item2.split('★')[2].equals('0')}">
+							<td>
+							否</td>
+							</c:if>
+							<td><span style="color:red">${item2.split('★')[3]}</span></td>
+						</tr>
+					</c:forEach>
+				</table>
+				</td>
+				<td>
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<table border="1" class="dataTable">
+					<tr>
+                         <td>
+                                                                                     参数名
+                         </td>
+                         <td>
+                                                                                    描述
+                         </td>
+                         <td>
+                                                                                     是否必填
+                         </td>
+                         <td>
+                                                                                      说明
+                         </td>
+                     </tr>
+                     <c:forEach items="${mapB[item1.id].split('☆')}" var="item2" varStatus="status2">
+						<tr>
+							<td align="center"><span style="color:red">${item2.split('★')[0]}</span></td>
+							<td><span style="color:red">${item2.split('★')[1]}</span></td>
+							<c:if test="${item2.split('★')[2].equals(\"<font color='black'>1</font>\")}">
+							<td><font color='black'>是</font></td>
+							</c:if>
+							<c:if test="${item2.split('★')[2].equals('1')}"><td>
+							是</td></c:if>
+							<c:if test="${item2.split('★')[2].equals(\"<font color='black'>0</font>\")}">
+							<td>
+							<font color='black'>否</font></td>
+							</c:if>
+							<c:if test="${item2.split('★')[2].equals('0')}">
+							<td>
+							否</td>
+							</c:if>
+							<td><span style="color:red">${item2.split('★')[3]}</span></td>
+						</tr>
+					</c:forEach>
+				</table>
+				</td>
+			  </tr>
+			</c:if>
+			<c:if test="${item1.nodeFormat==5 }">
+			  <tr>
+			    <td>
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<table border="1" class="dataTable">
+					<tr>
+                         <td>
+                                                                                    序号
+                         </td>
+                         <td>
+                                                                                    返回
+                         </td>
+                         <td>
+                                                                                     描述
+                         </td>
+                     </tr>
+                     <c:forEach items="${mapA[item1.id].split('☆')}" var="item2" varStatus="status2">
+                     	<tr >
+                     		<td><span style="color:red">${item2.split('★')[1]}</span></td>
+                     		<td><span style="color:red">${item2.split('★')[2]}</span></td>
+                     		<td><span style="color:red">${item2.split('★')[3]}</span></td>
+                     	</tr>
+                     </c:forEach>
+				</table>
+				</td>
+				 <td>
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<table border="1" class="dataTable">
+					<tr>
+                         <td>
+                                                                                    序号
+                         </td>
+                         <td>
+                                                                                    返回
+                         </td>
+                         <td>
+                                                                                     描述
+                         </td>
+                     </tr>
+                     <c:forEach items="${mapB[item1.id].split('☆')}" var="item2" varStatus="status2">
+                     	<tr>
+                     		<td><span style="color:red">${item2.split('★')[1]}</span></td>
+                     		<td><span style="color:red">${item2.split('★')[2]}</span></td>
+                     		<td><span style="color:red">${item2.split('★')[3]}</span></td>
+                     	</tr>
+                     </c:forEach>
+				</table>
+				</td>
+			</tr>
+			</c:if>
+			<c:if test="${item1.nodeFormat==6 }">
+			<tr>
+			    <td>
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<pre id="test" style="color:red">${mapA[item1.id].split('★')[1]}</pre>
+				<input type="button" class="ldBtnGreen" name="backid" onclick="requestTest(${item1.id},1)" value="模拟测试请求"/><br/>
+				</td>
+				<td>
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<pre id="test" style="color:red">${mapB[item1.id].split('★')[1]}</pre>
+				<input type="button" class="ldBtnGreen" name="backid" onclick="requestTest(${item1.id},2)" value="模拟测试请求"/><br/>
+				</td>
+			</tr>
+			</c:if>
+			<c:if test="${item1.nodeFormat==7 }">
+			<tr>
+			  <td>
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<pre style="color:red">${mapA[item1.id].split('★')[1]}</pre>
+			  </td>
+			  <td>
+				<h2><b>${item1.titleNo}${item1.title }</b></h2>
+				<pre style="color:red">${mapB[item1.id].split('★')[1]}</pre>
+			  </td>
+			</tr>
+			</c:if>
+		</c:forEach>
+	</c:forEach>
+		<tr> <form action="${basePath}dms/functionCheck!unPass.action?function.id=${function.id}" method="post" name="unPass" id="unPass">
+    			<td>
+    				<textarea style='border: 1px solid #94BBE2;width:100%;overflow-y:hidden' onfocus="javascript:$(this).val('');"
+    					name="examine.reason" onblur="javascript:if($(this).val()==''){$(this).val('驳回理由(通过的无需填写)');}" id="examine.reason"
+    					row=1 onpropertychange='this.style.posHeight=this.scrollHeight'>驳回理由(通过的无需填写)</textarea>
+    			</td>
+    		</form>
+    			<td align="right">
+    				 <input type="button" class="ldBtnGreen" onclick="auditPass();" value="通过"/>
+    				 <input type="button" class="ldBtnGreen" onclick="audiUnpass();" value="驳回"/>
+    			</td>
+    		</tr>
+    </table>
+    </div>
+   </c:if>
+  <script>
+	  function auditPass() {
+		  ldDialog.confirm("确定审核通过？", function () {
+			  document.pass.submit();
+		  });
+	  }
+	  function audiUnpass() {
+	  	  var reason = $('#examine\\.reason').val();
+	  	  if(reason=='驳回理由(通过的无需填写)' || reason==''){
+	  	  	ldDialog.tips("请填写驳回理由!");
+	  	  	return;
+	  	  }
+		  ldDialog.confirm("确定驳回？", function () {
+			  document.unPass.submit();
+		  });
+	  }
+  </script>
+  </body>
+</html>

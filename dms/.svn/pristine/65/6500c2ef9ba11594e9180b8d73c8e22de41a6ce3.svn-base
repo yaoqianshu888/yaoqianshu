@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IFunctionDao">
+	<resultMap type="function" id="function">
+		<result property="id" column="ID"/>
+		<result property="module.id" column="MODULE_ID" />
+		<result property="module.moduleName" column="MODULE_NAME" />
+		<result property="versionId" column="VERSION_ID" />
+		<result property="available" column="AVAILABLE" />
+		<result property="creator.id" column="CREATOR" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="creator.userName" column="user_name" />
+		<result property="functionName" column="FUNCTION_NAME" />
+		<result property="memo" column="MEMO" />
+		<result property="urlPath" column="URL_PATH" />
+		<result property="operationType" column="OPERATION_TYPE" />
+		<result property="requestCode" column="REQUEST_CODE" />
+		<association property="creator" column="creator"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+		<association property="module" column="MODULE_ID"
+			javaType="com.landicorp.dms.entities.Module" select="com.landicorp.dms.dao.IModuleDao.getById" />
+		
+	</resultMap>
+
+	<sql id="keyColumns">MODULE_ID,VERSION_ID,AVAILABLE,CREATOR,CREATE_TIME,FUNCTION_NAME,MEMO,URL_PATH,OPERATION_TYPE,REQUEST_CODE
+	</sql>
+	<sql id="valueColumns">#{module.id,jdbcType=NUMERIC},#{versionId,jdbcType=VARCHAR},
+		#{available,jdbcType=NUMERIC},
+		#{creator.id,jdbcType=NUMERIC},#{createTime,jdbcType=TIMESTAMP},
+		#{functionName,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{urlPath,jdbcType=VARCHAR},
+		#{operationType,jdbcType=NUMERIC},
+		#{requestCode,jdbcType=VARCHAR}
+	</sql>
+	
+	<insert id="save" parameterType="function">
+
+		insert into t_dms_function(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	<update id="update" parameterType="function">
+		update t_dms_function
+		<set>
+			<if test="module!=null and module.id!=null">MODULE_ID=#{module.id},</if>
+			<if test="versionId!=null">VERSION_ID=#{versionId},</if>
+			<if test="functionName!=null">FUNCTION_NAME=#{functionName},</if>
+			<if test="available!=null">AVAILABLE=#{available},</if>
+			<if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+			<if test="creator!=null and creator.id!=null">CREATOR=#{creator.id},</if>
+			<if test="urlPath!=null">URL_PATH=#{urlPath},</if>
+			<if test="operationType!=null">OPERATION_TYPE=#{operationType},</if>
+			<if test="memo!=null">MEMO=#{memo},</if>
+			<if test="requestCode!=null">REQUEST_CODE=#{requestCode}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<select id="getById" parameterType="int" resultMap="function">
+		select *
+		from
+		t_dms_function
+		where id=#{id}
+	</select>
+	
+
+	<select id="getAllFunction" resultMap="function" parameterType="map">
+		SELECT
+		*
+		FROM t_dms_function where MODULE_ID=#{moduleId} and OPERATION_TYPE=1
+		ORDER BY ID desc
+		<include refid="Sql.pager" />
+	</select>
+	
+	<select id="getAllFunctionByModuleId" resultMap="function" parameterType="map">
+		SELECT
+		*
+		FROM t_dms_function where MODULE_ID=#{moduleId} and OPERATION_TYPE=1 and AVAILABLE=1
+		ORDER BY ID desc
+		
+	</select>
+
+	<select id="getAllFunctionCount" resultType="int" parameterType="int">
+		select count(*) from t_dms_function where MODULE_ID=#{moduleId} and OPERATION_TYPE=1
+	</select>
+	<select id="getMaxId" resultType="int">
+		select Max(id) from t_dms_function
+	</select>
+</mapper>

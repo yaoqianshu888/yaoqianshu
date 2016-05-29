@@ -1,0 +1,280 @@
+package com.landicorp.dms.action.function;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.BasicNodeCont;
+import com.landicorp.dms.entities.DmsPhoto;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.DocumentModule;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.IBasicNodeContService;
+import com.landicorp.dms.service.IDmsPhotoService;
+import com.landicorp.dms.service.IDocumentModuleService;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IFunctionService;
+import com.landicorp.dms.service.IModuleService;
+import com.landicorp.dms.service.INodeService;
+
+public class FunctionInsertAction extends BaseActionSupport {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private IDmsPhotoService dmsPhotoService;
+	private DmsPhoto dmsPhoto;
+	private Document document;
+	private IDocumentService documentService;
+	private IDocumentModuleService documentModuleService;
+	private List<DmsPhoto> dmsPhotoList;
+	private List<DocumentModule> documentModuleList;
+	private Integer[] delete;
+	private Module module;
+	private IModuleService moduleService;
+	private List<Function> functionList;
+	private IFunctionService functionService;
+	private List<Node> nodeList;
+	private INodeService nodeService ;
+	private List<List<Node>> nodeLists;
+	private Function function;
+	private IBasicNodeContService basicNodeContService;
+	
+
+	public IBasicNodeContService getBasicNodeContService() {
+		return basicNodeContService;
+	}
+	public void setBasicNodeContService(IBasicNodeContService basicNodeContService) {
+		this.basicNodeContService = basicNodeContService;
+	}
+	public Function getFunction() {
+		return function;
+	}
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+	public List<List<Node>> getNodeLists() {
+		return nodeLists;
+	}
+	public void setNodeLists(List<List<Node>> nodeLists) {
+		this.nodeLists = nodeLists;
+	}
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+	public IFunctionService getFunctionService() {
+		return functionService;
+	}
+	public void setFunctionService(IFunctionService functionService) {
+		this.functionService = functionService;
+	}
+	public List<Function> getFunctionList() {
+		return functionList;
+	}
+	public void setFunctionList(List<Function> functionList) {
+		this.functionList = functionList;
+	}
+	public Module getModule() {
+		return module;
+	}
+	public void setModule(Module module) {
+		this.module = module;
+	}
+	public IModuleService getModuleService() {
+		return moduleService;
+	}
+	public void setModuleService(IModuleService moduleService) {
+		this.moduleService = moduleService;
+	}
+	public Integer[] getDelete() {
+		return delete;
+	}
+	public void setDelete(Integer[] delete) {
+		this.delete = delete;
+	}
+	public List<DocumentModule> getDocumentModuleList() {
+		return documentModuleList;
+	}
+	public void setDocumentModuleList(List<DocumentModule> documentModuleList) {
+		this.documentModuleList = documentModuleList;
+	}
+	public IDocumentModuleService getDocumentModuleService() {
+		return documentModuleService;
+	}
+	public void setDocumentModuleService(
+			IDocumentModuleService documentModuleService) {
+		this.documentModuleService = documentModuleService;
+	}
+	public List<DmsPhoto> getDmsPhotoList() {
+		return dmsPhotoList;
+	}
+	public void setDmsPhotoList(List<DmsPhoto> dmsPhotoList) {
+		this.dmsPhotoList = dmsPhotoList;
+	}
+	public IDmsPhotoService getDmsPhotoService() {
+		return dmsPhotoService;
+	}
+	public void setDmsPhotoService(IDmsPhotoService dmsPhotoService) {
+		this.dmsPhotoService = dmsPhotoService;
+	}
+	public DmsPhoto getDmsPhoto() {
+		return dmsPhoto;
+	}
+	public void setDmsPhoto(DmsPhoto dmsPhoto) {
+		this.dmsPhoto = dmsPhoto;
+	}
+	public Document getDocument() {
+		return document;
+	}
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+	
+	//跳转新增功能点
+	public String prepare() {
+		module=moduleService.getById(module.getId());
+		functionList=new ArrayList<Function>();
+		document=documentService.getById(document.getId());
+		documentModuleList=documentModuleService.getByDocumentId(document.getId());
+		for(int i=0;i<documentModuleList.size();i++){
+			List<Function> functions=functionService.getAllFunctionByModuleId(documentModuleList.get(i).getModule().getId());
+			for(int j=0;j<functions.size();j++){
+				functionList.add(functions.get(j));   //请求代码表
+			}
+		}
+		
+		if(document!=null && document.getTemplate()!=null){
+			List<Node> rootNodes=nodeService.getAllNodesByTidAndType1(document.getTemplate().getId());
+			Node firstNode=new Node();
+			if(rootNodes.size()>0){
+				firstNode=rootNodes.get(0);
+				nodeList=nodeService.getAllFirstNodeByPid(firstNode.getId());
+				nodeLists=new ArrayList<List<Node>>();
+				for(int i=0;i<nodeList.size();i++){
+					List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+					nodes.get(0).setTitleNo((i+1)+"");
+					for(int j=0;j<nodes.size();j++){
+						int c=1;
+						for(int k=1;k<nodes.size();k++){
+							if(nodes.get(k).getUpNode().getId().equals(nodes.get(j).getId())){
+								nodes.get(k).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+								c++;
+							}
+						}
+					}
+					nodeLists.add(nodes);
+				}
+			}
+		}
+		
+		
+		return INPUT;
+	}
+	
+	//新增功能点
+	public String insertFunction() throws IOException{
+		HttpServletRequest request=ServletActionContext.getRequest();
+		request.setCharacterEncoding("UTF-8"); 
+		function.setVersionId("1");
+		function.setCreateTime(new Date());
+		function.setCreator(getSessionUser());
+		function.setAvailable(1);
+		function.setOperationType(1);    //设置直接审核通过
+		
+		
+		//新增基本节点内容
+		 Map<String,String[]> map = request.getParameterMap();
+	     for(Entry<String, String[]> me : map.entrySet()){
+	       String name = me.getKey();
+	       String [] v = me.getValue();
+	       if(name.equals("function.module.id")){
+	    	   Module module1 =new Module();
+	    	   module1.setId(Integer.valueOf(v[0]));
+	    	   function.setModule(module1);
+	       }else if(name.equals("function.functionName")){
+	    	   function.setFunctionName(v[0]);
+	       }else if(name.equals("function.urlPath")){
+	    	   function.setUrlPath(v[0]);
+	       }else if(name.equals("function.memo")){
+	    	   function.setMemo(v[0]);
+	       }else
+	       {
+	    	   BasicNodeCont basicNodeCont=new BasicNodeCont();
+		       basicNodeCont.setDocument(document);
+		       String[] id=name.split("_");
+		       Node node1=new Node();
+		       node1.setId(Integer.valueOf(id[1]));
+		       basicNodeCont.setNode(node1);
+		       StringBuffer sb=new StringBuffer("");
+	    	   for(int i=0;i<v.length;i++){
+	    		   if((i+1)%4==0){
+	    			   sb.append(v[i]+"☆");
+	    		   }else {
+	    			   sb.append(v[i]+"★");
+	    		   }
+		       }
+	    	   if(sb.length()>1){
+					sb.deleteCharAt(sb.length()-1);
+			   }
+	    	   basicNodeCont.setContent(sb.toString());
+	    	   basicNodeContService.add(basicNodeCont);   //新增内容节点
+	       }
+	       
+	     }
+		functionService.add(function);
+		setWindowReturnValue("ok");
+		return "insert";
+	}
+	
+	
+	//图片池上传
+	public String addPhoto() {
+		if(document==null || document.getId()==null){
+			dmsPhotoList=dmsPhotoService.getAllByNoDocument();
+		}else{
+			document=documentService.getById(document.getId());
+			documentModuleList=documentModuleService.getByDocumentId(document.getId());
+			dmsPhotoList=dmsPhotoService.getAllByDocumentId(document.getId());
+		}
+		return SUCCESS;
+	}
+	public String deletePhoto(){
+		try{			
+			if(document!=null){
+				document=documentService.getById(document.getId());
+			}
+			dmsPhotoService.delete(delete); 
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "delete";
+		}
+		return "delete";
+	}
+}

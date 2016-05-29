@@ -1,0 +1,31 @@
+package com.landicorp.dms.dao;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Function;
+
+public interface IFunctionDao extends IMyBatisDao<Function, Integer> {
+	public List<Function> getAllFunction(@Param("pager") Pager pager,@Param("moduleId")Integer moduleId); //得到所有的功能点
+	public Integer getAllFunctionCount(Integer moduleId);     //得到所有的功能点数
+	public List<Function> getAllFunctionByModuleId(@Param("moduleId")Integer moduleId); //得到所有的功能点   不是分页
+	public Integer getMaxId();   
+	public Integer getMaxNo();   //得到最大的编号
+	public List<Function> getFunctionListByFunction(@Param("pager") Pager pager,@Param("function") Function function);
+	public List<Function> getAllFunctionPage(@Param("pager") Pager pager,@Param("function") Function function);
+	public Integer getFunctionCountByFunction(@Param("function") Function function);
+	public Integer getAllFunctionPageCount(@Param("function") Function function);
+	public List<Function> getAllFunctionExamimePage(@Param("pager") Pager pager);  //得到未审核单
+	public Integer getAllFunctionExamimePageCount();
+	public List<Function> getAllFunctionExamimePageByInfo(@Param("pager") Pager pager,@Param("function") Function function,@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime);//按条件得到未审核单
+	public Integer getAllFunctionExamimePageByInfoCount(@Param("function") Function function,@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime);
+	public List<Function> getNowVerByNo(Function function);  //根据编号得到当前版本
+	public void setFunctionByNo(Function function);
+	public void setFunctionById(Function function);
+} 

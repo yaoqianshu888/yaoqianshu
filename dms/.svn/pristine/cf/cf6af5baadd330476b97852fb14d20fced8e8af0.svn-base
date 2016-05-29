@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IFunctionDao">
+	<resultMap type="function" id="function">
+		<result property="id" column="ID"/>
+		<result property="module.id" column="MODULE_ID" />
+		<result property="document.id" column="DOCUMENT_ID" />
+		<result property="module.moduleName" column="MODULE_NAME" />
+		<result property="versionId" column="VERSION_ID" />
+		<result property="available" column="AVAILABLE" />
+		<result property="no" column="NO" />
+		<result property="creator.id" column="CREATOR" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="creator.userName" column="user_name" />
+		<result property="functionName" column="FUNCTION_NAME" />
+		<result property="memo" column="MEMO" />
+		<result property="isNowVer" column="IS_NOW_VER" />
+		<result property="urlPath" column="URL_PATH" />
+		<result property="operationType" column="OPERATION_TYPE" />
+		<result property="requestCode" column="REQUEST_CODE" />
+		<result property="examine.id" column="EXAMINE" />
+		<result property="examine.examiner.userName" column="EXAMINE_USERNAME" />
+		<result property="examine.content" column="content" />
+		<association property="creator" column="creator"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+		<association property="module" column="MODULE_ID"
+			javaType="com.landicorp.dms.entities.Module" select="com.landicorp.dms.dao.IModuleDao.getById" />
+		<association property="document" column="DOCUMENT_ID"
+			javaType="com.landicorp.dms.entities.Document" select="com.landicorp.dms.dao.IDocumentDao.getById" />
+		<association property="examine" column="EXAMINE"
+			javaType="com.landicorp.dms.entities.Examine" select="com.landicorp.dms.dao.IExamineDao.getById" />
+		
+	</resultMap>
+
+	<sql id="keyColumns">MODULE_ID,VERSION_ID,AVAILABLE,CREATOR,CREATE_TIME,FUNCTION_NAME,MEMO,URL_PATH,OPERATION_TYPE,REQUEST_CODE,NO,IS_NOW_VER,DOCUMENT_ID,EXAMINE
+	</sql>
+	<sql id="valueColumns">#{module.id,jdbcType=NUMERIC},#{versionId,jdbcType=VARCHAR},
+		#{available,jdbcType=NUMERIC},
+		#{creator.id,jdbcType=NUMERIC},#{createTime,jdbcType=TIMESTAMP},
+		#{functionName,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{urlPath,jdbcType=VARCHAR},
+		#{operationType,jdbcType=NUMERIC},
+		#{requestCode,jdbcType=VARCHAR},
+		#{no,jdbcType=NUMERIC},#{isNowVer,jdbcType=VARCHAR},
+		#{document.id,jdbcType=NUMERIC},#{examine.id,jdbcType=NUMERIC}
+	</sql>
+	
+	<sql id="whereColumns">
+			<if
+				test="function!=null and function.functionName!=null and function.functionName!=''">
+				and t1.FUNCTION_NAME like '%${function.functionName}%'
+			</if>
+			<if test="function!=null and function.versionId!=null and function.versionId!=''">
+				and t1.VERSION_ID=#{function.versionId}
+			</if>
+	</sql>
+	
+	<sql id="whereColumns1">
+			<if
+				test="function!=null and function.functionName!=null and function.functionName!=''">
+				and t1.FUNCTION_NAME like '%${function.functionName}%'
+			</if>
+			<if test="function!=null and function.creator!=null and function.creator.userName!=null and function.creator.userName!=''">
+				and t2.user_name like '%${function.creator.userName}%'
+			</if>
+			<if test="startCreateTime!=null and startCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) > DATE(#{startCreateTime})
+			 ]]>
+			</if>
+			<if test="endCreateTime!=null and endCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) < DATE(#{endCreateTime})
+			 ]]>
+			</if>
+			<if test="function!=null and function.module!=null and function.module.id!=null and function.module.id!=''">
+				and t1.MODULE_ID =#{function.module.id}
+			</if>
+			<if test="function!=null and function.document!=null and function.document.id!=null and function.document.id!=''">
+				and t1.DOCUMENT_ID =#{function.document.id}
+			</if>
+			<if test="function!=null and function.document!=null and function.document.project!=null and function.document.project.id!=null and function.document.project.id!=''">
+				and t3.PROJECT_ID =#{function.document.project.id}
+			</if>
+	</sql>
+	
+	<insert id="save" parameterType="function">
+
+		insert into t_dms_function(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	<update id="update" parameterType="function">
+		update t_dms_function
+		<set>
+			<if test="module!=null and module.id!=null">MODULE_ID=#{module.id},</if>
+			<if test="document!=null and document.id!=null">DOCUMENT_ID=#{document.id},</if>
+			<if test="versionId!=null">VERSION_ID=#{versionId},</if>
+			<if test="functionName!=null">FUNCTION_NAME=#{functionName},</if>
+			<if test="available!=null">AVAILABLE=#{available},</if>
+			<if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+			<if test="creator!=null and creator.id!=null">CREATOR=#{creator.id},</if>
+			<if test="urlPath!=null">URL_PATH=#{urlPath},</if>
+			<if test="operationType!=null">OPERATION_TYPE=#{operationType},</if>
+			<if test="memo!=null">MEMO=#{memo},</if>
+			<if test="no!=null">NO=#{no},</if>
+			<if test="isNowVer!=null">IS_NOW_VER=#{isNowVer},</if>
+			<if test="requestCode!=null">REQUEST_CODE=#{requestCode},</if>
+			<if test="examine!=null and examine.id!=null">EXAMINE=#{examine.id}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<select id="getById" parameterType="int" resultMap="function">
+		select *
+		from
+		t_dms_function
+		where id=#{id}
+	</select>
+	
+	<!--根据编号得到当前版本  -->
+	<select id="getNowVerByNo" parameterType="int" resultMap="function">
+		select *
+		from
+		t_dms_function
+		where No=#{no} and IS_NOW_VER=1
+	</select>
+	
+
+	<select id="getAllFunction" resultMap="function" parameterType="map">
+		SELECT
+		*
+		FROM t_dms_function where MODULE_ID=#{moduleId} and OPERATION_TYPE=1
+		ORDER BY ID desc
+		<include refid="Sql.pager" />
+	</select>
+	
+	<select id="getAllFunctionByModuleId" resultMap="function" parameterType="map">
+		SELECT
+		*
+		FROM t_dms_function where MODULE_ID=#{moduleId} and OPERATION_TYPE=1 and AVAILABLE=1
+		ORDER BY ID desc
+		
+	</select>
+
+	<select id="getAllFunctionCount" resultType="int" parameterType="int">
+		select count(*) from t_dms_function where MODULE_ID=#{moduleId} and OPERATION_TYPE=1
+	</select>
+	<select id="getMaxId" resultType="Integer">
+		select Max(id) from t_dms_function
+	</select>
+	<select id="getMaxNo" resultType="Integer">
+		select Max(NO) from t_dms_function
+	</select>
+	
+	
+	
+	<select id="getFunctionListByFunction" parameterType="map"
+		resultMap="function">
+		select * from t_dms_function t1
+		<where>
+			NO=#{function.no} and VERSION_ID is not null
+			<include refid="whereColumns" />
+		</where>		
+		order by t1.id desc
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getAllFunctionPage" resultMap="function" parameterType="function">
+		SELECT
+		*
+		FROM t_dms_function
+		where NO=#{function.no} and VERSION_ID is not null
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getFunctionCountByFunction" parameterType="map" resultType="int">
+		select count(*) from t_dms_function t1
+		<where>
+			NO=#{function.no} and VERSION_ID is not null
+			<include refid="whereColumns" />
+		</where>		
+	</select>
+	<select id="getAllFunctionPageCount" resultType="int" parameterType="function">
+		select count(*) from t_dms_function where NO=#{function.no} and VERSION_ID is not null
+	</select>
+	
+	<select id="getAllFunctionExamimePage" resultMap="function" >
+		SELECT
+		*
+		FROM t_dms_function
+		where OPERATION_TYPE=0
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getAllFunctionExamimePageCount" resultType="int" >
+		select count(*) from t_dms_function where OPERATION_TYPE=0
+	</select>
+	
+	<select id="getAllFunctionExamimePageByInfo" resultMap="function" parameterType="map">
+		SELECT
+		*
+		FROM t_dms_function t1,t_core_user t2,t_dms_document t3
+		<where>
+			t1.CREATOR=t2.ID and t1.DOCUMENT_ID=t3.ID  and t1.OPERATION_TYPE=0
+			<include refid="whereColumns1" />
+		</where>
+		ORDER BY t1.ID DESC
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getAllFunctionExamimePageByInfoCount" resultType="int" parameterType="map">
+		select count(*) FROM t_dms_function t1,t_core_user t2,t_dms_document t3
+		<where>
+			t1.CREATOR=t2.ID and t1.DOCUMENT_ID=t3.ID  and t1.OPERATION_TYPE=0
+			<include refid="whereColumns1" />
+		</where>
+	</select>
+	
+	<!-- 根据编号设置不是当前版本 -->
+	<update id="setFunctionByNo" parameterType="function">
+		update t_dms_function
+		set IS_NOW_VER=0
+		where NO=#{no} 
+	</update>
+	
+	<!-- 根据id设置为当前版本 -->
+	<update id="setFunctionById" parameterType="function">
+		update t_dms_function
+		set IS_NOW_VER=1
+		where id=#{id} 
+	</update>
+</mapper>

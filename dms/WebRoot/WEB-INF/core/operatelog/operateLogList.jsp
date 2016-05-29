@@ -1,0 +1,212 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<html>
+<head>
+<script type="text/javascript">
+	function showItem(id) {
+		ldDialog.open(
+				"${basePath}core/operateLogDetail!getOperateLogById.action?id="
+						+ id, "操作详情", function(window) {
+				}, 600, 500);
+	}
+	function loadData(curPageNum){
+		var url = "${basePath}coreAjax/operateLogSearch!searchOperateLog.action";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			data : $("#searchForm").serialize()+"&pager.curPageNum="+curPageNum,
+			async:false,
+			success : function(result) {
+				$("#contentTable td").remove();
+				var res = eval('(' + result + ')');
+				if(res.code == 1){
+					var items = res.list;
+					var pagerStr = res.pagerStr;
+					$(".ldPager").empty();
+					$(".ldPager").append(pagerStr);
+					var html = "";
+					$.each(items,function(i, item){
+						html += "<tr>";
+						html += "<td>"+ (i+1) +"</td>";
+						if(item.right == null){
+							html += "<td>非法URL</td>";
+						}else{
+							html += "<td>"+ item.right.rightName +"</td>";
+						}
+						
+						html += "<td>"+ item.statusOptionDisplay+"</td>";
+						html += "<td>"+ item.isLegalOptionDisplay+"</td>";
+						
+						html += "<td>"+ item.clientIp +"</td>";
+						
+						if(item.user==null){
+							html += "<td>未知用户</td>";
+						}else{
+							html += "<td>"+item.user.userName+"</td>";
+						}
+						
+						var time = new Date(item.time).format("yyyy-MM-dd HH:mm:ss");
+						html += "<td>"+ time +"</td>";
+						html += "<td>"+ item.lastingTime +"</td>";
+						
+						html += "<td>";
+					<ld:check mark="operateLogDetail">
+						html += "<input type='button' value='详情' class='ldBtnLink' onclick='showItem("+item.id+");' />&nbsp;";
+					</ld:check>
+						html += "</td>";
+					
+						html += "</tr>";
+					});
+					$("#contentTable").append(html);
+					ldDialog.unmask();
+				}else{
+					ldDialog.alert(res.reason);
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+			}
+		});
+		addTableCss();
+		initSkip();
+	}
+	$(function(){
+		loadData(1);
+		$("#searchBtn").bind("click", function(){
+			loadData(1);
+		});
+	});
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post">
+					<!-- 查询条件区域 -->
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">操作用户：</div>
+										<div class="conditionsitemR">
+											<input name="operator" id="operator" value="${operator}"
+												class="ldText"/>
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">操作名称：</div>
+										<div class="conditionsitemR">
+											<input name="operateName" id="operateName"
+												value="${operateName}" class="ldText" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">操作状态：</div>
+										<div class="conditionsitemR">
+											<ld:select groupName="sucOrFailInt" name="operateStatus"
+												value="${operateStatus}" className="ldSelect select144" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">是否合法：</div>
+										<div class="conditionsitemR">
+											<ld:select groupName="yesOrNoInt" name="isLegal"
+												value="${isLegal}" className="ldSelect select144" />
+										</div>
+									</div>
+								</div>
+								<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">起始时间：</div>
+										<div class="conditionsitemR">
+											<input name="startDate" type="text" id="startDate"
+												class="ldDateTime input138"
+												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+												value="<f:formatDate value="${startDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">结束时间：</div>
+										<div class="conditionsitemR">
+											<input name="endDate" type="text" id="endDate"
+												class="ldDateTime input138"
+												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+												value="<f:formatDate value="${endDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">操作时长：</div>
+										<div class="conditionsitemR">
+											<input type="text" name="minValue" id="minValue"
+												value="${minValue}" class="ldText" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">到：</div>
+										<div class="conditionsitemR">
+											<input type="text" name="maxValue" id="maxValue"
+												value="${maxValue}" class="ldText" />
+											(毫秒)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="yhlist3">
+							<div class="toolbarL">
+								<table border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td></td>
+									</tr>
+								</table>
+							</div>
+							<div class="toolbarR">
+								<table border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td>
+											<input id="searchBtn" type="submit" class="ldBtnBlue"
+												value="查询" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+				<table id="contentTable" width="100%" border="0" cellspacing="1" cellpadding="0"
+					class="ld-datagrid">
+					<tr>
+						<th>序号</th>
+						<th>操作名称</th>
+						<th>操作状态</th>
+						<th>是否合法</th>
+						<th>客户端ip</th>
+						<th>操作用户</th>
+						<th>操作时间</th>
+						<th>操作时长(毫秒)</th>
+						<th>操作</th>
+					</tr>
+				</table>
+			</div>
+
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<div class="ldPager">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

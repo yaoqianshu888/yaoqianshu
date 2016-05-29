@@ -1,0 +1,9 @@
+package com.landicorp.dms.action.docUser;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class UserDocRightReadConfAction extends BaseActionSupport {
+	public String execute(){
+		return SUCCESS;
+	}
+}

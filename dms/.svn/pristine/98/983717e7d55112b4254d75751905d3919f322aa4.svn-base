@@ -1,0 +1,14 @@
+package com.landicorp.dms.action.draft;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class DraftSearchAction extends BaseActionSupport{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public String searchDraft() {
+		return INPUT;
+	}
+}

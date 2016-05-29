@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="" extends="myDefault" namespace="/">
+		<action name="">
+			<result name="success">/WEB-INF/core/userLogin.jsp</result>
+		</action>
+		<action name="index">
+			<result name="success">/WEB-INF/core/userLogin.jsp</result>
+		</action>
+		<action name="mainForm">
+			<result name="success">/WEB-INF/layout/mainForm.jsp</result>
+		</action>
+		<action name="mainFormMenu" class="mainFormMenuAction">
+			<result name="success">/WEB-INF/layout/mainFormMenu.jsp</result>
+		</action>
+		<action name="mainFormCenter">
+			<result name="success">/WEB-INF/layout/mainFormCenter.jsp</result>
+		</action>
+		
+	</package>
+	
+	<package name="core" extends="myDefault" namespace="/core">
+		<action name="index">
+			<result name="success">/WEB-INF/core/userLogin.jsp</result>
+		</action>
+		<action name="">
+			<result name="success">/WEB-INF/core/userLogin.jsp</result>
+		</action>
+		<action name="enter">
+			<result name="success">/WEB-INF/core/systemSelect.jsp</result>
+		</action>
+		<action name="systemManage">
+			<result name="success">/WEB-INF/core/systemManage.jsp</result>
+		</action>
+		<action name="blankRightMenu">
+			<result name="success">/WEB-INF/core/blankRightMenu.jsp</result>
+		</action>
+		<!-- 用户管理 -->
+		<action name="coreLogin" class="coreLoginAction">
+			<result type="chain">
+				<param name="namespace">${nameSpace}</param>
+				<param name="actionName">${actionName}</param>
+				<param name="method">${method}</param>
+			</result>
+			<result name="logout" type="chain">
+				<param name="namespace">${nameSpace}</param>
+				<param name="actionName">${actionName}</param>
+				<param name="method">${method}</param>
+			</result>
+		</action>
+		<action name="userLogin" class="userLoginAction">
+			<result name="coreLogin" type="chain">
+				<param name="namespace">/core</param>
+				<param name="actionName">coreLogin</param>
+				<param name="method">execute</param>
+			</result>
+			<result name="coreLogout" type="chain">
+				<param name="namespace">/core</param>
+				<param name="actionName">coreLogin</param>
+				<param name="method">logout</param>
+			</result>
+			<result name="input">/WEB-INF/core/userLogin.jsp</result>
+			<result name="success">/WEB-INF/layout/mainForm.jsp</result>
+		</action>
+		<action name="userDetail" class="userDetailAction">
+			<result name="userInfo">/WEB-INF/core/user/userInfo.jsp</result>
+			<result name="success">/WEB-INF/core/user/userDetail.jsp</result>
+		</action>
+		<action name="userUpdatePassword" class="userUpdatePasswordAction">
+			<result name="input">/WEB-INF/core/user/userUpdatePassword.jsp</result>
+		</action>
+		<action name="userSearch" class="userSearchAction">
+			<result name="success">/WEB-INF/core/user/userSearch.jsp</result>
+			<result name="detail">/WEB-INF/core/user/userDetail.jsp</result>
+		</action>
+		<action name="userInsert" class="userInsertAction">
+			<result name="input">/WEB-INF/core/user/userInsert.jsp</result>
+		</action>
+		<action name="userUpdate" class="userUpdateAction">
+			<result name="input">/WEB-INF/core/user/userUpdate.jsp</result>
+		</action>
+		<action name="userForChoose" class="userForChooseAction">
+			<result name="input">/WEB-INF/core/user/userForChooseFrame.jsp</result>
+			<result name="userMultiChooseSearch">/WEB-INF/core/user/userMultiChooseSearch.jsp</result>
+			<result name="userSingleChooseSearch">/WEB-INF/core/user/userSingleChooseSearch.jsp</result>
+			<result name="areaForChooseUserTree">/WEB-INF/core/user/areaForChooseUserTree.jsp</result>
+		</action>
+
+		<!-- 角色管理 -->
+		<action name="roleSearch" class="roleSearchAction">
+			<result>/WEB-INF/core/role/roleSearch.jsp</result>
+			<result name="roleDetail">/WEB-INF/core/role/roleDetail.jsp</result>
+			<result name="roleTree">/WEB-INF/core/role/roleTree.jsp</result>
+		</action>
+		<action name="roleInsert" class="roleInsertAction">
+			<result name="input">/WEB-INF/core/role/roleInsert.jsp</result>
+		</action>
+		<action name="roleUpdate" class="roleUpdateAction">
+			<result name="input">/WEB-INF/core/role/roleUpdate.jsp</result>
+		</action>
+		<action name="roleUpdateRight" class="roleUpdateRightAction">
+			<result name="success">/WEB-INF/core/success.jsp</result>
+			<result name="input">/WEB-INF/core/role/rightTreeOfRole.jsp</result>
+		</action>
+		<!-- 权限管理 -->
+		<action name="rightManageFrame">
+			<result>/WEB-INF/core/right/rightManageFrame.jsp</result>
+		</action>
+		<action name="rightSearch" class="rightSearchAction">
+			<result name="rightSearch">/WEB-INF/core/right/rightSearch.jsp</result>
+			<result name="rightTree">/WEB-INF/core/right/rightTree.jsp</result>
+			<result name="rightDetail">/WEB-INF/core/right/rightDetail.jsp</result>
+		</action>
+		<action name="rightInsert" class="rightInsertAction">
+			<result name="input">/WEB-INF/core/right/rightInsert.jsp</result>
+		</action>
+		<action name="rightUpdate" class="rightUpdateAction">
+			<result name="input">/WEB-INF/core/right/rightUpdate.jsp</result>
+		</action>
+		<!-- 系统管理 -->
+		<action name="systemOptionManage" class="systemOptionManageAction">
+			<result name="input">/WEB-INF/core/systemOptionManage.jsp</result>
+			<result name="success">/WEB-INF/core/successWithoutCloseWindow.jsp
+			</result>
+		</action>
+		<action name="reportColumnStyleUpdate" class="reportColumnStyleUpdateAction">
+			<result name="input">/WEB-INF/core/reportColumnUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<!-- 部门管理 -->
+		<action name="areaManageFrame">
+			<result>/WEB-INF/core/area/areaManageFrame.jsp</result>
+		</action>
+		<action name="areaForChoose" class="areaForChooseAction">
+			<result name="areaForChooseFrame">/WEB-INF/core/area/areaForChooseFrame.jsp</result>
+			<result name="areaForChooseTree">/WEB-INF/core/area/areaForChooseTree.jsp</result>
+			<result name="areaMultiChooseSearch">/WEB-INF/core/area/areaMultiChooseSearch.jsp</result>
+			<result name="areaSingleChooseSearch">/WEB-INF/core/area/areaSingleChooseSearch.jsp</result>
+		</action>
+		<action name="areaSearch" class="areaSearchAction">
+			<result name="areaSearch">/WEB-INF/core/area/areaSearch.jsp</result>
+			<result name="areaTree">/WEB-INF/core/area/areaTree.jsp</result>
+			<result name="areaDetail">/WEB-INF/core/area/areaDetail.jsp</result>
+		</action>
+		<action name="areaInsert" class="areaInsertAction">
+			<result name="input">/WEB-INF/core/area/areaInsert.jsp</result>
+		</action>
+		<action name="areaUpdate" class="areaUpdateAction">
+			<result name="input">/WEB-INF/core/area/areaUpdate.jsp</result>
+		</action>
+
+		<!-- 用户角色管理 -->
+		<action name="roleUserManageFrame">
+			<result>/WEB-INF/core/roleuser/roleUserManageFrame.jsp</result>
+		</action>
+		<action name="roleUserSearch" class="roleUserSearchAction">
+			<result>/WEB-INF/core/roleuser/roleUserSearch.jsp</result>
+		</action>
+
+		<!-- 用户导入 -->
+		<action name="userImport" class="userImportAction">
+			<result name="success">/WEB-INF/core/success.jsp</result>
+			<result name="input">/WEB-INF/core/user/userImport.jsp</result>
+		</action>
+
+		<!-- 操作日志 -->
+		<action name="operateLogSearch" class="operateLogSearch">
+			<result name="success">/WEB-INF/core/operatelog/operateLogList.jsp</result>
+		</action>
+		<action name="operateLogDetail" class="operateLogDetail">
+			<result name="success">/WEB-INF/core/operatelog/operateLogDetail.jsp</result>
+		</action>
+
+		<!--软件升级 -->
+		<action name="checkstandVersionSearch" class="checkstandVersionSearchAction">
+			<result>/WEB-INF/core/checkstandversion/checkstandVersionSearch.jsp
+			</result>
+			<result name="detail">/WEB-INF/core/checkstandversion/checkstandVersionDetail.jsp
+			</result>
+		</action>
+		<action name="checkstandVersionUpdate" class="checkstandVersionUpdateAction">
+			<result name="input">/WEB-INF/core/checkstandversion/checkstandVersionUpdate.jsp
+			</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="checkstandVersionInsert" class="checkstandVersionInsertAction">
+			<result name="input">/WEB-INF/core/checkstandversion/checkstandVersionInsert.jsp
+			</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+
+		<action name="versionUpdate" class="versionUpdateAction">
+			<result name="downFile" type="stream">
+				<param name="contentType">${fileContentType}</param>
+				<param name="contentDisposition">${fileName}</param>
+				<param name="inputName">inputStream</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+		<action name="systemMonitor" class="systemMonitorAction">
+			<result name="success">/WEB-INF/core/monitormanage/systemMonitor.jsp
+			</result>
+		</action>
+
+		<!--项目管理 -->
+		<action name="projectSearch" class="projectSearchAction">
+			<result name="detail">/WEB-INF/core/project/projectDetail.jsp</result>
+			<result name="success">/WEB-INF/core/project/projectSearch.jsp</result>
+
+		</action>
+		<action name="projectUpdate" class="projectUpdateAction">
+			<result name="input">/WEB-INF/core/project/projectUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="projectInsert" class="projectInsertAction">
+			<result name="input">/WEB-INF/core/project/projectInsert.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+
+		<!--选项管理 -->
+		<action name="optionManage" class="optionManageAction">
+			<result name="input">/WEB-INF/core/option/optionManage.jsp</result>
+		</action>
+		<action name="optionUpdate" class="optionUpdateAction">
+			<result name="input">/WEB-INF/core/option/optionManage.jsp</result>
+			<result name="success">/WEB-INF/core/successWithoutCloseWindow.jsp
+			</result>
+		</action>
+		<!--服务器同步处理 -->
+		<action name="serverSync" class="serverSyncAction" />
+		<!--选择 -->
+		<action name="selectForChoose" class="selectForChooseAction">
+			<result name="success">/WEB-INF/core/basicdata/selectForChooseFrame.jsp
+			</result>
+			<result name="chooseContainer">/WEB-INF/core/basicdata/selectChooseContainer.jsp
+			</result>
+		</action>
+
+	</package>
+</struts>
+

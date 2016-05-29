@@ -1,0 +1,70 @@
+package com.landicorp.dms.action.template;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.ITemplateService;
+
+public class TemplateInsertAction extends BaseActionSupport {
+	private Template template;
+	private ITemplateService templateService;
+	
+	
+	public Template getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+
+	public ITemplateService getTemplateService() {
+		return templateService;
+	}
+
+	public void setTemplateService(ITemplateService templateService) {
+		this.templateService = templateService;
+	}
+
+	public String prepare() {
+		return INPUT;
+	}
+	
+	public void insertProject() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		String reason="";
+		int code=0;
+		String returnValue="";
+		
+		try {
+			template.setCreator(getSessionUser());
+			template.setCreateTime(new Date());
+			template.setLastModifier(getSessionUser());
+			template.setLastModifyTime(new Date());
+			template.setAvailable(1);
+			template.setIsConfigure(0);
+			
+			templateService.add(template);
+			returnValue="新增成功";
+			code=1;
+			setWindowReturnValue(returnValue);
+		} catch (Exception e) {
+			reason="新增失败";
+		}
+		
+		
+		response.getWriter().write("[{\"code\":\""+code+"\",\"reason\":\""+reason+"\",\"returnValue\":\""+returnValue+"\"}]");
+		
+	}
+	
+	public String insertFunctionTemplate(){
+		return SUCCESS;
+	}
+}

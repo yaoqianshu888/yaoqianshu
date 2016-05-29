@@ -1,0 +1,232 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+/* $(function(){
+	loadData();
+}); */
+function loadData(){
+	var url = "${basePath}coreAjax/userSearch!detailUser.action?user.id=${user.id}";
+	$.ajax({
+		type : "POST",
+		url : url,
+		dataType : "text",
+		success : function(result) {
+			var res = JSON.parse(result);
+			if (res.code == 1) {
+				var user = res.bean;
+				$("#userAlias").append(user.userAlias);
+				$("#userNum").append(user.userNum);
+				$("#userName").append(user.userName);
+				$("#available").append(user.availableOptionDisplay);
+				$("#belongAreaName").append(user.belongArea.areaName);
+				$("#memo").append(user.memo);
+			} else {
+				ldDialog.alert(res.reason);
+			}
+			ldDialog.unmask();
+		},
+		error : function() {
+			ldDialog.unmask();
+		}
+	});
+}
+function showResult(){
+	$("#result").show();
+}
+function showSrc(obj){
+	$(obj).addClass("choosed");
+	var src=$(obj).find("img").attr("src");
+	$("#photo").html(src);
+}
+function checkSubmit(){
+	ldDialog.close($("#photo").html());
+}
+function upload(){
+	ldDialog.openMini(
+					"${basePath}dms/pictureUpload!uploadPicture.action", "图片上传", function(window) {
+	});
+}
+/* function addItem() {
+	ldDialog.open("${basePath}dms/functionSearch!uploadPhoto.action", "上传图片",
+			function(window) {
+				var returnValue = window.returnValue;
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					return true;
+				} else {//有返回值 处理一些事
+					ldDialog.alert("密码：" + returnValue);
+					return true;
+				}
+			});
+} */
+</script>
+<style type="text/css">
+#result{display:none}
+.size{width:150px;height:150px}
+.file {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.file:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+}
+.photoSize{width:100px;height:100px;padding:10px}
+.meno{padding:40px}
+。choosed{display:block;cursor:pointer;background-color: #fef5e1;}
+</style>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td>
+											<input type="button" class="ldBtnGray" value="上传" onclick="upload();" />
+										</td>
+								</tr>
+							</table>
+						</div>
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><ld:check mark="userInsert">
+											<input type="button" class="ldBtnGray" value="删除" onclick="deleteItems();" />
+										</ld:check></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist3">
+				<div class="yhlist1L">
+					文档基本图片
+				</div>
+			</div>
+			<div class="yhlist2">
+
+					<table id="contentTable" border="0" cellspacing="0" cellpadding="0">
+						<tr>	
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change1.jpg" class="photoSize"><br/>
+							<span class="meno">1.jpg</span></td>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change2.jpg" class="photoSize"><br/>
+							<span class="meno">2.jpg</span></td>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change3.jpg" class="photoSize"><br/>
+							<span class="meno">3.jpg</span></td>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change4.jpg" class="photoSize"><br/>
+							<span class="meno">4.jpg</span></td>
+						</tr>
+					</table>
+			</div>
+			<div class="yhlist3">
+				<div class="yhlist1L">
+					用户管理模块
+				</div>
+			</div>
+			<div class="yhlist2">
+
+					<table id="contentTable" border="0" cellspacing="0" cellpadding="0">
+						<tr>	
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change1.jpg" class="photoSize"><br/>
+							<span class="meno">1.jpg</span></td>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change2.jpg" class="photoSize"><br/>
+							<span class="meno">2.jpg</span></td>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change3.jpg" class="photoSize"><br/>
+							<span class="meno">3.jpg</span></td>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change4.jpg" class="photoSize"><br/>
+							<span class="meno">4.jpg</span></td>
+						</tr>
+					</table>
+			</div>
+			<div class="yhlist3">
+				<div class="yhlist1L">
+					数据管理模块
+				</div>
+			</div>
+			<div class="yhlist2">
+
+					<table id="contentTable" border="0" cellspacing="0" cellpadding="0">
+						<tr>	
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change1.jpg" class="photoSize"><br/>
+							<span class="meno">1.jpg</span></td>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change2.jpg" class="photoSize"><br/>
+							<span class="meno">2.jpg</span></td>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change3.jpg" class="photoSize"><br/>
+							<span class="meno">3.jpg</span></td>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td onclick="showSrc(this)"><img alt="图片" src="${basePath}dms/images/change4.jpg" class="photoSize"><br/>
+							<span class="meno">4.jpg</span></td>
+						</tr>
+					</table>
+			</div>
+			<div class="yhlist2">
+						<div class="dialogBottom">	
+											<label>选择的图片：</label><span name="user.userAlias"  id="photo" style="width:360px"   value="${draft.draftAlias}" ></span>
+											<input type="button" value="确 定" class="ldBtnGreen" style="float:right"
+						onclick="return checkSubmit();" />
+						
+						</div>	
+
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<style>
+.red{color: red;}
+.tips{  display: block;
+  color: #a3a3a3;
+  }
+ .tableleft{text-align:right;}
+
+</style>
+</html>
+

@@ -1,0 +1,249 @@
+﻿<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+<script type="text/javascript">
+	function showItem(id) {
+		ldDialog.openMini(
+			"${basePath}dms/dmsProjectSearch!detail.action?projectDoc.id=" + id,
+			"项目详情", 
+			function(window) {
+			
+		});
+	}
+	function addItem() {
+		var ok=this;
+		ldDialog.openMini("${basePath}dms/dmsProjectInsert!prepare.action",
+			"项目新增", 
+			function(window) {
+				var returnValue = window.returnValue;
+				
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					//loadData(1);
+					return true;
+				} else {//有返回值 处理一些事
+					ldDialog.tips("处理成功！");
+					document.pagerForm.submit();
+					//loadData(1);
+					return true;
+				}
+		});
+		
+		
+	}
+	function editItem(id) {
+		ldDialog.openMini(
+			"${basePath}dms/dmsProjectUpdate!prepare.action?projectDoc.id="+ id,
+			"项目编辑",
+			function(window) {
+				var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.tips("处理成功！");
+						var curPageNum = $("input[name='pager.curPageNum']").val();
+						document.pagerForm.submit();
+						return true;
+					}
+		});
+	}
+	function deleteItems() {
+		var dms = getAllChose("delete");
+		if (dms == "") {
+			ldDialog.alert("请先选择要删除的项");
+			return;
+		}
+		var param = $("#deleteForm").serialize();
+		ldDialog.confirm("你确定要删除这些项吗？", function() {
+			var url = "${basePath}coreAjax/projectSearch!deleteProject.action?" + param;
+			$.ajax({
+				type : "POST",
+				url : url,
+				dataType : "text",
+				success : function(result) {
+					var res = JSON.parse(result);
+					if (res.code == 1) {
+						ldDialog.tips("处理完成");
+						var curPageNum = $("input[name='pager.curPageNum']").val();
+						loadData(curPageNum);
+					} else {
+						ldDialog.alert(res.reason);
+					}
+				},
+				error : function() {
+					
+				}
+			});
+		});
+	}
+	
+	function setAvailable(id,page){
+		document.getElementById("statusForm").action = "${basePath}dms/dmsProjectSearch!setAvailable.action?projectDoc.id="
+				+ id + '&pager.curPageNum=' + page;
+		document.statusForm.submit();
+	
+	}
+	
+	
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post" action="${basePath}dms/dmsProjectSearch!getProjectListByProject.action">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<table class="rightseach2">
+									<div class="conditionsrow">
+										<div class="conditionsitem">
+											<div class="conditionsitemL">项目名称：</div>
+											<div class="conditionsitemR">
+												<input name="projectDoc.projectName" class="ldText" style="width:144px" id="projectDoc.projectName"
+													value="${projectDoc.projectName}" />
+											</div>
+										</div>
+										<div class="conditionsitem">
+						                  <div class="conditionsitemL">状态：</div>
+						                  <div class="conditionsitemR">
+						                    <ld:select groupName="availableAll" name="projectDoc.available" 
+						                               value="${projectDoc.available}" className="ldSelect select144" />
+						                  </div>
+						                 
+						                </div>
+										<div class="conditionsitem">
+						                  <div class="conditionsitemL">&nbsp;&nbsp;创建时间（起）：</div>
+						                  <div class="conditionsitemR">
+						                    <input name="startCreateTime" type="text" id="startCreateTime"
+						                           class="ldDateTime input138"
+						                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+						                           value="<f:formatDate value="${startCreateTime}"
+																				pattern="yyyy-MM-dd" />" />
+						                  </div>
+						                </div>
+						                <div class="conditionsitem">
+						                  <div class="conditionsitemL">&nbsp;&nbsp;创建时间（止）：</div>
+						                  <div class="conditionsitemR">
+						                    <input name="endCreateTime" type="text" id="endCreateTime"
+						                           class="ldDateTime input138"
+						                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+						                           value="<f:formatDate value="${endCreateTime}"
+																				pattern="yyyy-MM-dd" />" />
+						                  </div>
+										</div>
+									</div>
+								</table>
+							</div>
+							<div class="yhlist3">
+								<div class="toolbarL">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>
+
+												<ld:check mark="projectInsert">
+													<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+												</ld:check>
+											</td>
+										</tr>
+									</table>
+								</div>
+								<div class="toolbarR">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>
+												<input id="searchBtn" type="submit" class="ldBtnBlue" value="查询" />
+												<input type="hidden" value="0" name="pager.curPageNum" />
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			
+			
+			<div class="yhlist2">
+				<form method="post" name="statusForm" id="statusForm">
+				<input name="projectDoc.projectName" type="hidden" value="${projectDoc.projectName}" />
+				<input name="projectDoc.available" type="hidden" value="${projectDoc.available}" />
+				<input name="startCreateTime" type="hidden" value="${startCreateTime}" />
+				<input name="endCreateTime" type="hidden" value="${endCreateTime}" />
+					<table id="contentTable" width="100%" border="0" cellspacing="1" cellpadding="0" class="ld-datagrid">
+						<tr>
+							<th>项目编号</th>
+							<th>项目名称</th>
+							<th>状态</th>
+							<th>创建人</th>
+							<th>创建时间</th>
+							<th>操作</th>
+						</tr>
+						
+						<c:forEach items="${projectDocList }" var="item">
+						<tr>
+							<td>${ item.no} </td>
+							<td>${ item.projectName}  </td>
+							<td>
+								<a href="javascript:void(0);" onclick="setAvailable(${item.id},${pager.curPageNum});" >
+									<c:if test="${item.available==1 }">
+									 	<input type="checkbox" class="ldSwitch" checked />
+									 </c:if>
+									 <c:if test="${item.available==0 }">
+									 	<input type="checkbox" class="ldSwitch"  />
+									</c:if>
+								</a>
+								
+							</td>
+							<td>${ item.creator.userName}  </td>
+							<td><f:formatDate value="${ item.createTime}" pattern="yyyy-MM-dd  HH:mm:ss" /></td>
+							<td>
+								<ld:check mark="projectDetail">
+									<input type="button" value="详情" class="ldBtnLink" onclick="showItem(${item.id});" />&nbsp;
+								</ld:check>
+								<ld:check mark="projectUpdate">
+									<input type="button" value="编辑" class="ldBtnLink" onclick="editItem(${item.id});" />&nbsp;
+								</ld:check>
+							</td>
+						</tr>
+						
+						</c:forEach>
+					</table>
+				</form>
+			</div>
+			
+			
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								<form
+									action="${basePath}dms/dmsProjectSearch!getProjectListByProject.action"
+									method="post" name="pagerForm">
+									    <input name="projectDoc.projectName" type="hidden"
+										value="${projectDoc.projectName}" /> <input name="projectDoc.available"
+										type="hidden" id="projectDoc.available" value="${projectDoc.available}" /> <input
+										name="startCreateTime" type="hidden" id="startCreateTime"
+										value="${startCreateTime}" /><input name="endCreateTime" type="hidden"
+										id="endCreateTime" value="${endCreateTime}" />
+									<ld:pager type="form" action="pagerForm" />
+								</form>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

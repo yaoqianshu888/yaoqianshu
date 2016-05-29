@@ -1,0 +1,15 @@
+package com.landicorp.dms.service;
+
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Draft;
+
+public interface IDraftService extends IBaseService<Draft, Integer> {
+	public List<Draft> getDraftListByDraft(Draft draft,Date startCreateTime,Date endCreateTime,Pager pager);
+	
+	public List<Draft> getAllDraft(Pager pager); 
+	public void deleteById(Integer id);
+}

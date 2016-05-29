@@ -1,0 +1,38 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<html>
+<head>
+	<%@include file="/headDeclare.jsp"%>
+</head>
+
+<body height="100%">
+<div id="rightcontent">
+	<div class="quxxcontent">
+		<table width="100%" height="100%" border="0" cellspacing="0"
+			   cellpadding="0">
+			<tr>
+				<td width="230" valign="top" class="tree">
+					<ld:check mark="roleTree">
+						<iframe src="${basePath}dms/documentTree.action"
+								name="roleTree" width="230" height="100%" marginwidth="0"
+								onload="iframeResize(this);" marginheight="0" frameborder="0"
+								scrolling="no"> </iframe>
+					</ld:check>
+				</td>
+				<td valign="top" style="padding-top:5px ">
+					<ld:check mark="searchUserByRole">
+						<iframe
+								src="${basePath}dms/docUserSearch.action"
+								name="roleUserList" width="100%" height="600px" marginwidth="0" marginheight="0"
+								frameborder="0" onscroll="iframeResize(this);">
+						</iframe>
+					</ld:check>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+</body>
+</html>
+
+

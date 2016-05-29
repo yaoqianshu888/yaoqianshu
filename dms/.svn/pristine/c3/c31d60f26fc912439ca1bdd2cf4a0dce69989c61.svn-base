@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IDraftDao">
+	<resultMap type="draft" id="draft">
+		<result property="id" column="ID"/>
+		<result property="draftName" column="draft_name" />
+		<result property="document.id" column="DOCUMENT_ID" />
+		<result property="document.documentName" column="DOCUMENT_NAME" />
+		<result property="module.id" column="MODULE_ID" />
+		<result property="module.moduleName" column="MODULE_NAME" />
+		<result property="function.id" column="FUNCTION_ID" />
+		<result property="function.functionName" column="FUNCTION_NAME" />
+		<result property="projectDoc.id" column="PROJECT_ID" />
+		<result property="projectDoc.projectName" column="PROJECT_NAME" />
+		<result property="creator.id" column="CREATOR" />
+		<result property="creator.userName" column="CREATOR_NAME" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="status" column="status" />
+		<association property="document" column="DOCUMENT_ID"
+			javaType="com.landicorp.dms.entities.Document" select="com.landicorp.dms.dao.IDocumentDao.getById" />
+		<association property="function" column="FUNCTION_ID"
+			javaType="com.landicorp.dms.entities.Function" select="com.landicorp.dms.dao.IFunctionDao.getById" />
+		<association property="module" column="MODULE_ID"
+			javaType="com.landicorp.dms.entities.Module" select="com.landicorp.dms.dao.IModuleDao.getById" />
+		<association property="projectDoc" column="PROJECT_ID"
+			javaType="com.landicorp.dms.entities.ProjectDoc" select="com.landicorp.dms.dao.IProjectDocDao.getById" />
+		<association property="creator" column="creator"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+	</resultMap>
+
+	<sql id="keyColumns">draft_name,DOCUMENT_ID,MODULE_ID,PROJECT_ID,CREATOR,CREATE_TIME,status,FUNCTION_ID
+	</sql>
+	<sql id="valueColumns">#{draftName,jdbcType=VARCHAR},#{document.id,jdbcType=NUMERIC},
+		#{module.id,jdbcType=NUMERIC},
+		#{projectDoc.id,jdbcType=NUMERIC},#{creator.id,jdbcType=NUMERIC},
+		#{createTime,jdbcType=TIMESTAMP},#{status,jdbcType=NUMERIC},#{function.id,jdbcType=NUMERIC}
+	</sql>
+	
+	<sql id="whereColumns">
+			<if
+				test="draft!=null and draft.draftName!=null and draft.draftName!=''">
+				and t1.draft_name like '%${draft.draftName}%'
+			</if>
+			<if test="startCreateTime!=null and startCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) > DATE(#{startCreateTime})
+			 ]]>
+			</if>
+			<if test="endCreateTime!=null and endCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) < DATE(#{endCreateTime})
+			 ]]>
+			</if>
+			<if test="draft!=null and draft.creator!=null and draft.creator.userName!=null and draft.creator.userName!=''">
+				and t2.user_name like '%${draft.creator.userName}%'
+			</if>
+			<if test="draft!=null and draft.status!=null">
+				and t1.status=#{draft.status}
+			</if>
+			<if test="draft!=null and draft.document!=null and draft.document.documentName!=null and draft.document.documentName!=''">
+				and t3.DOCUMENT_NAME like '%${draft.document.documentName}%'
+			</if>
+			<if test="draft!=null and draft.module!=null and draft.module.moduleName!=null and draft.module.moduleName!=''">
+				and t4.MODULE_NAME like '%${draft.module.moduleName}%'
+			</if>
+			<if test="draft!=null and draft.projectDoc!=null and draft.projectDoc.projectName!=null and draft.projectDoc.projectName!=''">
+				and t5.PROJECT_NAME like '%${draft.projectDoc.projectName}%'
+			</if>
+	</sql>
+	
+	<insert id="save" parameterType="draft">
+
+		insert into t_dms_draft(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	<update id="update" parameterType="draft">
+		update t_dms_draft
+		<set>
+			<if test="draftName!=null">draft_name=#{draftName},</if>
+			<if test="document!=null and document.id!=null">DOCUMENT_ID=#{document.id},</if>
+			<if test="module!=null and module.id!=null">MODULE_ID=#{module.id},</if>
+			<if test="projectDoc!=null and projectDoc.id!=null">PROJECT_ID=#{projectDoc.id},</if>
+			<if test="creator!=null and creator.id!=null">CREATOR=#{creator.id},</if>
+			<if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+			<if test="status!=null">status=#{status},</if>
+			<if test="function!=null and function.id!=null">FUNCTION_ID=#{function.id}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<select id="getById" parameterType="int" resultMap="draft">
+		select *
+		from
+		t_dms_draft
+		where id=#{id}
+	</select>
+	
+	
+	<delete id="delete" parameterType="int">
+		delete from t_dms_draft where
+		id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<delete id="deleteById" parameterType="int">
+		delete from t_dms_draft where
+		id=#{id}
+	</delete>
+	
+	<select id="getDraftListByDraft" parameterType="map"
+		resultMap="draft">
+		select * from t_dms_draft t1,t_core_user t2,t_dms_document t3,t_dms_module t4,t_dms_project t5
+		<where>
+			t1.CREATOR=t2.ID and t1.DOCUMENT_ID=t3.ID and t1.MODULE_ID=t4.ID and t1.PROJECT_ID=t5.ID
+			<include refid="whereColumns" />
+		</where>		
+		order by t1.id desc
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getDraftCountByDraft" parameterType="map" resultType="int">
+		select count(*) from t_dms_draft t1,t_core_user t2,t_dms_document t3,t_dms_module t4,t_dms_project t5
+		<where>
+			t1.CREATOR=t2.ID and t1.DOCUMENT_ID=t3.ID and t1.MODULE_ID=t4.ID and t1.PROJECT_ID=t5.ID
+			<include refid="whereColumns" />
+		</where>		
+	</select>
+	
+	<select id="getAllDraft" resultMap="draft">
+		SELECT
+		*
+		FROM t_dms_draft
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getAllDraftCount" resultType="int">
+		select count(*) from t_dms_draft 
+	</select>
+</mapper>

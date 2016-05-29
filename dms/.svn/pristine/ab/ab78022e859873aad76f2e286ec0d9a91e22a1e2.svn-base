@@ -1,0 +1,44 @@
+package com.landicorp.dms.entities;
+
+import com.landicorp.core.entities.base.BaseEntity;
+
+public class ModuleFunction extends BaseEntity {
+	private Integer id;
+	private Module module;
+	private Function function;
+	private Integer isNowVer;  //是当前版本
+	private Document document;
+	
+	
+	public Document getDocument() {
+		return document;
+	}
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+	public Integer getIsNowVer() {
+		return isNowVer;
+	}
+	public void setIsNowVer(Integer isNowVer) {
+		this.isNowVer = isNowVer;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public Module getModule() {
+		return module;
+	}
+	public void setModule(Module module) {
+		this.module = module;
+	}
+	public Function getFunction() {
+		return function;
+	}
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+	
+}

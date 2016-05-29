@@ -1,0 +1,32 @@
+package com.landicorp.dms.service;
+
+import java.util.Date;
+import java.util.List;
+
+
+
+
+
+
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Function;
+
+public interface IFunctionService extends IBaseService<Function, Integer> {
+	public List<Function> getAllFunction(Pager pager,Integer moduleId); //得到所有的模块
+	public List<Function> getAllFunctionByModuleId(Integer moduleId); //得到所有的功能点   不是分页
+	public Integer getMaxId();  
+	public Integer getMaxNo();   //得到最大的编号
+	public List<Function> getFunctionListByFunction(Pager pager, Function function);
+	public List<Function> getAllFunctionPage(Pager pager, Function function);
+	public List<Function> getAllFunctionExamimePage(Pager pager);  //得到未审核单
+	public List<Function> getAllFunctionExamimePageByInfo(Pager pager,Function function,Date startCreateTime,
+			Date endCreateTime);//按条件得到未审核单
+	public Integer getAllFunctionPageCount(Function function);
+	public List<Function> getNowVerByNo(Function function);  //根据编号得到当前版本
+	public void setFunctionByNo(Function function);
+	public void setFunctionById(Function function);
+}

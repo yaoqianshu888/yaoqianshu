@@ -1,0 +1,32 @@
+package com.landicorp.dms.action.node;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.service.INodeService;
+
+public class NodeDetailAction extends BaseActionSupport {
+
+	private Node node;
+	private INodeService nodeService;
+	
+	public Node getNode() {
+		return node;
+	}
+
+	public void setNode(Node node) {
+		this.node = node;
+	}
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+	public String detailNode(){
+		node=nodeService.getById(node.getId());
+		return "detail";
+	}
+}

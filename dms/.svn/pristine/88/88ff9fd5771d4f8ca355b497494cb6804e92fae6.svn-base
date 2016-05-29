@@ -1,0 +1,37 @@
+package com.landicorp.dms.action.picture;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.DmsPhoto;
+import com.landicorp.dms.service.IDmsPhotoService;
+
+public class PictureDetailAction extends BaseActionSupport {
+
+	private DmsPhoto dmsPhoto;
+	private IDmsPhotoService dmsPhotoService;
+	
+	
+	public DmsPhoto getDmsPhoto() {
+		return dmsPhoto;
+	}
+
+
+	public void setDmsPhoto(DmsPhoto dmsPhoto) {
+		this.dmsPhoto = dmsPhoto;
+	}
+
+
+	public IDmsPhotoService getDmsPhotoService() {
+		return dmsPhotoService;
+	}
+
+
+	public void setDmsPhotoService(IDmsPhotoService dmsPhotoService) {
+		this.dmsPhotoService = dmsPhotoService;
+	}
+
+
+	public String detailPicture(){
+		dmsPhoto=dmsPhotoService.getById(dmsPhoto.getId());
+		return "detail";
+	}
+}

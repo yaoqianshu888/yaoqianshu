@@ -1,0 +1,16 @@
+package com.landicorp.dms.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Function;
+
+public interface IFunctionDao extends IMyBatisDao<Function, Integer> {
+	public List<Function> getAllFunction(@Param("pager") Pager pager,@Param("moduleId")Integer moduleId); //得到所有的功能点
+	public Integer getAllFunctionCount(Integer moduleId);     //得到所有的功能点数
+	public List<Function> getAllFunctionByModuleId(@Param("moduleId")Integer moduleId); //得到所有的功能点   不是分页
+	public Integer getMaxId();   
+}

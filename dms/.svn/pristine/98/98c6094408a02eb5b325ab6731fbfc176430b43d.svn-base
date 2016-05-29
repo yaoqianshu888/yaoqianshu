@@ -1,0 +1,205 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<%@include file="/headDeclare.jsp"%>
+<link rel="stylesheet" href="${basePath}core/plugins/ztree/skin/zTree.css"
+	type="text/css"></link>
+	<link rel="stylesheet"
+		href="${basePath}core/plugins/ztree/skin/zTreeStyle/zTreeStyle.css"
+		type="text/css"></link>
+		<script type="text/javascript"
+			src="${basePath}core/plugins/ztree/jquery.ztree.core-3.5.js"></script>
+		<script type="text/javascript"
+			src="${basePath}core/plugins/ztree/jquery.ztree.excheck-3.5.js"></script>
+		<script type="text/javascript">
+			var rightTreeIdArray = [];
+			var currendLeftId ;
+			function changeLeftRight(rightId) {
+				document.getElementById('rightTree' + currendLeftId).style.display = "none";
+				document.getElementById('rightTree' + rightId).style.display = "";
+				currendLeftId = rightId;
+			}
+			function checkSubmit() {
+				ldDialog.confirm("是否确定对该用户文档权限进行修改？", function() {
+					var selectStr = "";
+					for (var i = 0; i < rightTreeIdArray.length; i++) {
+						var treeObj = $.fn.zTree.getZTreeObj("rightTree"
+								+ rightTreeIdArray[i]);
+						var nodes = treeObj.getCheckedNodes(true);
+						for (var j = 0; j < nodes.length; j++) {
+							selectStr += "," + nodes[j].id;
+						}
+					}
+					if (!isNull(selectStr)) {
+						selectStr = selectStr.substring(1);
+					}
+					$("#selectStr").val(selectStr);
+					submitForm();
+				});
+			}
+			function submitForm(){
+				var url = "${basePath}coreAjax/roleUpdateRight!updateRight.action";
+				$.ajax({
+					type : "POST",
+					url : url,
+					dataType : "text",
+					data : $("#submitForm").serialize(),
+					success : function(result) {
+						var res = JSON.parse(result);
+						if (res.code == 1) {
+							ldDialog.tips("处理成功！");
+							ldDialog.close();
+						} else {
+							ldDialog.alert(res.reason);
+							ldDialog.unmask();
+						}
+					},
+					error : function() {
+
+					}
+				});
+			}
+			var leftSetting = {
+				view : {
+					dblClickExpand : dblClickExpand
+				},
+				data : {
+					simpleData : {
+						enable : true,
+						pIdKey : "upId"
+					}
+				}
+			};
+			var rightSetting = {
+				check : {
+					enable : true
+				},
+				view : {
+					dblClickExpand : dblClickExpand
+				},
+				data : {
+					simpleData : {
+						enable : true,
+						pIdKey : "upId"
+					}
+				}
+			};
+			function dblClickExpand(treeId, treeNode) {
+				return treeNode.level > 0;
+			}
+			$(function() {
+				
+				/*var url = "${basePath}coreAjax/roleUpdateRight!getRightTree.action?targetRoleId=${targetRoleId}";
+				$.ajax({
+					type : "POST",
+					url : url,
+					dataType : "text",
+					async:false,
+					success : function(result) {
+						var res = JSON.parse(result);
+						if (res.code == 1) {
+							var role = res.bean;
+							$("#roleName").text(role.roleName);
+							
+							var firstRightJson = JSON.parse(res.firstRightJson);
+							$.fn.zTree.init($("#firstRightTree"), leftSetting, firstRightJson);
+							var rightNodeTmp;
+							var rightTreeList = res.rightTreeList;
+							
+							var html = "";
+							for(var i=0; i<rightTreeList.length; i++){
+								var item = rightTreeList[i];
+								html += "<ul id=\"rightTree"+item.id+"\" class=\"ztree\" style=\"width: 500px;border: 0px;";
+								if(i != 0){
+									html += "display: none;"
+								}
+								html += "\"></ul>";
+							}
+							$("#rightTreeTd").html(html);
+							
+							for(var i=0; i<rightTreeList.length; i++){
+								var item = rightTreeList[i];
+								if(i == 0){
+									currendLeftId = item.id;
+								}
+								rightNodeTmp = JSON.parse(item.treeJson);
+								$.fn.zTree.init($("#rightTree"+item.id), rightSetting,
+										rightNodeTmp);
+								rightTreeIdArray.push(item.id);
+								
+							}
+							ldDialog.unmask();
+						} else {
+							ldDialog.alert(res.reason);
+							ldDialog.unmask();
+						}
+					},
+					error : function() {
+					}
+				});*/
+				var firstRightJson = "[{\"checked\":true,\"id\":1,\"name\":\"全部\",\"open\":true,\"target\":\"rightList\",\"upId\":-1,\"url\":\"\"},{\"checked\":false,\"id\":2,\"name\":\"银销通\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":3,\"name\":\"银医\",\"open\":false,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"}]";
+				$.fn.zTree.init($("#firstRightTree"), leftSetting, JSON.parse(firstRightJson));
+				var html = "";
+				html += "<ul id=\"rightTree1\" class=\"ztree\" style=\"width: 500px;border: 0px;";
+				html += "\"></ul>";
+				$("#rightTreeTd").html(html);
+//				rightNodeTmp = JSON.parse(item.treeJson);
+				$.fn.zTree.init($("#rightTree1"), rightSetting,
+						JSON.parse("[{\"checked\":false,\"id\":100,\"name\":\"银销通\",\"open\":true,\"target\":\"rightList\",\"upId\":-1,\"url\":\"\"},{\"checked\":false,\"id\":1,\"name\":\"银销通文档1\",\"open\":true,\"target\":\"rightList\",\"upId\":100,\"url\":\"\"},{\"checked\":false,\"id\":200,\"name\":\"银销通文档2\",\"open\":true,\"target\":\"rightList\",\"upId\":100,\"url\":\"\"},{\"checked\":false,\"id\":2,\"name\":\"厂商信息管理\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":3,\"name\":\"商品信息管理\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":4,\"name\":\"商品分类管理\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":5,\"name\":\"添加\",\"open\":true,\"target\":\"rightList\",\"upId\":2,\"url\":\"\"},{\"checked\":false,\"id\":6,\"name\":\"修改\",\"open\":true,\"target\":\"rightList\",\"upId\":2,\"url\":\"\"},{\"checked\":false,\"id\":7,\"name\":\"删除\",\"open\":true,\"target\":\"rightList\",\"upId\":2,\"url\":\"\"}]"));
+
+			});
+		</script>
+</head>
+<body>
+	<form id="submitForm" name="submitForm" method="post">
+		<input type="hidden" name="targetRoleId" value="${targetRoleId}" />
+		<input type="hidden" name="selectStr" value="" id="selectStr" />
+		<div class="yhbox" style="margin-bottom:50px; ">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="height: 420px">
+				<tr>
+					<td width="180" class="yhbox2" valign="top">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="treetitle">我的项目</td>
+							</tr>
+							<tr>
+								<td>
+									<ul id="firstRightTree" class="ztree"
+										style="width: 260px;height: 480px;border: 0px;"></ul>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td valign="top" class="yhbox3">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="treetitle" id="userName">项目内容</td>
+							</tr>
+							<tr>
+								<td id="rightTreeTd">
+									
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
+	<div class="dialogBottom">
+		<div class="btns">
+			<ld:check mark="roleUpdateRightCommit">
+				<input type="button" value="确 定" class="ldBtnGreen"
+					onclick="return checkSubmit();" />
+			</ld:check>
+			&nbsp;
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+	</form>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+	ldDialog.alert("开发中。。。");
+	function showDetail() {
+		ldDialog.openLarge(
+						"${basePath}dms/functionVersionDetail!detailFunctionVersion.action", "版本查看", function(window) {
+		});
+	}
+	
+	function versionCompare(){
+	
+	var ids = getAllChose("compare");
+		if(ids.length!=3){
+			ldDialog.alert("请选择两个版本进行对比");
+		}else{
+			ldDialog.openFullScreen(
+						"${basePath}dms/functionVersionCompare!compareFuncionVersion.action", "版本对比", function(window) {
+		});
+		}
+	}
+
+	function setItem() {
+		ldDialog.confirm("确定将该版本置为当前版本？", function () {
+			ldDialog.tips("设置成功！");
+		})
+	}
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<div class="conditionsrow">
+								<div class="conditionsitem">
+										<div class="conditionsitemL">版本号：</div>
+										<div class="conditionsitemR">
+											<input name="functionVersion.versionNum" class="ldText input138" id="functionVersion.versionNum" value="${functionVersion.versionNum}" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">功能点名称：</div>
+										<div class="conditionsitemR">
+											<input name="functionVersion.name" class="ldText input138" id="functionVersion.name" value="${functionVersion.name}" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属项目：</div>
+										<div class="conditionsitemR">
+											<input name="functionVersion.belongProject" class="ldText input138" id="functionVersion.belongProject" value="${functionVersion.belongProject}" />
+										</div>
+									</div>
+									</div>
+									<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属文档：</div>
+										<div class="conditionsitemR">
+											<input name="functionVersion.belongDocument" class="ldText input138" id="functionVersion.belongDocument" value="${functionVersion.belongDocument}" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属模块：</div>
+										<div class="conditionsitemR">
+											<input name="functionVersion.belongModule" class="ldText input138" id="functionVersion.belongModule" value="${functionVersion.belongModule}" />
+										</div>
+									</div>
+									
+							</div>	
+								
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><ld:check mark="userInsert">
+											<input type="button" class="ldBtnGray" value="对比" onclick="versionCompare();" />
+										</ld:check></td>
+								</tr>
+							</table>
+						</div>
+					
+						<div class="toolbarR">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input id="searchBtn" type="button" class="ldBtnBlue" value="查询"/></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+						<th>选择</th>
+						<th>序号</th>
+						<th>版本号</th>
+						<th>功能点名称</th>
+						<th>所属项目</th>
+						<th>所属文档</th>
+						<th>所属模块</th>
+						<th>产生时间</th>
+						<th>操作</th>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="compare" id="compare" class="ldCheckbox" value="1" /></td>
+						<td>1</td>
+						<td>1</td>
+						<td>签到</td>
+						<td>银销通</td>
+						<td>银销通接口说明</td>
+						<td>终端管理</td>
+						<td>2015-08-13 12:54:04</td>
+						<td>
+							<input type="button" value="查看" class="ldBtnLink" onclick="showDetail();">
+							<input type="button" value="置为当前版本" class="ldBtnLink" onclick="setItem('1')">
+						</td>
+					</tr>
+					<tr>
+					<td><input type="checkbox" name="compare" id="compare" class="ldCheckbox" value="2" /></td>
+						<td>2</td>
+						<td>2</td>
+						<td>签到</td>
+						<td>银销通</td>
+						<td>银销通接口说明</td>
+						<td>终端管理</td>
+						<td>2015-08-13 12:54:04</td>
+						<td>
+							<input type="button" value="查看" class="ldBtnLink" onclick="showDetail('1')">
+							<input type="button" value="置为当前版本" class="ldBtnLink" onclick="setItem('1')">
+						</td>
+					</tr>
+					<tr>
+					<td><input type="checkbox" name="compare" id="compare" class="ldCheckbox" value="3" /></td>
+						<td>3</td>
+						<td>3</td>
+						<td>签到</td>
+						<td>银销通</td>
+						<td>银销通接口说明</td>
+						<td>终端管理</td>
+						<td>2015-08-13 12:54:04</td>
+						<td>
+							<input type="button" value="查看" class="ldBtnLink" onclick="showDetail('1')">
+							<input type="button" value="置为当前版本" class="ldBtnLink" onclick="setItem('1')">
+						</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="compare" id="compare" class="ldCheckbox" value="3" /></td>
+						<td>4</td>
+						<td>4</td>
+						<td>签到</td>
+						<td>银销通</td>
+						<td>银销通接口说明</td>
+						<td>终端管理</td>
+						<td>2015-08-13 12:54:04</td>
+						<td>
+							<input type="button" value="查看" class="ldBtnLink" onclick="showDetail('1')">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

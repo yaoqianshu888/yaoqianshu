@@ -1,0 +1,294 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+  <script type="text/javascript">
+
+    function addItem() {
+		ldDialog.openMini("${basePath}dms/templateInsert!prepare.action",
+			"模板新增", 
+			function(window) {
+			var returnValue = window.returnValue;
+					
+						if (returnValue == undefined) {//无返回值 直接关闭 
+							//loadData(1);
+							return true;
+						} else {//有返回值 处理一些事
+							ldDialog.tips("处理成功！");
+							document.pagerForm.submit();
+							//loadData(1);
+							return true;
+						}
+		});
+	}
+
+    function editItem(id){
+      ldDialog.openMini("${basePath}dms/templateUpdate!prepare.action?template.id="+id,
+              "模板编辑",
+              function(window) {
+              var returnValue = window.returnValue;
+					
+						if (returnValue == undefined) {//无返回值 直接关闭 
+							//loadData(1);
+							return true;
+						} else {//有返回值 处理一些事
+							ldDialog.tips("处理成功！");
+							document.pagerForm.submit();
+							//loadData(1);
+							return true;
+						}
+              });
+    }
+
+    function addDocumentItem(id) {
+      ldDialog.openLarge("${basePath}dms/documentTemplateInsert!insertDocumentTemplate.action?template.id="+id,
+              "配置文档模板",
+              function(window) {
+              });
+    }
+
+    function addFunctionItem() {
+		ldDialog.openFullScreen("${basePath}dms/templateInsert!insertFunctionTemplate.action",
+			"配置功能点模板", 
+			function(window) {
+		});
+	}
+
+	function detailItem(id){
+		ldDialog.openLarge("${basePath}dms/templateDetail!detailTemplate.action?template.id="+id,
+			"模板查看", 
+			function(window) {
+		});
+	}
+    function deleteItem(id) {
+      ldDialog.confirm("确定删除该模板？", function () {
+        var url = "${basePath}dms/templateDelete!deleteTemplate.action?template.id="+id;
+      	$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			success : function(result) {
+				ldDialog.tips("删除成功！");
+				document.pagerForm.submit();
+			},
+			error : function() {
+				ldDialog.tips("删除失败！");
+			}
+		});
+      
+       
+      })
+    }
+
+	function setAvailable(id,page){
+		document.getElementById("statusForm").action = "${basePath}dms/templateSearch!setAvailable.action?template.id="
+				+ id + '&pager.curPageNum=' + page;
+		document.statusForm.submit();
+	
+	}
+  </script>
+</head>
+<body>
+<div id="rightcontent">
+  <div id="rightcontent1">
+    <div class="yhlist">
+      <form id="searchForm" method="post" action="${basePath}dms/templateSearch!searchTemplatesByInfo.action">
+        <div class="conditionsbox">
+          <div id="conditionsbox">
+            <div class="yhlist1">
+              <div class="yhlist1L">查询条件</div>
+            </div>
+            <div class="yhlist2">
+              <div class="conditionsrow">
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">模板名称：</div>
+                  <div class="conditionsitemR">
+                    <input name="template.templetName" class="ldText input138" id="template.templetName" value="${template.templetName}" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">创建人：</div>
+                  <div class="conditionsitemR">
+                    <input name="template.creator.userName" class="ldText input138" id="template.creator.userName" value="${template.creator.userName}" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">&nbsp;&nbsp;创建时间（起）：</div>
+                  <div class="conditionsitemR">
+                    <input name="startCreateTime" type="text" id="startCreateTime"
+                           class="ldDateTime input138"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                           value="<f:formatDate value="${startCreateTime}"
+														pattern="yyyy-MM-dd" />" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">&nbsp;&nbsp;创建时间（止）：</div>
+                  <div class="conditionsitemR">
+                    <input name="endCreateTime" type="text" id="endCreateTime"
+                           class="ldDateTime input138"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                           value="<f:formatDate value="${endCreateTime}"
+														pattern="yyyy-MM-dd" />" />
+                  </div>
+                </div>
+              </div>
+              <div class="conditionsrow">
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">状态：</div>
+                  <div class="conditionsitemR">
+                    <ld:select groupName="availableAll" name="template.available"
+                               value="${template.available}" className="ldSelect select144" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">最后修改人：</div>
+                  <div class="conditionsitemR">
+                    <input name="template.lastModifier.userName" class="ldText input138" id="template.lastModifier.userName" value="${template.lastModifier.userName}" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">最后修改时间（起）：</div>
+                  <div class="conditionsitemR">
+                    <input name="startModifyTime" type="text" id="startModifyTime"
+                           class="ldDateTime input138"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                           value="<f:formatDate value="${startModifyTime}"
+														pattern="yyyy-MM-dd" />" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">最后修改时间（止）：</div>
+                  <div class="conditionsitemR">
+                    <input name="endModifyTime" type="text" id="endModifyTime"
+                           class="ldDateTime input138"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                           value="<f:formatDate value="${endModifyTime}"
+														pattern="yyyy-MM-dd" />" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="yhlist3">
+          <div class="toolbarL">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                  <input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+                  
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="toolbarR">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                	<input id="searchBtn" type="submit" class="ldBtnBlue" value="查询"/>
+                	<input type="hidden" value="0" name="pager.curPageNum" />
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="yhlist2">
+    <form method="post" name="statusForm" id="statusForm">
+      <input name="template.templetName" type="hidden" value="${template.templetName}"/>
+      <input name="template.creator.userName" type="hidden" value="${template.creator.userName}"/>
+      <input name="startCreateTime" type="hidden" value="${startCreateTime}"/>
+      <input name="endCreateTime" type="hidden" value="${endCreateTime}"/>
+      <input name="template.available" type="hidden" value="${template.available}"/>
+      <input name="template.lastModifier.userName" type="hidden" value="${template.lastModifier.userName}"/>
+      <input name="startModifyTime" type="hidden" value="${startModifyTime}"/>
+      <input name="endModifyTime" type="hidden" value="${endModifyTime}"/>
+      <table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+        <tr>
+          <th>序号</th>
+          <th>模板名称</th>
+          <%--<th>模板类型</th>--%>
+          <th>状态</th>
+          <th>创建人</th>
+          <th>创建时间</th>
+          <th>最后修改人</th>
+          <th>最后修改时间</th>
+          <th>操作</th>
+        </tr>
+        
+ 		<c:forEach items="${templateList}" var="item" varStatus="status">
+			<tr class="tableitem${6-status.index%2}"
+				onMouseOver="this.className='tableitem9';this.style.cursor='hand';"
+				onMouseOut="this.className='tableitem${6-status.index%2}';this.style.cursor='hand';"
+				>
+								
+				
+								
+				<td>${status.count}</td>
+				<td>${item.templetName}</td>
+				<td>
+					<a href="javascript:void(0);" onclick="setAvailable(${item.id},${pager.curPageNum});" >
+					<c:if test="${item.available==1 }">
+						<input type="checkbox" class="ldSwitch" checked />
+					</c:if>
+					<c:if test="${item.available==0 }">
+						<input type="checkbox" class="ldSwitch"  />
+					</c:if>
+				    </a>
+				</td>
+				<td>${item.creator.userName}</td>
+				<td><f:formatDate value="${item.createTime}"
+							      pattern="yyyy-MM-dd" />
+				</td>
+				<td>${item.lastModifier.userName}</td>
+				<td><f:formatDate value="${item.lastModifyTime}"
+							      pattern="yyyy-MM-dd" />
+				</td>
+			    <td>
+             		<input type='button' value='配置文档模板' class='ldBtnLink' onclick="addDocumentItem(${item.id})" style="cursor: pointer;" />&nbsp;
+           			<input type='button' value='预览' class='ldBtnLink' onclick="detailItem(${item.id});" style="cursor: pointer;" />&nbsp;
+            		<input type='button' value='编辑' class='ldBtnLink'  onclick="editItem(${item.id});"  style="cursor: pointer;" />&nbsp;
+           	 		<input type='button' value='删除' class='ldBtnLink' onclick="deleteItem(${item.id});" style="cursor: pointer;" />
+         		</td>
+		    </tr>
+		</c:forEach>       
+        
+      </table>
+      </form>
+    </div>
+    <div class="yhlist3">
+      <div class="toolbarL">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <div class="toolbarR">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>
+              <div class="ldPager">
+              <form action="${basePath}dms/templateSearch!searchTemplatesByInfo.action" method="post" name="pagerForm">
+					<input name="template.templetName" type="hidden" value="${template.templetName}" /> 
+					<input name="template.creator.userName" type="hidden" id="template.creator.userName" value="${template.creator.userName}" /> 
+					<input name="startCreateTime" type="hidden" id="startCreateTime" value="${startCreateTime}" />
+					<input name="endCreateTime" type="hidden" id="endCreateTime" value="${endCreateTime}" />
+					<input name="template.available" type="hidden" value="${template.available}" />
+					<input name="template.lastModifier.userName" type="hidden" id="template.lastModifier.userName" value="${template.lastModifier.userName}" /> 
+					<input name="startModifyTime" type="hidden" id="startModifyTime" value="${startModifyTime}" />
+					<input name="endModifyTime" type="hidden" id="endModifyTime" value="${endModifyTime}" />
+					<ld:pager type="form" action="pagerForm" />
+			  </form>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+package com.landicorp.dms.action.draft;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Draft;
+import com.landicorp.dms.service.IDraftService;
+
+public class DraftSearchAction extends BaseActionSupport{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private IDraftService draftService;
+	private Draft draft;
+	private List<Draft> draftList;
+	private Date startCreateTime;
+	private Date endCreateTime;
+	
+
+	public Date getStartCreateTime() {
+		return startCreateTime;
+	}
+
+
+	public void setStartCreateTime(Date startCreateTime) {
+		this.startCreateTime = startCreateTime;
+	}
+
+
+	public Date getEndCreateTime() {
+		return endCreateTime;
+	}
+
+
+	public void setEndCreateTime(Date endCreateTime) {
+		this.endCreateTime = endCreateTime;
+	}
+
+
+	public IDraftService getDraftService() {
+		return draftService;
+	}
+
+
+	public void setDraftService(IDraftService draftService) {
+		this.draftService = draftService;
+	}
+
+
+	public Draft getDraft() {
+		return draft;
+	}
+
+
+	public void setDraft(Draft draft) {
+		this.draft = draft;
+	}
+
+
+	public List<Draft> getDraftList() {
+		return draftList;
+	}
+
+
+	public void setDraftList(List<Draft> draftList) {
+		this.draftList = draftList;
+	}
+
+	//跳转草稿列表
+	public String searchDraft() {
+		draftList=new ArrayList<Draft>();
+		startCreateTime=null;
+		endCreateTime=null;
+		draft=null;
+		draftList=draftService.getAllDraft(getPager());
+		
+		return INPUT;
+	}
+	
+	//按条件查询
+	public String searchDraftsByInfo(){
+		draftList= new ArrayList<Draft>();
+		draftList=draftService.getDraftListByDraft(draft, startCreateTime, endCreateTime, getPager());
+		return INPUT;
+	}
+}

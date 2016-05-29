@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/aop 
+                           http://www.springframework.org/schema/aop/spring-aop.xsd "
+                    	default-autowire="byName">
+	<!-- 使用MethodInvokingJobDetailFactoryBean，任务类可以不实现Job接口，通过targetMethod指定调用方法 -->
+
+	<!-- 线程执行器配置，用于任务注册 -->
+	<bean id="executor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="10" />
+		<property name="maxPoolSize" value="100" />
+		<property name="queueCapacity" value="150" />
+	</bean>
+	
+ 	<!-- 定义调用对象和调用对象的方法 -->
+ 	<!-- 具体执行job的service与方法 -->
+	<!-- <bean id="keyDownloadJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="group" value="keyDownloadJobGroup" />
+		<property name="name" value="keyDownloadJobName" />
+		false表示等上一个任务执行完后再开启新的任务
+		<property name="concurrent" value="false" />
+		<property name="targetObject">
+			<ref bean="terminalKeyService" />
+		</property>
+		<property name="targetMethod">
+			<value>notifyUpdate</value>
+		</property>
+	</bean> -->
+
+	<!-- 调度触发器 -->
+	<!-- <bean id="keyDownloadTrigger"
+		class="com.landicorp.core.helper.quartz.InitializingCronTriggerFactoryBean">
+		<constructor-arg ref="optionService">
+		</constructor-arg>
+		<constructor-arg>
+			<value>keyDownloadTime</value>
+		</constructor-arg>
+		<property name="name" value="keyDownloadTriggerName" />
+		<property name="group" value="keyDownloadTriggerGroup" />
+		<property name="jobDetail">
+			<ref bean="keyDownloadJob" />
+		</property>
+	</bean> -->
+	
+<!-- 	<bean id="transactionDataSynJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="group" value="transactionDataSynJobGroup" />
+		<property name="name" value="transactionDataSynJobName" />
+		false表示等上一个任务执行完后再开启新的任务
+		<property name="concurrent" value="false" />
+		<property name="targetObject">
+			<ref bean="transactionDataService" />
+		</property>
+		<property name="targetMethod">
+			<value>synRemoteData</value>
+		</property>
+	</bean> -->
+
+	<!-- 调度触发器 -->
+<!-- 	<bean id="transactionDataSynTrigger"
+		class="com.landicorp.core.helper.quartz.InitializingCronTriggerFactoryBean">
+		<property name="name" value="transactionDataSynTriggerName" />
+		<property name="group" value="transactionDataSynTriggerGroup" />
+		<property name="cronExpression" value="0/3 * * * * ?" />
+		<property name="jobDetail">
+			<ref bean="transactionDataSynJob" />
+		</property>
+	</bean> -->
+	
+<!-- 	<bean id="electronicVoucherSynJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="group" value="electronicVoucherSynJobGroup" />
+		<property name="name" value="electronicVoucherSynJobName" />
+		false表示等上一个任务执行完后再开启新的任务
+		<property name="concurrent" value="false" />
+		<property name="targetObject">
+			<ref bean="electronicVoucherService" />
+		</property>
+		<property name="targetMethod">
+			<value>synRemoteData</value>
+		</property>
+	</bean> -->
+
+	<!-- 调度触发器 -->
+<!-- 	<bean id="electronicVoucherSynTrigger"
+		class="com.landicorp.core.helper.quartz.InitializingCronTriggerFactoryBean">
+		<property name="name" value="electronicVoucherSynTriggerName" />
+		<property name="group" value="electronicVoucherSynTriggerGroup" />
+		<property name="cronExpression" value="1/3 * * * * ?" />
+		<property name="jobDetail">
+			<ref bean="electronicVoucherSynJob" />
+		</property>
+	</bean> -->
+
+	<!-- 调度工厂 -->
+	<bean id="scheduler" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="dataSource"><null/></property>
+		<property name="triggers">
+			<list>
+				<!-- <ref bean="keyDownloadTrigger" /> -->
+				<!-- <ref bean="electronicVoucherSynTrigger" />
+				<ref bean="transactionDataSynTrigger" /> -->
+			</list>
+		</property>
+		<property name="taskExecutor" ref="executor"></property>
+	</bean>
+</beans>

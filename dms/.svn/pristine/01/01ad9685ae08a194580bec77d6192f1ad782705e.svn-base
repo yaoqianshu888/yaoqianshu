@@ -1,0 +1,162 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+	<script src="${basePath}dms/js/dms.js"></script>
+<script type="text/javascript">
+	function addItem() {
+
+		var notChooseIds = getAllChose("delete");
+		if (!isNull(notChooseIds)) {
+			notChooseIds = notChooseIds.substring(1);
+		}
+		var url = "${basePath}core/selectForChoose.action?"
+				+ "selectAction=${basePath}core/userForChoose!userForChooseFrame.action?role.id=1$chooseType=2$notChooseIds="
+				+ notChooseIds;
+		ldDialog.open(url,"添加文档权限用户",
+				function(window) {
+					var items = window.returnValue;
+					if (items != undefined) {
+						var userIds = "";
+						for (var i = 0; i < items.length; i++) {
+							var user = items[i];
+							userIds = userIds + "," + user.id;
+						}
+						if (userIds != "") {
+							userIds = userIds.substring(1);
+						}
+
+						return true;
+					}
+				}, 1200, 600);
+	}
+
+	function deleteItems() {
+		var ids = getAllChose("delete");
+		if (ids == "") {
+			ldDialog.alert("请先选择要删除的项");
+			return;
+		}
+		var param = $("#deleteForm").serialize();
+		ldDialog.confirm("你确定要删除吗？", function() {
+			ldDialog.tips("删除成功");
+			/*$.ajax({
+				type : "POST",
+				url : "${basePath}coreAjax/roleUserSearch!deleteRoleUser.action?" + param,
+				dataType : "text",
+				success : function(result) {
+					var data = JSON.parse(result);
+					if (data.code == undefined || data.code == 1) {
+						ldDialog.tips("删除成功");
+						var curPageNum = $("input[name='pager.curPageNum']").val();
+						loadData(curPageNum);
+					} else {
+						ldDialog.alert(data.reason);
+					}
+					ldDialog.unmask();
+				},
+				error : function() {
+
+				}
+			});*/
+		});
+	}
+
+	function detailItem(id) {
+		ldDialog.openMini("${basePath}core/userSearch!getUserDetail.action?user.id="
+								+ id, "用户详情");
+	}
+
+	$(function(){
+
+
+//		loadData(1);
+	});
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist3">
+				<div class="toolbarL">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><ld:check mark="roleUserInsert">
+									<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+								</ld:check> <ld:check mark="roleUserDelete">
+									<input type="button" value="删除" class="ldBtnGray" onclick="deleteItems();" />
+								</ld:check></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="yhlist2">
+				<form name="deleteForm" method="post" id="deleteForm">
+					<table id="contentTable" width="100%" border="0" cellspacing="1" cellpadding="0" class="ld-datagrid">
+						<tr>
+							<th id="checkboxAllTh">
+								<input type="checkbox" name="deleteAll" class="ldCheckbox all" id="checkboxAll" />
+							</th>
+							<th id="showTypeTh">角色名称</th>
+							<th>登录名称</th>
+							<th>用户编码</th>
+							<th>用户全称</th>
+							<th>状态</th>
+							<th>编辑权限</th>
+							<th>阅读权限</th>
+							<th>操作</th>
+						</tr>
+						<tr>
+							<td><input type="checkbox" name="delete" class="ldCheckbox" value="1" /></td>
+							<td>接口录入员</td>
+							<td>test</td>
+							<td>test</td>
+							<td>录入员1</td>
+							<td>有效</td>
+							<td><input class="ldRightSwitch" type="checkbox" checked/></td>
+							<td><input class="ldRightSwitch" type="checkbox" checked/></td>
+							<td><input type='button' value='详情' class='ldBtnLink' onclick='detailItem(1);' style="cursor: pointer;" /></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" name="delete" class="ldCheckbox" value="2" /></td>
+							<td>接口录入员</td>
+							<td>test2</td>
+							<td>test2</td>
+							<td>录入员2</td>
+							<td>有效</td>
+							<td><input class="ldRightSwitch" type="checkbox"/></td>
+							<td><input class="ldRightSwitch" type="checkbox"/></td>
+							<td><input type='button' value='详情' class='ldBtnLink' onclick='detailItem(1);' style="cursor: pointer;" /></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarL">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><ld:check mark="roleUserInsert">
+									<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+								</ld:check> <ld:check mark="roleUserDelete">
+									<input type="submit" value="删除" class="ldBtnGray" onclick="deleteItems();" />
+								</ld:check></td>
+						</tr>
+					</table>
+				</div>
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

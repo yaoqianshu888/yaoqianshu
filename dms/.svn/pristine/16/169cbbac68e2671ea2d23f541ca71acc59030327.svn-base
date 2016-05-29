@@ -1,0 +1,14 @@
+package com.landicorp.dms.action.function;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class FunctionSearchAction extends BaseActionSupport{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public String searchFunction() {
+		return INPUT;
+	}
+}

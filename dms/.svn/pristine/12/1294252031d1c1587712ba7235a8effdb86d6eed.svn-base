@@ -1,0 +1,33 @@
+package com.landicorp.dms.dao;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Template;
+
+public interface ITemplateDao extends IMyBatisDao<Template, Integer> {
+	public List<Template> getAllTemplate(@Param("pager") Pager pager); //得到所有的模板
+	public Integer getAllTemplateCount();     //得到所有的模板数
+	
+	public List<Template> getTemplateListByTemplate(     //按条件得到模板
+			@Param("template") Template template,
+			@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime,
+			@Param("startModifyTime") Date startModifyTime,
+			@Param("endModifyTime") Date endModifyTime,
+			@Param("pager") Pager pager);
+		
+	public int getTemplateCountByTemplate(@Param("template") Template template,  //按条件得到模板数
+			@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime,
+			@Param("startModifyTime") Date startModifyTime,
+			@Param("endModifyTime") Date endModifyTime);
+	
+	public List<Template> getAll();
+	public String getTemplateName(Template template);
+	public void deleteById(int id);  //根据id删除节点
+}

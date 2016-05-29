@@ -1,0 +1,35 @@
+package com.landicorp.dms.dao;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.entities.Template;
+
+public interface INodeDao extends IMyBatisDao<Node, Integer> {
+	public List<Node> getAllNode(@Param("pager") Pager pager); //得到所有的节点
+	public Integer getAllNodeCount();     //得到所有的节点数
+	
+	public List<Node> getNodeListByNode(     //按条件得到节点
+			@Param("node") Node node,
+			@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime,
+			@Param("pager") Pager pager);
+		
+	public int getNodeCountByNode(@Param("node") Node node,  //按条件得到节点数
+			@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime);
+	
+	public List<Node> getAllNodeByPid(int id);  //通过父节点得到所有的子节点
+	public Integer getMaxId();   //得到最大的节点编号
+	public void deleteById(int id);  //根据id删除节点
+	public void saveIncludeId(Node node); //增加节点包含节点id
+	public void deleteByTemplateId(int id);   //根据模板id删除节点
+	public List<Node> getTemplateByTid(int id);  //根据模板id和节点类型得到节点
+	public List<Node> getAllNodesByTid(int id);  //通过模板id和是否已配置 获取所有的节点 
+	public Integer getCircleTypeById(int id);  //通过节点id得到相应的循环类型
+}

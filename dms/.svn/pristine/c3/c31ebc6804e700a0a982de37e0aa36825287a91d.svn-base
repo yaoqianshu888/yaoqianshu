@@ -1,0 +1,222 @@
+package com.landicorp.dms.action.template;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.INodeService;
+import com.landicorp.dms.service.ITemplateService;
+
+public class DocumentTemplateInsertAction extends BaseActionSupport {
+	private Template template;
+	private ITemplateService templateService;
+	private List<Node> nodeList;
+	private INodeService nodeService;
+	
+	
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+	public Template getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+
+	public ITemplateService getTemplateService() {
+		return templateService;
+	}
+
+	public void setTemplateService(ITemplateService templateService) {
+		this.templateService = templateService;
+	}
+
+	public String insertDocumentTemplate() {
+		template=templateService.getById(template.getId());
+		return INPUT;
+	}
+	
+	public void getAllNodesByTid() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		nodeList=nodeService.getAllNodesByTid(template.getId());
+		template=templateService.getById(template.getId());
+		StringBuffer sb=new StringBuffer("[");
+		sb.append("{\"id\":\"-1\",\"pId\":\""+""+"\",\"name\":\""+template.getTempletName()+"\",\"drop\":\"false\",\"drag\":\"false\",\"open\":\"true\",\"type\":\"(模板名称)\"},");
+		
+		for(int i=0;i<nodeList.size();i++){
+			if(nodeList.get(i).getNodeFormat()==0){  //为普通节点时
+				List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+				//-1为每个模板的节点id
+				for(int j=0;j<nodes.size();j++){
+						if(nodes.get(j).getUpNode()==null){
+							sb.append("{\"id\":\""+nodes.get(j).getId()+"\",\"pId\":\"-1\",\"name\":\""+nodes.get(j).getTitle()+"\",\"drop\":false,\"drag\":\"false\",\"open\":\"true\",\"type\":\"("+nodes.get(j).getNodeName()+")\"},");
+						}else{
+							sb.append("{\"id\":\""+nodes.get(j).getId()+"\",\"pId\":\""+nodes.get(j).getUpNode().getId()+"\",\"name\":\""+nodes.get(j).getTitle()+"\",\"drop\":false,\"drag\":false,\"open\":true,\"type\":\"("+nodes.get(j).getNodeName()+")\"},");
+						}
+				}
+			}else{//为基本节点时
+				List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+				//-1为每个模板的节点id
+				for(int j=0;j<nodes.size();j++){
+						if(nodes.get(j).getUpNode()==null){
+							sb.append("{\"id\":\""+nodes.get(j).getId()+"\",\"pId\":\"-1\",\"name\":\""+nodes.get(j).getTitle()+"\",\"drop\":true,\"drag\":true,\"open\":\"true\",\"type\":\"("+nodes.get(j).getNodeName()+")\"},");
+						}else{
+							sb.append("{\"id\":\""+nodes.get(j).getId()+"\",\"pId\":\""+nodes.get(j).getUpNode().getId()+"\",\"name\":\""+nodes.get(j).getTitle()+"\",\"drop\":true,\"drag\":true,\"open\":true,\"type\":\"("+nodes.get(j).getNodeName()+")\"},");
+						}
+				}
+			}
+			
+		}
+		
+		
+		if(sb.length()>1){
+			sb.deleteCharAt(sb.length()-1);
+		}
+		sb.append("]");
+		
+		response.getWriter().write(sb.toString());
+	}
+	
+	public void copyTree() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String CopyId=request.getParameter("CopyId");
+		List<Node> nodes=nodeService.getAllNodeByPid(Integer.valueOf(CopyId));
+		
+		StringBuffer sb=new StringBuffer("[");
+		Integer max=Integer.valueOf(request.getParameter("newCount"));
+		if(max==null){
+			max=0;
+		}
+		
+		for(int i=0;i<nodes.size();i++){
+				if(nodes.get(i).getUpNode()==null){
+					sb.append("{\"id\":\""+(nodes.get(i).getId()+max)+"\",\"pId\":\""+""+"\",\"name\":\""+nodes.get(i).getTitle()+"\",\"drop\":false,\"drag\":\"false\",\"open\":\"true\",\"type\":\"("+nodes.get(i).getNodeName()+")\"},");
+				}else{
+					sb.append("{\"id\":\""+(nodes.get(i).getId()+max)+"\",\"pId\":\""+(nodes.get(i).getUpNode().getId()+max)+"\",\"name\":\""+nodes.get(i).getTitle()+"\",\"drop\":false,\"drag\":false,\"open\":true,\"type\":\"("+nodes.get(i).getNodeName()+")\"},");
+				}
+			
+		}
+		if(sb.length()>1){
+			sb.deleteCharAt(sb.length()-1);
+		}
+		sb.append("]");
+		response.getWriter().write(sb.toString());
+		
+	}
+	
+	public void getAllNodesByPid() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String BPd=request.getParameter("BPd");
+		nodeList=nodeService.getAllNodeByPid(Integer.valueOf(BPd));
+		StringBuffer sb=new StringBuffer("[");
+		
+		for(int i=0;i<nodeList.size();i++){
+				if(nodeList.get(i).getUpNode()==null){
+					sb.append("{\"id\":\""+nodeList.get(i).getId()+"\",\"pId\":\""+""+"\",\"name\":\""+nodeList.get(i).getTitle()+"\",\"drop\":false,\"drag\":\"false\",\"open\":\"true\",\"type\":\"("+nodeList.get(i).getNodeName()+")\"},");
+				}else{
+					sb.append("{\"id\":\""+nodeList.get(i).getId()+"\",\"pId\":\""+nodeList.get(i).getUpNode().getId()+"\",\"name\":\""+nodeList.get(i).getTitle()+"\",\"drop\":false,\"drag\":false,\"open\":\"true\",\"type\":\"("+nodeList.get(i).getNodeName()+")\"},");
+				}
+			
+		}
+		if(sb.length()>1){
+			sb.deleteCharAt(sb.length()-1);
+		}
+		sb.append("]");
+		
+		response.getWriter().write(sb.toString());
+	}
+	
+	public void setConfig() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		
+		String reStr=request.getParameter("jsonString");
+		String deleteIds=request.getParameter("deleteIds");
+		
+		String split1[]=reStr.split("★");
+		
+		for(int i=1;i<split1.length;i++){
+			String split2[]=split1[i].split("☆");
+			Node nodeCopy=new Node();
+			nodeCopy.setId(Integer.valueOf(split2[0]));
+			
+			if(split2[1].equals("-1")){   //父节点为根节点时
+				nodeCopy.setIsConfigure(1);
+				nodeCopy.setTemplate(template);
+			}else {
+				nodeCopy.setUpNode(nodeService.getById(Integer.valueOf(split2[1])));
+			}
+			nodeCopy.setTitle(split2[2]);
+			nodeCopy.setNodeName(split2[3].substring(1,split2[3].length()-1));
+			nodeCopy.setSort(i);
+			
+			if(nodeService.getById(nodeCopy.getId())==null){
+				
+				if(nodeCopy.getNodeName().equals("标题节点")){
+					nodeCopy.setNodeFormat(1);
+				}else if(nodeCopy.getNodeName().equals("文本节点")){
+					nodeCopy.setNodeFormat(2);
+				}else if(nodeCopy.getNodeName().equals("图文节点")){
+					nodeCopy.setNodeFormat(3);
+				}else if(nodeCopy.getNodeName().equals("请求参数节点")){
+					nodeCopy.setNodeFormat(4);
+				}else if(nodeCopy.getNodeName().equals("返回参数节点")){
+					nodeCopy.setNodeFormat(5);
+				}else if(nodeCopy.getNodeName().equals("请求报文节点")){
+					nodeCopy.setNodeFormat(6);
+				}else if(nodeCopy.getNodeName().equals("返回报文节点")){
+					nodeCopy.setNodeFormat(7);
+				}else {
+					nodeCopy.setNodeFormat(0);
+					nodeCopy.setIsCopy(1);
+				}
+				nodeService.saveIncludeId(nodeCopy);
+			}else{
+				nodeService.update(nodeCopy);
+			}
+			
+		}
+		
+		//删除节点
+		if(deleteIds.length()>1){
+			deleteIds=deleteIds.substring(0, deleteIds.length()-1);
+			String ids[]=deleteIds.split(",");
+			for(int i=0;i<ids.length;i++){
+				Node node1=new Node();
+				node1.setId(Integer.valueOf(ids[i]));
+				node1.setIsConfigure(0);
+				nodeService.update(node1);
+			}
+		}
+		
+	}
+
+}

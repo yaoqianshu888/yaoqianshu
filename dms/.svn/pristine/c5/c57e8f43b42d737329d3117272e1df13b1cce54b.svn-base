@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.node;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class NodeSearchAction extends BaseActionSupport {
+
+	public String searchNode(){
+		return "node";
+	}
+}

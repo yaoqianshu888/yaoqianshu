@@ -1,0 +1,329 @@
+package com.landicorp.dms.action.functionVersion;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.BasicNodeCont;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.service.IBasicNodeContService;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IFunctionService;
+import com.landicorp.dms.service.INodeService;
+import com.landicorp.dms.util.LCSrting;
+
+public class FunctionVersionCompareAction extends BaseActionSupport {
+	private String compare;
+	private Document document;
+	private IDocumentService documentService;
+	private Function functionA;
+	private Function functionB;
+	private IFunctionService functionService;
+	private List<Node> nodeList;
+	private List<List<Node>> nodeLists;
+	private INodeService nodeService;
+	private Map<Integer, String> mapA;
+	private IBasicNodeContService basicNodeContService;
+	private Map<Integer, String> mapB;
+	
+
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	public List<List<Node>> getNodeLists() {
+		return nodeLists;
+	}
+
+	public void setNodeLists(List<List<Node>> nodeLists) {
+		this.nodeLists = nodeLists;
+	}
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+	public Map<Integer, String> getMapA() {
+		return mapA;
+	}
+
+	public void setMapA(Map<Integer, String> mapA) {
+		this.mapA = mapA;
+	}
+
+	public IBasicNodeContService getBasicNodeContService() {
+		return basicNodeContService;
+	}
+
+	public void setBasicNodeContService(IBasicNodeContService basicNodeContService) {
+		this.basicNodeContService = basicNodeContService;
+	}
+
+	public Map<Integer, String> getMapB() {
+		return mapB;
+	}
+
+	public void setMapB(Map<Integer, String> mapB) {
+		this.mapB = mapB;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+	public Function getFunctionA() {
+		return functionA;
+	}
+
+	public void setFunctionA(Function functionA) {
+		this.functionA = functionA;
+	}
+
+	public Function getFunctionB() {
+		return functionB;
+	}
+
+	public void setFunctionB(Function functionB) {
+		this.functionB = functionB;
+	}
+
+	public IFunctionService getFunctionService() {
+		return functionService;
+	}
+
+	public void setFunctionService(IFunctionService functionService) {
+		this.functionService = functionService;
+	}
+
+	public String getCompare() {
+		return compare;
+	}
+
+	public void setCompare(String compare) {
+		this.compare = compare;
+	}
+
+
+	public String compareFuncionVersion(){
+		String[] ids=compare.split(",");//得到对比id
+		functionA=functionService.getById(Integer.valueOf(ids[0]));
+		functionB=functionService.getById(Integer.valueOf(ids[1]));
+		
+		document=documentService.getById(document.getId());
+		if(document!=null && document.getTemplate()!=null){
+			List<Node> rootNodes=nodeService.getAllNodesByTidAndType1(document.getTemplate().getId());
+			Node firstNode=new Node();
+			if(rootNodes.size()>0){
+				firstNode=rootNodes.get(0);
+				nodeList=nodeService.getAllFirstNodeByPid(firstNode.getId());
+				nodeLists=new ArrayList<List<Node>>();
+				for(int i=0;i<nodeList.size();i++){
+					List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+					nodes.get(0).setTitleNo((i+1)+"");
+					for(int j=0;j<nodes.size();j++){
+						int c=1;
+						for(int k=1;k<nodes.size();k++){
+							if(nodes.get(k).getUpNode().getId().equals(nodes.get(j).getId())){
+								nodes.get(k).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+								c++;
+							}
+						}
+					}
+					
+					nodeLists.add(nodes);
+				}
+			}
+			//内容传值
+			mapA=new HashMap<Integer, String>();
+			mapB=new HashMap<Integer, String>();
+			List<BasicNodeCont> basicNodeContListA=basicNodeContService.getByDocumentIdAndFunctionId(functionA.getDocument().getId(),functionA.getId());
+			List<BasicNodeCont> basicNodeContListB=basicNodeContService.getByDocumentIdAndFunctionId(functionB.getDocument().getId(),functionB.getId());
+			
+			for(int a=0;a<basicNodeContListA.size();a++){
+				if(basicNodeContListA.get(a).getNode().getNodeFormat()==3){//对图片添加框
+					basicNodeContListA.get(a).setContent(basicNodeContListA.get(a).getContent().replaceAll("&lt;img", "&lt;img style='border:2px solid red' "));
+				}
+				if(basicNodeContListB.get(a).getNode().getNodeFormat()==3){//对图片添加框
+					basicNodeContListB.get(a).setContent(basicNodeContListB.get(a).getContent().replaceAll("&lt;img", "&lt;img style='border:2px solid red' "));
+				}
+			}
+			
+			for(int i=0;i<basicNodeContListA.size();i++){
+				for(int j=0;j<basicNodeContListB.size();j++){
+					if(basicNodeContListB.get(j).getNode().getId()==basicNodeContListA.get(i).getNode().getId()&&(basicNodeContListB.get(j).getNode().getNodeFormat()==3 ||basicNodeContListB.get(j).getNode().getNodeFormat()==2)){
+						List<String> allLCstr=new ArrayList<String>();
+						String temp=basicNodeContListA.get(i).getContent();
+						int length=10000;   //初始化长度
+						while(true){
+							String LCstr[]=LCSrting.getLCString(temp.toCharArray(),basicNodeContListB.get(j).getContent().toCharArray());
+							if(LCstr.length==0){
+								break;
+							}
+							length=LCstr[0].length();
+							if(length<5){    //当匹配长度小于5时退出匹配
+								break;
+							}
+							for(int b=0;b<LCstr.length;b++){
+								allLCstr.add(LCstr[b]);
+								temp=temp.replace(LCstr[b], " ");
+							}
+							
+						}
+						
+						for(int k=0;k<allLCstr.size();k++){
+							if(LCSrting.countStr(allLCstr.get(k),"&lt;img")==LCSrting.countStr(allLCstr.get(k),"/&gt")){
+								
+								String str1=allLCstr.get(k).replaceAll("style='border:2px solid red'", "style=''");
+								
+								if(LCSrting.countStr(allLCstr.get(k),"&lt;img")==0){
+									basicNodeContListA.get(i).setContent(basicNodeContListA.get(i).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+								}else {
+									str1=str1.replaceAll("&lt;img", "</font>&lt;img");
+									basicNodeContListA.get(i).setContent(basicNodeContListA.get(i).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1 ));
+								}
+							}else if(LCSrting.countStr(allLCstr.get(k),"&lt;img")>LCSrting.countStr(allLCstr.get(k),"/&gt")){  //图片被修改
+								
+								String tempCon=allLCstr.get(k).substring(0,allLCstr.get(k).lastIndexOf("&lt;img"));
+								String str2=tempCon.replaceAll("style='border:2px solid red'", "style=''");
+								//System.out.println(str2);
+								//System.out.println(tempCon);
+								if(!tempCon.trim().equals("")){
+									basicNodeContListA.get(i).setContent(basicNodeContListA.get(i).getContent().replace(tempCon,"<font color='black'>"+str2+"</font>" ));
+								}
+								
+								
+							}
+							
+						}
+						
+						for(int k=0;k<allLCstr.size();k++){
+							
+							if(LCSrting.countStr(allLCstr.get(k),"&lt;img")==LCSrting.countStr(allLCstr.get(k),"/&gt")){
+								String str1=allLCstr.get(k).replaceAll("style='border:2px solid red'", "style=''");
+								if(LCSrting.countStr(allLCstr.get(k),"&lt;img")==0){
+									basicNodeContListB.get(j).setContent(basicNodeContListB.get(j).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+								}else {
+									str1=str1.replaceAll("&lt;img", "</font>&lt;img");
+									basicNodeContListB.get(j).setContent(basicNodeContListB.get(j).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1 ));
+								}
+							}else if(LCSrting.countStr(allLCstr.get(k),"&lt;img")>LCSrting.countStr(allLCstr.get(k),"/&gt")){
+								String tempCon=allLCstr.get(k).substring(0,allLCstr.get(k).lastIndexOf("&lt;img"));
+								String str2=tempCon.replaceAll("style='border:2px solid red'", "style=''");
+								if(!tempCon.trim().equals("")){
+									basicNodeContListB.get(j).setContent(basicNodeContListB.get(j).getContent().replace(tempCon,"<font color='black'>"+str2+"</font>" ));
+								}
+							}	
+						}
+					}else if(basicNodeContListB.get(j).getNode().getId()==basicNodeContListA.get(i).getNode().getId()&& (basicNodeContListB.get(j).getNode().getNodeFormat()==4 || basicNodeContListB.get(j).getNode().getNodeFormat()==5)){  //请求参数节点时
+						List<String> allLCstr=new ArrayList<String>();
+						String temp=basicNodeContListA.get(i).getContent();
+						int length=10000;   //初始化长度
+						while(true){
+							String LCstr[]=LCSrting.getLCString(temp.toCharArray(),basicNodeContListB.get(j).getContent().toCharArray());
+							if(LCstr.length==0){
+								break;
+							}
+							length=LCstr[0].length();
+							if(length<5){    //当匹配长度小于5时退出匹配
+								break;
+							}
+							for(int b=0;b<LCstr.length;b++){
+								allLCstr.add(LCstr[b]);
+								temp=temp.replace(LCstr[b], " ");
+							}
+							
+						}
+						
+						for(int k=0;k<allLCstr.size();k++){
+							String str1=allLCstr.get(k);
+							str1=str1.replaceAll("★", "</font>★<font color='black'>");
+							str1=str1.replaceAll("☆", "</font>☆<font color='black'>");
+							basicNodeContListA.get(i).setContent(basicNodeContListA.get(i).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+						}
+						
+						for(int k=0;k<allLCstr.size();k++){
+							String str1=allLCstr.get(k);
+							str1=str1.replaceAll("★", "</font>★<font color='black'>");
+							str1=str1.replaceAll("☆", "</font>☆<font color='black'>");
+							basicNodeContListB.get(j).setContent(basicNodeContListB.get(j).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+						}
+						
+					}else if(basicNodeContListB.get(j).getNode().getId()==basicNodeContListA.get(i).getNode().getId()&& (basicNodeContListB.get(j).getNode().getNodeFormat()==6 || basicNodeContListB.get(j).getNode().getNodeFormat()==7)){//请求报文节点时
+						List<String> allLCstr=new ArrayList<String>();
+						String temp=basicNodeContListA.get(i).getContent();
+						int length=10000;   //初始化长度
+						while(true){
+							String LCstr[]=LCSrting.getLCString(temp.toCharArray(),basicNodeContListB.get(j).getContent().toCharArray());
+							if(LCstr.length==0){
+								break;
+							}
+							length=LCstr[0].length();
+							if(length<4){    //当匹配长度小于4时退出匹配
+								break;
+							}
+							for(int b=0;b<LCstr.length;b++){
+								allLCstr.add(LCstr[b]);
+								temp=temp.replace(LCstr[b], " ");
+							}
+							
+						}
+						
+						for(int k=0;k<allLCstr.size();k++){
+							String str1=allLCstr.get(k);
+							str1=str1.replaceAll("★", "</font>★<font color='black'>");
+							basicNodeContListA.get(i).setContent(basicNodeContListA.get(i).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+						}
+						for(int k=0;k<allLCstr.size();k++){
+							String str1=allLCstr.get(k);
+							str1=str1.replaceAll("★", "</font>★<font color='black'>");
+							basicNodeContListB.get(j).setContent(basicNodeContListB.get(j).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+						}
+					}
+				}
+				
+			}
+			
+			for(int a=0;a<basicNodeContListA.size();a++){
+				if(basicNodeContListA.get(a).getNode().getNodeFormat()==3){//对字符串进行反转义
+					basicNodeContListA.get(a).setContent(basicNodeContListA.get(a).getContent().replaceAll("&lt;", "<"));
+					basicNodeContListA.get(a).setContent(basicNodeContListA.get(a).getContent().replaceAll("&quot;", "\""));
+					basicNodeContListA.get(a).setContent(basicNodeContListA.get(a).getContent().replaceAll("&gt;", ">"));
+				}
+				if(basicNodeContListB.get(a).getNode().getNodeFormat()==3){//对字符串进行反转义
+					basicNodeContListB.get(a).setContent(basicNodeContListB.get(a).getContent().replaceAll("&lt;", "<"));
+					basicNodeContListB.get(a).setContent(basicNodeContListB.get(a).getContent().replaceAll("&quot;", "\""));
+					basicNodeContListB.get(a).setContent(basicNodeContListB.get(a).getContent().replaceAll("&gt;", ">"));
+				}
+				mapA.put(basicNodeContListA.get(a).getNode().getId(), basicNodeContListA.get(a).getContent());
+				mapB.put(basicNodeContListB.get(a).getNode().getId(), basicNodeContListB.get(a).getContent());
+			}
+		}
+		
+		
+		return "compare";
+	}
+}

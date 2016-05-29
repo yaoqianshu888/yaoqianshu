@@ -1,0 +1,12 @@
+package com.landicorp.dms.service;
+
+import java.util.List;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.dms.entities.BasicNodeCont;
+
+public interface IBasicNodeContService extends
+		IBaseService<BasicNodeCont, Integer> {
+	public List<BasicNodeCont> getByDocumentId(Integer id); //通过文档id得到内容节点
+	public void updateContent(BasicNodeCont basicNodeCont);   //根据文档id和节点id更新数据
+}

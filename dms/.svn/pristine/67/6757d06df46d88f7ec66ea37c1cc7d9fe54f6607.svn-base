@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.template;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class TemplateDetailAction extends BaseActionSupport {
+
+	public String detailTemplate(){
+		return "detail";
+	}
+}

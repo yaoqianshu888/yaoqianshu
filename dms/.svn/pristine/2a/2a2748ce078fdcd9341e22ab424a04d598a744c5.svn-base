@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IBasicNodeContDao">
+	<resultMap type="basicNodeCont" id="basicNodeCont">
+		<result property="id" column="ID"/>
+		<result property="node.id" column="NODE_ID" />
+		<result property="function.id" column="FUNCTION_ID" />
+		<result property="document.id" column="DOCUMENT_ID" />
+		<result property="content" column="CONTENT" />
+	</resultMap>
+
+	<sql id="keyColumns">NODE_ID,FUNCTION_ID,DOCUMENT_ID,CONTENT
+	</sql>
+	<sql id="valueColumns">
+		#{node.id,jdbcType=NUMERIC},
+		#{function.id,jdbcType=NUMERIC},
+		#{document.id,jdbcType=NUMERIC},
+		#{content,jdbcType=LONGVARCHAR}
+	</sql>
+	
+	<insert id="save" parameterType="basicNodeCont">
+
+		insert into t_dms_basic_node_cont(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	<update id="update" parameterType="basicNodeCont">
+		update t_dms_basic_node_cont
+		<set>
+			<if test="node!=null and node.id!=null">NODE_ID=#{node.id},</if>
+			<if test="function!=null and function.id!=null">FUNCTION_ID=#{function.id},</if>
+			<if test="document!=null and document.id!=null">DOCUMENT_ID=#{document.id},</if>
+			<if test="content!=null">CONTENT=#{content}</if>
+		</set>
+		where id=#{id}
+	</update>
+	<update id="updateContent" parameterType="basicNodeCont">
+		update t_dms_basic_node_cont
+		<set>
+			<if test="content!=null">CONTENT=#{content}</if>
+		</set>
+		where NODE_ID=#{node.id} and DOCUMENT_ID=#{document.id}
+	</update>
+	
+	
+	<select id="getById" parameterType="int" resultMap="basicNodeCont">
+		select *
+		from
+		t_dms_basic_node_cont
+		where id=#{id}
+	</select>
+	<delete id="delete" parameterType="int">
+		delete from t_dms_basic_node_cont where
+		id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 通过文档id得到内容 -->
+	<select id="getByDocumentId" parameterType="int" resultMap="basicNodeCont">
+		select *
+		from
+		t_dms_basic_node_cont
+		where DOCUMENT_ID=#{id}
+	</select>
+	
+</mapper>

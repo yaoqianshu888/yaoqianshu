@@ -1,0 +1,218 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+  <script type="text/javascript">
+
+    function addItem() {
+		ldDialog.openMini("${basePath}dms/templateInsert!prepare.action",
+			"模板新增", 
+			function(window) {
+		});
+	}
+
+    function editItem(){
+      ldDialog.openMini("${basePath}dms/templateUpdate!prepare.action",
+              "模板编辑",
+              function(window) {
+              });
+    }
+
+    function addDocumentItem() {
+      ldDialog.openLarge("${basePath}dms/documentTemplateInsert!insertDocumentTemplate.action",
+              "配置文档模板",
+              function(window) {
+              });
+    }
+
+    function addFunctionItem() {
+		ldDialog.openFullScreen("${basePath}dms/templateInsert!insertFunctionTemplate.action",
+			"配置功能点模板", 
+			function(window) {
+		});
+	}
+
+	function detailItem(){
+		ldDialog.openLarge("${basePath}dms/templateDetail!detailTemplate.action",
+			"模板查看", 
+			function(window) {
+		});
+	}
+    function deleteItem() {
+      ldDialog.confirm("确定删除该模板？", function () {
+        ldDialog.tips("删除成功！");
+      })
+    }
+
+  </script>
+</head>
+<body>
+<div id="rightcontent">
+  <div id="rightcontent1">
+    <div class="yhlist">
+      <form id="searchForm" method="post">
+        <div class="conditionsbox">
+          <div id="conditionsbox">
+            <div class="yhlist1">
+              <div class="yhlist1L">查询条件</div>
+            </div>
+            <div class="yhlist2">
+              <div class="conditionsrow">
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">模板名称：</div>
+                  <div class="conditionsitemR">
+                    <input name="user.userAlias" class="ldText input138" id="user.userAlias" value="${user.userAlias}" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">创建人：</div>
+                  <div class="conditionsitemR">
+                    <input name="user.userNum" class="ldText input138" id="user.userNum" value="${user.userNum}" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">&nbsp;&nbsp;创建时间（起）：</div>
+                  <div class="conditionsitemR">
+                    <input name="startDate" type="text" id="startDate"
+                           class="ldDateTime input138"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+                           value="<f:formatDate value="${startDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">&nbsp;&nbsp;创建时间（止）：</div>
+                  <div class="conditionsitemR">
+                    <input name="endDate" type="text" id="endDate"
+                           class="ldDateTime input138"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+                           value="<f:formatDate value="${endDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+                  </div>
+                </div>
+              </div>
+              <div class="conditionsrow">
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">状态：</div>
+                  <div class="conditionsitemR">
+                    <ld:select groupName="availableAll" name="status"
+                               value="${status}" className="ldSelect select144" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">最后修改人：</div>
+                  <div class="conditionsitemR">
+                    <input name="user.userNum" class="ldText input138" id="user.userNum" value="${user.userNum}" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">最后修改时间（起）：</div>
+                  <div class="conditionsitemR">
+                    <input name="startDate" type="text" id="startDate"
+                           class="ldDateTime input138"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+                           value="<f:formatDate value="${startDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+                  </div>
+                </div>
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">最后修改时间（止）：</div>
+                  <div class="conditionsitemR">
+                    <input name="endDate" type="text" id="endDate"
+                           class="ldDateTime input138"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+                           value="<f:formatDate value="${endDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+                  </div>
+                </div>
+              </div>
+             <%-- <div class="conditionsrow">
+                <div class="conditionsitem">
+                  <div class="conditionsitemL">类型：</div>
+                  <div class="conditionsitemR">
+                    <select class="ldSelect select144">
+                      <option>接口文档模板</option>
+                      <option>需求文档模板</option>
+                      <option>概要设计文档模板</option>
+                    </select>
+                  </div>
+                </div>
+              </div>--%>
+            </div>
+          </div>
+        </div>
+        <div class="yhlist3">
+          <div class="toolbarL">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                  <input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="toolbarR">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><input id="searchBtn" type="button" class="ldBtnBlue" value="查询"/></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="yhlist2">
+      <table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+        <tr>
+          <th>序号</th>
+          <th>模板名称</th>
+          <%--<th>模板类型</th>--%>
+          <th>状态</th>
+          <th>创建人</th>
+          <th>创建时间</th>
+          <th>最后修改人</th>
+          <th>最后修改时间</th>
+          <th>操作</th>
+        </tr>
+        <tr>
+          <td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="${item.id}" /></td>
+          <td>接口文档模板</td>
+          <%--<td>接口文档模板</td>--%>
+          <td><input type="checkbox" class="ldSwitch" checked/></td>
+          <td>管理员</td>
+          <td>2015-08-18 09:40:02</td>
+          <td>管理员</td>
+          <td>2015-08-18 09:40:02</td>
+          <td>
+              <input type='button' value='配置文档模板' class='ldBtnLink' onclick='addDocumentItem()' style="cursor: pointer;" />&nbsp;
+          <!--  <input type='button' value='配置功能点模板' class='ldBtnLink' onclick='addFunctionItem()' style="cursor: pointer;" />&nbsp; -->
+            <input type='button' value='预览' class='ldBtnLink' onclick='detailItem();' style="cursor: pointer;" />&nbsp;
+            <input type='button' value='编辑' class='ldBtnLink' onclick='editItem();' style="cursor: pointer;" />&nbsp;
+            <input type='button' value='删除' class='ldBtnLink' onclick='deleteItem();' style="cursor: pointer;" />
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="yhlist3">
+      <div class="toolbarL">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <div class="toolbarR">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>
+              <div class="ldPager">
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

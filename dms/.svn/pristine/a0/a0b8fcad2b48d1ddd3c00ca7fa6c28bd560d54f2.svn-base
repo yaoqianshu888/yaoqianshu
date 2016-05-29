@@ -1,0 +1,124 @@
+package com.landicorp.dms.action.project;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IProjectDocService;
+
+public class DmsProjectSearchAction extends BaseActionSupport {
+	
+	private static final long serialVersionUID = 1L;
+	private ProjectDoc projectDoc;
+	private List<ProjectDoc> projectDocList;
+	private IProjectDocService projectDocService;
+	private Date startCreateTime;
+	private Date endCreateTime;
+	
+	
+	
+
+
+	public String searchAllProject() {
+		projectDoc=null;
+		startCreateTime = null;
+		endCreateTime = null;
+		projectDocList=projectDocService.getAllProject(getPager());
+		return SUCCESS;
+	}
+	
+	public String getProjectListByProject(){
+		System.out.println(projectDoc.getAvailable());
+		projectDocList=projectDocService.getProjectListByProject(projectDoc, startCreateTime, endCreateTime, getPager());
+		
+		return SUCCESS;
+	}
+	
+	
+
+	//得到所有项目
+	public void getAllProjectDoc() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		projectDocList=projectDocService.getAll();
+		StringBuffer sb=new StringBuffer("[");
+		
+		for(int i=0;i<projectDocList.size();i++){
+			sb.append("{\"id\":\""+projectDocList.get(i).getId()+"\",\"projectName\":\""+projectDocList.get(i).getProjectName()+"\"},");
+		}
+		if(sb.length()>1){
+			sb.deleteCharAt(sb.length()-1);
+		}
+		sb.append("]");
+		//System.out.println(sb.toString());
+		response.getWriter().write(sb.toString());
+		
+	}
+	
+	//改变项目的状态
+	public String setAvailable(){
+		ProjectDoc statue=projectDocService.getById(projectDoc.getId());
+		statue.setAvailable(1 - statue.getAvailable());
+		statue.setLastModifier(getSessionUser());
+		statue.setLastModifyTime(new Date());
+		projectDocService.update(statue);
+		projectDocList=projectDocService.getProjectListByProject(projectDoc, startCreateTime, endCreateTime, getPager());
+		return SUCCESS;
+	}
+	
+	public String detail(){
+		projectDoc=projectDocService.getById(projectDoc.getId());
+		return "detail";
+	}
+	public ProjectDoc getProjectDoc() {
+		return projectDoc;
+	}
+
+	public Date getStartCreateTime() {
+		return startCreateTime;
+	}
+
+	public void setStartCreateTime(Date startCreateTime) {
+		this.startCreateTime = startCreateTime;
+	}
+
+	public Date getEndCreateTime() {
+		return endCreateTime;
+	}
+
+	public void setEndCreateTime(Date endCreateTime) {
+		this.endCreateTime = endCreateTime;
+	}
+
+	public void setProjectDoc(ProjectDoc projectDoc) {
+		this.projectDoc = projectDoc;
+	}
+
+	public IProjectDocService getProjectDocService() {
+		return projectDocService;
+	}
+
+	public void setProjectDocService(IProjectDocService projectDocService) {
+		this.projectDocService = projectDocService;
+	}
+
+	
+
+	public List<ProjectDoc> getProjectDocList() {
+		return projectDocList;
+	}
+
+	public void setProjectDocList(List<ProjectDoc> projectDocList) {
+		this.projectDocList = projectDocList;
+	}
+
+	
+
+}

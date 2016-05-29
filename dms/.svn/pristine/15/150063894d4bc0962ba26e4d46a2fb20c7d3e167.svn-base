@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.documentVersion;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class DocumentVersionMenuAction extends BaseActionSupport {
+
+	public String getDocumentVersionMenu(){
+		return "menu";
+	}
+}

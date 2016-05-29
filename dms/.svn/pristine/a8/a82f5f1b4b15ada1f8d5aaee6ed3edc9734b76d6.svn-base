@@ -1,0 +1,155 @@
+package com.landicorp.dms.action.document;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.DocumentView;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IProjectDocService;
+
+public class DocumentViewAction extends BaseActionSupport {
+	private Document document;
+	private List<Document> documentList;
+	private Date startCreateTime;
+	private Date endCreateTime;
+	private IDocumentService documentService;
+	private List<DocumentView> documentViewList;
+	private IProjectDocService projectDocService;
+	private ProjectDoc project;
+	
+	public ProjectDoc getProject() {
+		return project;
+	}
+
+	public void setProject(ProjectDoc project) {
+		this.project = project;
+	}
+
+	public List<DocumentView> getDocumentViewList() {
+		return documentViewList;
+	}
+
+	public void setDocumentViewList(List<DocumentView> documentViewList) {
+		this.documentViewList = documentViewList;
+	}
+
+	public IProjectDocService getprojectDocService() {
+		return projectDocService;
+	}
+
+	public void setprojectDocService(IProjectDocService projectDocService) {
+		this.projectDocService = projectDocService;
+	}
+
+	public Date getStartCreateTime() {
+		return startCreateTime;
+	}
+
+	public void setStartCreateTime(Date startCreateTime) {
+		this.startCreateTime = startCreateTime;
+	}
+
+	public Date getEndCreateTime() {
+		return endCreateTime;
+	}
+
+	public void setEndCreateTime(Date endCreateTime) {
+		this.endCreateTime = endCreateTime;
+	}
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+	public List<Document> getDocumentList() {
+		return documentList;
+	}
+
+	public void setDocumentList(List<Document> documentList) {
+		this.documentList = documentList;
+	}
+	
+	//得到所有有效的文档
+	public String getAllDocumentAila() {
+		//清空之前的查询信息
+		documentViewList=new ArrayList<DocumentView>();
+		document = null;
+		startCreateTime = null;
+		endCreateTime = null;
+		documentList = documentService.getAllDocumentAila(getPager());
+		for(int i=0;i<documentList.size();i++){
+			DocumentView documentView=new DocumentView();
+			project=projectDocService.getById(documentList.get(i).getProject().getId());
+			documentView.setId(documentList.get(i).getId());
+			documentView.setNo(documentList.get(i).getNo());
+			documentView.setVersionId(documentList.get(i).getVersionId());
+			documentView.setDocumentName(documentList.get(i).getDocumentName());
+			documentView.setDocType(documentList.get(i).getDocType());
+			documentView.setAvailable(documentList.get(i).getAvailable());
+			documentView.setProjectName(project.getProjectName());
+			documentView.setCreator(documentList.get(i).getCreator().getUserName());
+			documentView.setCreateTime(documentList.get(i).getCreateTime());
+			documentView.setUrlPath(documentList.get(i).getUrlPath());
+			documentView.setMemo(documentList.get(i).getMemo());
+			//所属模板未添加
+			documentView.setLastModifyTime(documentList.get(i).getLastModifyTime());
+			documentView.setLastModifier(documentList.get(i).getLastModifier().getUserName());
+			documentView.setModifyContent(documentList.get(i).getModifyContent());
+			
+			documentViewList.add(documentView);
+			
+		}
+		
+		return SUCCESS;
+	}
+	
+	//得到有效的文档
+	public String searchDocumentsByInfo() throws ParseException {
+		document.setAvailable(1);
+		documentViewList=new ArrayList<DocumentView>();
+		
+		documentList=documentService.getDocumentListByDocument(document, startCreateTime, endCreateTime, getPager());
+		
+		for(int i=0;i<documentList.size();i++){
+			DocumentView documentView=new DocumentView();
+			project=projectDocService.getById(documentList.get(i).getProject().getId());
+			documentView.setId(documentList.get(i).getId());
+			documentView.setNo(documentList.get(i).getNo());
+			documentView.setVersionId(documentList.get(i).getVersionId());
+			documentView.setDocumentName(documentList.get(i).getDocumentName());
+			documentView.setDocType(documentList.get(i).getDocType());
+			documentView.setAvailable(documentList.get(i).getAvailable());
+			documentView.setProjectName(project.getProjectName());
+			documentView.setCreator(documentList.get(i).getCreator().getUserName());
+			documentView.setCreateTime(documentList.get(i).getCreateTime());
+			documentView.setUrlPath(documentList.get(i).getUrlPath());
+			documentView.setMemo(documentList.get(i).getMemo());
+			//所属模板未添加
+			documentView.setLastModifyTime(documentList.get(i).getLastModifyTime());
+			documentView.setLastModifier(documentList.get(i).getLastModifier().getUserName());
+			documentView.setModifyContent(documentList.get(i).getModifyContent());
+			
+			documentViewList.add(documentView);
+		}
+		
+		return SUCCESS; 
+	}
+}

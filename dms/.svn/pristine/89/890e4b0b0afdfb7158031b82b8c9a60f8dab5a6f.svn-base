@@ -1,0 +1,72 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+<script>
+</script>
+</head>
+<body>
+	<div class="dialogTop">
+		<table width="400" border="0" cellspacing="10" cellpadding="0" class="ld-detailTable">
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					版本号：
+				</td>
+				<td>${document.versionId}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					文档名称：
+				</td>
+				<td>${document.documentName}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					所属项目：
+				</td>
+				<td>
+					${document.project.projectName}
+				</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					修改人：
+				</td>
+				<td>${document.lastModifier.userName}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					审核人：
+				</td>
+				<td>${document.examine.examiner.userName}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					起止时间：
+				</td>
+				<td>
+					<f:formatDate value="${document.lastModifyTime}" pattern="yyyy-MM-dd" />
+				</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					修改内容
+				</td>
+				<td>${ document.examine.content}</td>
+			</tr>
+			
+		</table>
+	</div>
+	
+	<div class="dialogBottom">
+		<div class="btns">
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+</body>
+</html>
+
+

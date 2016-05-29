@@ -1,0 +1,9 @@
+package com.landicorp.dms.action.template;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class TemplateSearchAction extends BaseActionSupport {
+	public String execute(){
+		return SUCCESS;
+	}
+}

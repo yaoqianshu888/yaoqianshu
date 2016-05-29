@@ -1,0 +1,11 @@
+package com.landicorp.dms.service;
+
+import java.util.List;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.dms.entities.DocumentModule;
+
+public interface IDocumentModuleService extends
+		IBaseService<DocumentModule, Integer> {
+	public List<DocumentModule> getByDocumentId(Integer id);//根据文档id得到所有的关系
+}

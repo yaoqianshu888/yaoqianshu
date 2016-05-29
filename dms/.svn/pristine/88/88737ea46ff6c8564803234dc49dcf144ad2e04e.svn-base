@@ -1,0 +1,12 @@
+package com.landicorp.dms.action.template;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class TemplateInsertAction extends BaseActionSupport {
+	public String prepare() {
+		return INPUT;
+	}
+	public String insertFunctionTemplate(){
+		return SUCCESS;
+	}
+}

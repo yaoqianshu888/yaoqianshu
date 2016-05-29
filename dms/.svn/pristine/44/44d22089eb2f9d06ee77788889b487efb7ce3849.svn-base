@@ -1,0 +1,159 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+	function showDetail(id) {
+		ldDialog.openLarge(
+						"${basePath}dms/functionDetail!detailFunction.action?function.id="+id, "版本查看", function(window) {
+		});
+	}
+	
+	function versionCompare(){
+	
+	var ids = getAllChose("compare");
+		if(ids.split(",").length!=2){
+			ldDialog.alert("请选择两个版本进行对比");
+		}else{
+			ldDialog.openFullScreen(
+						"${basePath}dms/functionVersionCompare!compareFuncionVersion.action?compare="+ids+"&document.id="+${document.id}, "版本对比", function(window) {
+		});
+		}
+	}
+
+	function setItem(id) {
+			ldDialog.confirm("确定将该版本置为当前版本？", function () {
+			var url = "${basePath}dms/functionVersionSearch!setFunction.action?function.id="+id+"&document.id="+${document.id}+"&nowFunction.id="+${function.id }+"&module.id="+${module.id };
+			$.ajax({
+				type : "POST",
+				url : url,
+				dataType : "json",
+				success : function(result) {
+					ldDialog.tips("设置成功！");
+					document.pagerForm.submit();
+				},
+				error : function() {
+					ldDialog.alert("设置出错！");
+				}
+			});
+		
+		})
+	}
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post" action="${basePath}dms/functionVersionSearch!searchFunctionByInfo.action">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<div class="conditionsrow">
+								<div class="conditionsitem">
+								<input type="hidden" name="function.id" value="${function.id }"/>
+								<input type="hidden" name="module.id" value="${module.id }"/>
+								<input type="hidden" name="document.id" value="${document.id }"/>
+										<div class="conditionsitemL">版本号：</div>
+										<div class="conditionsitemR">
+											<input name="function.versionId" class="ldText input138" id="function.versionId"  value="${function.versionId }"/>
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">功能点名称：</div>
+										<div class="conditionsitemR">
+											<input name="function.functionName" class="ldText input138" id="function.functionName" value="${function.functionName }" />
+										</div>
+									</div>
+							</div>	
+								
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><ld:check mark="userInsert">
+											<input type="button" class="ldBtnGray" value="对比" onclick="versionCompare();" />
+										</ld:check></td>
+								</tr>
+							</table>
+						</div>
+					
+						<div class="toolbarR">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input id="searchBtn" type="submit" class="ldBtnBlue" value="查询"/></td>
+									<input type="hidden" value="0" name="pager.curPageNum" />
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+			<form action="${basePath}dms/functionVersionCompare!compareFuncionVersion.action" method="post" name="deleteForm" id="deleteForm">
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+						<th>选择</th>
+						<th>序号</th>
+						<th>版本号</th>
+						<th>功能点名称</th>
+						<th>所属项目</th>
+						<th>所属文档</th>
+						<th>所属模块</th>
+						<th>产生时间</th>
+						<th>操作</th>
+					</tr>
+					<c:forEach items="${functionList }" var="item" varStatus="status">
+						<tr>
+							<td><input type="checkbox" name="compare" class="ldCheckbox" value="${item.id }" /></td>
+							<td>${status.count}</td>
+							<td>${item.versionId }</td>
+							<td>${item.functionName }</td>
+							<td>${projectDoc.projectName }</td>
+							<td>${document.documentName }</td>
+							<td>${module.moduleName }</td>
+							<td><f:formatDate value="${ item.createTime}" pattern="yyyy-MM-dd  HH:mm:ss" /></td>
+							<td>
+								<input type="button" value="查看" class="ldBtnLink" onclick="showDetail(${item.id });">
+								<c:if test="${ item.isNowVer!=1}">
+								<input type="button" value="置为当前版本" class="ldBtnLink" onclick="setItem(${item.id })">
+								</c:if>
+							</td>
+						</tr>
+					</c:forEach>
+					
+				</table>
+			</form>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								<form
+									action="${basePath}dms/functionVersionSearch!searchFunctionByInfo.action"
+									method="post" name="pagerForm">
+									 <input type="hidden" name="function.versionId" value="${function.versionId }"/>
+									 <input type="hidden" name="function.functionName" value="${function.functionName}"/>
+									 <input type="hidden" name="function.id" value="${function.id }"/>
+									<input type="hidden" name="module.id" value="${module.id }"/>
+									<input type="hidden" name="document.id" value="${document.id }"/>
+									<ld:pager type="form" action="pagerForm" />
+								</form>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

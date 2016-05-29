@@ -1,0 +1,16 @@
+package com.landicorp.dms.service;
+
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Template;
+
+public interface ITemplateService extends IBaseService<Template, Integer> {
+	public List<Template> getAllTemplate(Pager pager); //得到所有的模板
+	public List<Template> getTemplateListByTemplate(Template template,Date startCreateTime,Date endCreateTime,Date startModifyTime,Date endModifyTime,Pager pager);
+	public List<Template> getAll();
+	public String getTemplateName(Template template);
+	public void deleteById(int id);  //根据id删除节点
+}

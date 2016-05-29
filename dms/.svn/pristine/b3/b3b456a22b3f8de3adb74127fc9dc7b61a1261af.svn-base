@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.picture;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class PictureSearchAction extends BaseActionSupport {
+
+	public String searchPicture(){
+		return "picture";
+	}
+}

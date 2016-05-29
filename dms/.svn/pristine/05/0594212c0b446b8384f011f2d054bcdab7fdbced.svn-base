@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+	default-autowire="byName">
+	<!-- 文档查看 -->
+	<bean id="documentViewSearchAction" class="com.landicorp.dms.action.document.DocumentViewSearchAction"
+		scope="prototype" />
+	<bean id="documentViewAction" class="com.landicorp.dms.action.document.DocumentViewAction"
+		scope="prototype" />
+	<bean id="documentMenuAction" class="com.landicorp.dms.action.document.DocumentMenuAction"
+		scope="prototype" />
+	<bean id="documentContentAction" class="com.landicorp.dms.action.document.DocumentContentAction"
+		scope="prototype" />
+		<!-- 功能点版本 -->
+	<bean id="functionVersionSearchAction" class="com.landicorp.dms.action.functionVersion.FunctionVersionSearchAction"
+		scope="prototype" />
+	<bean id="functionVersionDetailAction" class="com.landicorp.dms.action.functionVersion.FunctionVersionDetailAction"
+		scope="prototype" />
+	<bean id="functionVersionCompareAction" class="com.landicorp.dms.action.functionVersion.FunctionVersionCompareAction"
+		scope="prototype" />
+		<!-- 文档版本 -->
+	<bean id="documentVersionSearchAction" class="com.landicorp.dms.action.documentVersion.DocumentVersionSearchAction"
+		scope="prototype" />
+	<bean id="documentVersionViewAction" class="com.landicorp.dms.action.documentVersion.DocumentVersionViewAction"
+		scope="prototype" />
+	<bean id="documentVersionMenuAction" class="com.landicorp.dms.action.documentVersion.DocumentVersionMenuAction"
+		scope="prototype" />
+	<bean id="documentVersionContentAction" class="com.landicorp.dms.action.documentVersion.DocumentVersionContentAction"
+		scope="prototype" />
+	<bean id="documentVersionDetailAction" class="com.landicorp.dms.action.documentVersion.DocumentVersionDetailAction"
+		scope="prototype" />
+		<!-- 图片管理-->
+	<bean id="pictureSearchAction" class="com.landicorp.dms.action.picture.PictureSearchAction"
+		scope="prototype" />
+	<bean id="pictureDetailAction" class="com.landicorp.dms.action.picture.PictureDetailAction"
+		scope="prototype" />
+	<bean id="pictureUploadAction" class="com.landicorp.dms.action.picture.PictureUploadAction"
+		scope="prototype" />
+		<!-- 草稿管理-->
+	<bean id="draftDetailAction" class="com.landicorp.dms.action.draft.DraftDetailAction"
+		scope="prototype" />
+	<!-- 功能点管理-->
+	<bean id="functionDetailAction" class="com.landicorp.dms.action.function.FunctionDetailAction"
+		scope="prototype" />
+	<!-- 模板管理-->
+	<bean id="templateDetailAction" class="com.landicorp.dms.action.template.TemplateDetailAction"
+		scope="prototype" />
+	<!-- 节点管理-->
+	<bean id="nodeSearchAction" class="com.landicorp.dms.action.node.NodeSearchAction"
+		scope="prototype" />
+	<bean id="nodeDetailAction" class="com.landicorp.dms.action.node.NodeDetailAction"
+		scope="prototype" />
+	<bean id="nodeInsertAction" class="com.landicorp.dms.action.node.NodeInsertAction"
+		scope="prototype" />
+	<bean id="nodeUpdateAction" class="com.landicorp.dms.action.node.NodeUpdateAction"
+		scope="prototype" />
+	<bean id="nodeViewAction" class="com.landicorp.dms.action.node.NodeViewAction"
+		scope="prototype" />
+	</beans>
+	

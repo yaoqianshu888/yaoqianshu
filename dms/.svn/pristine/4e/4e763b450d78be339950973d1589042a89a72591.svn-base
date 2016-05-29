@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.INodeDao">
+	<resultMap type="node" id="node">
+		<result property="id" column="ID"/>
+		<result property="nodeName" column="NODE_NAME" />
+		<result property="template.id" column="TEMPLET_ID" />
+		<result property="creator.userName" column="CREATOR" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="nodeType" column="NODE_TYPE" />
+		<result property="circleType" column="CIRCLE_TYPE" />
+		<result property="upNode.id" column="UP_NODE_ID" />
+		<result property="sort" column="SORT" />
+		<result property="memo" column="MEMO" />
+		<result property="lastModifyTime" column="LAST_MODIFY_TIME" />
+		<result property="lastModifier.userName" column="LAST_MODIFIER" />
+		<result property="title" column="TITLE" />
+		<result property="nodeFormat" column="NODE_FORMAT" />
+		<result property="isConfigure" column="IS_CONFIGURE" />
+		<result property="isCopy" column="IS_COPY" />
+	</resultMap>
+
+	<sql id="keyColumns">NODE_NAME,TEMPLET_ID,CREATOR,CREATE_TIME,NODE_TYPE,
+	                     CIRCLE_TYPE,UP_NODE_ID,SORT,MEMO,LAST_MODIFY_TIME,LAST_MODIFIER,TITLE,NODE_FORMAT,IS_CONFIGURE,IS_COPY
+	</sql>
+	<sql id="valueColumns">#{nodeName,jdbcType=VARCHAR},#{template.id,jdbcType=NUMERIC},
+		#{creator.userName,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
+		#{nodeType,jdbcType=NUMERIC},#{circleType,jdbcType=NUMERIC},
+		#{upNode.id,jdbcType=NUMERIC},#{sort,jdbcType=NUMERIC},
+		#{memo,jdbcType=VARCHAR},#{lastModifyTime,jdbcType=TIMESTAMP},
+		#{lastModifier.userName,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR},
+		#{nodeFormat,jdbcType=NUMERIC},
+		#{isConfigure,jdbcType=NUMERIC},
+		#{isCopy,jdbcType=NUMERIC}
+	</sql>
+	
+	
+	<sql id="whereColumns">
+			<if
+				test="node!=null and node.nodeName!=null and node.nodeName!=''">
+				and t1.NODE_NAME like '%${node.nodeName}%'
+			</if>
+			<if test="startCreateTime!=null and startCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) > DATE(#{startCreateTime})
+			 ]]>
+			</if>
+			<if test="endCreateTime!=null and endCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) < DATE(#{endCreateTime})
+			 ]]>
+			</if>
+			<if test="node!=null and node.creator!=null and node.creator.userName!=null and node.creator.userName!=''">
+				and t1.CREATOR like '%${node.creator.userName}%'
+			</if>
+			<if test="node!=null and node.circleType!=null">
+				and t1.CIRCLE_TYPE=#{node.circleType}
+			</if>
+			<if test="node!=null and node.nodeType!=null">
+				and t1.NODE_TYPE=#{node.nodeType}
+			</if>
+			<if test="node!=null and node.template!=null and node.template.id!=null and node.template.id!=''">
+				and t1.TEMPLET_ID=#{node.template.id} 
+			</if>
+			    and t1.NODE_FORMAT =0
+			    and IS_COPY is null or IS_COPY = 0
+	</sql>
+	
+	<insert id="save" parameterType="node">
+
+		insert into t_dms_node(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	
+	<insert id="saveIncludeId" parameterType="node">
+
+		insert into t_dms_node(id,
+		<include refid="keyColumns" />
+		) values(#{id,jdbcType=NUMERIC},
+		<include refid="valueColumns" />
+		)
+	</insert>
+	
+	<delete id="deleteById" parameterType="int">
+		delete from t_dms_node where
+		id=#{id}
+	</delete>
+	<delete id="deleteByTemplateId" parameterType="int">
+		delete from t_dms_node where
+		TEMPLET_ID=#{id}
+	</delete>
+	
+	<update id="update" parameterType="node">
+		update t_dms_node
+		<set>
+			<if test="nodeName!=null">NODE_NAME=#{nodeName},</if>
+			<if test="template!=null and template.id!=null">TEMPLET_ID=#{template.id},</if>
+			<if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+			<if test="creator!=null and creator.userName!=null">CREATOR=#{creator.userName},</if>
+			<if test="lastModifyTime!=null">LAST_MODIFY_TIME=#{lastModifyTime},</if>
+			<if test="lastModifier!=null and lastModifier.userName!=null">LAST_MODIFIER=#{lastModifier.userName},</if>
+			<if test="nodeType!=null">NODE_TYPE=#{nodeType},</if>
+			<if test="memo!=null">MEMO=#{memo},</if>
+			<if test="circleType!=null">CIRCLE_TYPE=#{circleType},</if>
+			<if test="upNode!=null and upNode.id!=null">UP_NODE_ID=#{upNode.id},</if>
+			<if test="sort!=null">SORT=#{sort},</if>
+			<if test="title!=null">TITLE=#{title},</if>
+			<if test="nodeFormat!=null">NODE_FORMAT=#{nodeFormat},</if>
+			<if test="isConfigure!=null">IS_CONFIGURE=#{isConfigure},</if>
+			<if test="isCopy!=null">IS_COPY=#{isCopy}</if>
+		</set>
+		where id=#{id}
+	</update>
+	<select id="getById" parameterType="int" resultMap="node">
+		select *
+		from
+		t_dms_node
+		where id=#{id}
+	</select>
+	<select id="getTemplateByTid" parameterType="int" resultMap="node">
+		select *
+		from
+		t_dms_node
+		where TEMPLET_ID=#{id} and NODE_FORMAT=0 and IS_COPY is null or IS_COPY = 0
+	</select>
+	<delete id="delete" parameterType="int">
+		delete from t_dms_node where
+		id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="getNodeListByNode" parameterType="map"
+		resultMap="node">
+		select * from t_dms_node t1
+		<where>
+			<include refid="whereColumns" />
+		</where>		
+		order by t1.id desc
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getAllNode" resultMap="node">
+		SELECT
+		*
+		FROM t_dms_node
+		where NODE_FORMAT =0 and IS_COPY is null or IS_COPY = 0
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getNodeCountByNode" parameterType="map" resultType="int">
+		select count(*) from t_dms_node t1
+		<where>
+			<include refid="whereColumns" />
+		</where>		
+	</select>
+	<select id="getAllNodeCount" resultType="int">
+		select count(*) from t_dms_node where NODE_FORMAT =0 and IS_COPY is null or IS_COPY = 0
+	</select>
+	
+	<!-- 通过当前节点得到所有的子节点 -->
+	<select id="getAllNodeByPid" parameterType="int" resultMap="node">
+		select * from t_dms_node
+		where FIND_IN_SET(id, getChildList(#{id}))
+		ORDER BY SORT ASC
+	</select>
+	<!-- 通过模板id和是否已配置 获取所有的节点 -->
+	<select id="getAllNodesByTid" parameterType="int" resultMap="node">
+		select * from t_dms_node
+		where TEMPLET_ID=#{id} and IS_CONFIGURE=1 
+		ORDER BY SORT ASC
+	</select>
+	
+	<!-- 得到最大的id -->
+	<select id="getMaxId" resultType="Integer">
+		select Max(id) from t_dms_node
+	</select>
+	
+	<select id="getCircleTypeById" resultType="Integer" parameterType="int">
+		select CIRCLE_TYPE from t_dms_node where id=#{id}
+	</select>
+</mapper>

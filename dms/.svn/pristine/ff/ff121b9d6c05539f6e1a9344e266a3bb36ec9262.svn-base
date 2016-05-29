@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+	<!-- 登录 -->
+	<item code="1001">
+		<option name="beanName" value="coreUserLoginService"/>
+		<option name="methodName" value="login"/>
+		<option name="isCheckSession" value="0"/>
+	</item>
+</items>

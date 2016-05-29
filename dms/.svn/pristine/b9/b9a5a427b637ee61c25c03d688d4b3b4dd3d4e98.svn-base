@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IDocumentModuleDao">
+	<resultMap type="documentModule" id="documentModule">
+		<result property="id" column="ID"/>
+		<result property="document.id" column="document_id" />
+		<result property="module.id" column="module_id" />
+		<result property="available" column="AVAILABLE" />
+		<association property="document" column="document_id"
+			javaType="com.landicorp.dms.entities.Document" select="com.landicorp.dms.dao.IDocumentDao.getById" />
+		<association property="module" column="module_id"
+			javaType="com.landicorp.dms.entities.Module" select="com.landicorp.dms.dao.IModuleDao.getById" />
+	</resultMap>
+
+	<sql id="keyColumns">document_id,module_id,AVAILABLE
+	</sql>
+	<sql id="valueColumns">#{document.id,jdbcType=NUMERIC},#{module.id,jdbcType=NUMERIC},
+		#{available,jdbcType=NUMERIC}
+	</sql>
+	
+	<insert id="save" parameterType="documentModule">
+
+		insert into t_dms_document_module(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	<update id="update" parameterType="documentModule">
+		update t_dms_document_module
+		<set>
+			<if test="document!=null and document.id!=null">document_id=#{document.id},</if>
+			<if test="module!=null and module.id!=null">module_id=#{module.id},</if>
+			<if test="available!=null">AVAILABLE=#{available}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	
+	<select id="getById" parameterType="int" resultMap="documentModule">
+		select *
+		from
+		t_dms_document_module
+		where id=#{id}
+	</select>
+	<select id="getByDocumentId" parameterType="int" resultMap="documentModule">
+		select *
+		from
+		t_dms_document_module
+		where document_id=#{id}
+	</select>
+	
+</mapper>

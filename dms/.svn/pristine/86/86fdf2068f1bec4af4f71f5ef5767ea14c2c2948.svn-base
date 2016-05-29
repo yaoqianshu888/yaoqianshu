@@ -1,0 +1,157 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+	
+	function showDetail() {
+		ldDialog.open(
+						"${basePath}dms/pictureDetail!detailPicture.action", "图片详情", function(window) {
+		},600,600);
+	}
+	function upload(){
+		ldDialog.openMini(
+						"${basePath}dms/pictureUpload!uploadPicture.action", "图片上传", function(window) {
+		});
+	}
+	function deleteItems(){
+		var ids = getAllChose("delete");
+		if (ids == "") {
+			ldDialog.alert("请先选择要删除的图片");
+			return;
+		}
+	}
+</script>
+<style type="text/css">
+.photoSize{width:100px;height:100px;padding:10px;cursor: pointer}
+.meno{padding:40px}
+ldCheckbox{float:left};
+</style> 
+</head>
+<body>
+				<form id="searchForm" method="post">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">银销通文档</div>
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><ld:check mark="userInsert">
+											<input type="button" class="ldBtnGray" value="上传" onclick="upload();" />
+										</ld:check></td>
+								</tr>
+							</table>
+						</div>
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><ld:check mark="userInsert">
+											<input type="button" class="ldBtnGray" value="删除" onclick="deleteItems();" />
+										</ld:check></td>
+								</tr>
+							</table>
+						</div>
+						
+					</div>
+					<div class="yhlist3">
+						<div class="yhlist1L">
+							文档基本图片
+						</div>
+					</div>
+					<div class="yhlist2">
+
+							<table id="contentTable" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>	
+									<td><img alt="图片" src="${basePath}dms/images/change1.jpg" class="photoSize"  onclick="showDetail()"><br/>
+									<span class="meno">1.jpg</span></td>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+									<td><img alt="图片" src="${basePath}dms/images/change2.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">2.jpg</span></td>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+									<td><img alt="图片" src="${basePath}dms/images/change3.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">3.jpg</span></td>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+									<td><img alt="图片" src="${basePath}dms/images/change4.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">4.jpg</span></td>
+								</tr>
+							</table>
+					</div>
+					<div class="yhlist3">
+						<div class="yhlist1L">
+							用户管理模块
+						</div>
+					</div>
+					<div class="yhlist2">
+
+							<table id="contentTable" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>	
+									<td><img alt="图片" src="${basePath}dms/images/change1.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">1.jpg</span></td>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+									<td><img alt="图片" src="${basePath}dms/images/change2.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">2.jpg</span></td>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+									<td><img alt="图片" src="${basePath}dms/images/change3.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">3.jpg</span></td>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+									<td><img alt="图片" src="${basePath}dms/images/change4.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">4.jpg</span></td>
+								</tr>
+							</table>
+					</div>
+					<div class="yhlist3">
+						<div class="yhlist1L">
+							数据管理模块
+						</div>
+					</div>
+					<div class="yhlist2">
+
+							<table id="contentTable" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>	
+									<td><img alt="图片" src="${basePath}dms/images/change1.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">1.jpg</span></td>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+									<td><img alt="图片" src="${basePath}dms/images/change2.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">2.jpg</span></td>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+									<td><img alt="图片" src="${basePath}dms/images/change3.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">3.jpg</span></td>
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+									<td><img alt="图片" src="${basePath}dms/images/change4.jpg" class="photoSize" onclick="showDetail()"><br/>
+									<span class="meno">4.jpg</span></td>
+								</tr>
+							</table>
+					</div>
+			<div class="dialogBottom">
+				<div class="btns">
+					<input type="button" value="关 闭" class="ldBtnGray"
+						onclick="ldDialog.close();" />
+				</div>
+			</div>
+				</form>
+						
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				
+			</div>
+			
+
+</body>
+</html>

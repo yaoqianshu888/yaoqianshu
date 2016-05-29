@@ -1,0 +1,133 @@
+package com.landicorp.dms.action.picture;
+
+import java.io.File;
+import java.util.Calendar;
+import java.util.UUID;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.DmsPhoto;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.service.IDmsPhotoService;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.web.option.Dms;
+
+public class PictureUploadAction extends BaseActionSupport {
+	private DmsPhoto dmsPhoto;
+	private IDmsPhotoService dmsPhotoService;
+	private Document document;
+	private IDocumentService documentService;
+	private File uploadFile;
+	private String uploadFileFileName;
+	private String uploadFileContentType;
+	
+	
+	public File getUploadFile() {
+		return uploadFile;
+	}
+
+
+
+	public void setUploadFile(File uploadFile) {
+		this.uploadFile = uploadFile;
+	}
+
+
+
+	public String getUploadFileFileName() {
+		return uploadFileFileName;
+	}
+
+
+
+	public void setUploadFileFileName(String uploadFileFileName) {
+		this.uploadFileFileName = uploadFileFileName;
+	}
+
+
+
+	public String getUploadFileContentType() {
+		return uploadFileContentType;
+	}
+
+
+
+	public void setUploadFileContentType(String uploadFileContentType) {
+		this.uploadFileContentType = uploadFileContentType;
+	}
+
+
+
+	public DmsPhoto getDmsPhoto() {
+		return dmsPhoto;
+	}
+
+
+
+	public void setDmsPhoto(DmsPhoto dmsPhoto) {
+		this.dmsPhoto = dmsPhoto;
+	}
+
+
+
+	public IDmsPhotoService getDmsPhotoService() {
+		return dmsPhotoService;
+	}
+
+
+
+	public void setDmsPhotoService(IDmsPhotoService dmsPhotoService) {
+		this.dmsPhotoService = dmsPhotoService;
+	}
+
+
+
+	public Document getDocument() {
+		return document;
+	}
+
+
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+	public String uploadPicture(){
+		if(document!=null){
+			document=documentService.getById(document.getId());
+		}
+		
+		return "upload";
+	}
+	
+	public String uploadPhoto() throws Exception{
+		String realPath=ServletActionContext.getServletContext().getRealPath(Dms.LINUX_PHOTO_PATH);
+		File file=new File(realPath);
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		Calendar calendar = Calendar.getInstance();
+		uploadFileFileName=calendar.get(Calendar.YEAR)+""+(calendar.get(Calendar.MONTH)+1)+calendar.get(Calendar.DATE)+calendar.get(Calendar.HOUR_OF_DAY)+calendar.get(Calendar.MINUTE)+calendar.get(Calendar.SECOND)+"_"+uploadFileFileName;
+		FileUtils.copyFile(uploadFile, new File(file,uploadFileFileName));
+		
+		dmsPhoto.setPhotoPath(Dms.LINUX_PHOTO_PATH+uploadFileFileName);
+		dmsPhotoService.add(dmsPhoto);
+		
+		setWindowReturnValue("ok");
+		return SUCCESS;
+	}
+}

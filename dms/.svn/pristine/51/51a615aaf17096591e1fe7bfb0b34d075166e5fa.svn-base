@@ -1,0 +1,99 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IDocumentDao;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.service.IDocumentService;
+
+public class DocumentServiceImpl extends
+		AbstractBaseServiceImpl<Document, Integer> implements IDocumentService {
+
+	private IDocumentDao documentDao;
+	
+	public IDocumentDao getDocumentDao() {
+		return documentDao;
+	}
+
+	public void setDocumentDao(IDocumentDao documentDao) {
+		this.documentDao = documentDao;
+	}
+
+	@Override
+	public int add(Document arg0) {
+		return documentDao.save(arg0);
+	}
+
+
+	@Override
+	public void delete(Integer[] arg0) {
+		documentDao.delete(arg0);
+	}
+
+	
+	
+	@Override
+	public Document getById(Integer arg0) {
+		return documentDao.getById(arg0);
+	}
+
+
+	@Override
+	public int update(Document arg0) {
+		return documentDao.update(arg0);
+	}
+
+	@Override
+	public List<Document> getAllDocumentAila(Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(documentDao.getAllDocumentCountAila());
+		}
+		return documentDao.getAllDocumentAila(pager);
+	}
+
+	@Override
+	public List<Document> getDocumentListByDocument(Document document,
+			Date startCreateTime, Date endCreateTime, Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(documentDao.getDocumentCountByDocument(document, startCreateTime, endCreateTime));
+		}
+		return documentDao.getDocumentListByDocument(document, startCreateTime, endCreateTime, pager);
+	}
+
+	@Override
+	public IMyBatisDao<Document, Integer> getMyBatisDao() {
+		return documentDao;
+	}
+
+	@Override
+	public List<Document> getAllDocument(Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(documentDao.getAllDocumentCount());
+		}
+		return documentDao.getAllDocument(pager);
+	}
+
+	@Override
+	public List<Document> getDocumentListByDocumentAll(Document document,Date startCreateTime,Date endCreateTime,
+			Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(documentDao.getDocumentCountByDocumentAll(document, startCreateTime, endCreateTime));
+		}
+		return documentDao.getDocumentListByDocumentAll(document, startCreateTime, endCreateTime, pager);
+	}
+
+	@Override
+	public int getMaxId() {
+		return documentDao.getMaxId();
+	}
+
+	@Override
+	public void saveEdit(Document document) {
+		documentDao.saveEdit(document);
+	}
+
+}

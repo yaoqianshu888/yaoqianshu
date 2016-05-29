@@ -1,0 +1,182 @@
+package com.landicorp.dms.action.functionVersion;
+
+import java.io.IOException;
+import java.util.List;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.entities.ModuleFunction;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IFunctionService;
+import com.landicorp.dms.service.IModuleFunctionService;
+import com.landicorp.dms.service.IModuleService;
+import com.landicorp.dms.service.IProjectDocService;
+
+public class FunctionVersionSearchAction extends BaseActionSupport {
+	private Function function;
+	private IFunctionService functionService;
+	private List<Function> functionList;
+	private Module module;
+	private ProjectDoc projectDoc;
+	private Document document;
+	private IProjectDocService projectDocService;
+	private IModuleService moduleService;
+	private IDocumentService documentService;
+	private Function nowFunction;
+	private IModuleFunctionService moduleFunctionService;
+	
+
+	public IModuleFunctionService getModuleFunctionService() {
+		return moduleFunctionService;
+	}
+
+
+	public void setModuleFunctionService(
+			IModuleFunctionService moduleFunctionService) {
+		this.moduleFunctionService = moduleFunctionService;
+	}
+
+
+	public Function getNowFunction() {
+		return nowFunction;
+	}
+
+
+	public void setNowFunction(Function nowFunction) {
+		this.nowFunction = nowFunction;
+	}
+
+
+	public IModuleService getModuleService() {
+		return moduleService;
+	}
+
+
+	public void setModuleService(IModuleService moduleService) {
+		this.moduleService = moduleService;
+	}
+
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+
+	public IProjectDocService getProjectDocService() {
+		return projectDocService;
+	}
+
+
+	public void setProjectDocService(IProjectDocService projectDocService) {
+		this.projectDocService = projectDocService;
+	}
+
+
+	public Module getModule() {
+		return module;
+	}
+
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+
+	public ProjectDoc getProjectDoc() {
+		return projectDoc;
+	}
+
+
+	public void setProjectDoc(ProjectDoc projectDoc) {
+		this.projectDoc = projectDoc;
+	}
+
+
+	public Document getDocument() {
+		return document;
+	}
+
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+
+	public Function getFunction() {
+		return function;
+	}
+
+
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+
+
+	public IFunctionService getFunctionService() {
+		return functionService;
+	}
+
+
+	public void setFunctionService(IFunctionService functionService) {
+		this.functionService = functionService;
+	}
+
+
+	public List<Function> getFunctionList() {
+		return functionList;
+	}
+
+
+	public void setFunctionList(List<Function> functionList) {
+		this.functionList = functionList;
+	}
+
+
+	public String searchFunctionVersion(){
+		function=functionService.getById(function.getId());
+		module=moduleService.getById(module.getId());
+		document=documentService.getById(document.getId());
+		projectDoc=document.getProject();
+		
+		functionList=functionService.getAllFunctionPage(getPager(), function);
+		function.setVersionId("");
+		function.setFunctionName("");
+		return "version";
+	}
+	
+	public String searchFunctionByInfo(){
+		Function function1=new Function();
+		function1=functionService.getById(function.getId());
+		function.setNo(function1.getNo());
+		module=moduleService.getById(module.getId());
+		document=documentService.getById(document.getId());
+		projectDoc=document.getProject();
+		functionList=functionService.getFunctionListByFunction(getPager(), function);
+		return "version";
+	}
+	
+	public void setFunction() throws IOException{
+		module=moduleService.getById(module.getId());
+		document=documentService.getById(document.getId());
+		function=functionService.getById(function.getId());
+		nowFunction=functionService.getById(nowFunction.getId());
+		moduleFunctionService.deleteByFunctionAndDocument(nowFunction.getId(), document.getId());
+		ModuleFunction moduleFunction=new ModuleFunction();
+		moduleFunction.setFunction(function);
+		moduleFunction.setModule(module);
+		moduleFunction.setDocument(document);
+		moduleFunctionService.add(moduleFunction);
+		
+		functionService.setFunctionByNo(function);
+		functionService.setFunctionById(function);
+		
+	}
+}

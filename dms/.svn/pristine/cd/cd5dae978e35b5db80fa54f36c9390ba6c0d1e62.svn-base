@@ -1,0 +1,134 @@
+package com.landicorp.dms.entities;
+
+import java.util.Date;
+
+import com.landicorp.core.entities.User;
+import com.landicorp.core.entities.base.BaseEntity;
+
+public class Node extends BaseEntity{
+	private Integer id;
+	private String nodeName;  //节点名
+	private Template template;  //所属模板
+	private User creator;  //创建人
+	private Date createTime;// 创建时间
+	private Integer nodeType; //节点类型（复合、功能节点）
+	private Integer circleType;  //循环类型（单次、多次）
+	private Node upNode;  //父节点
+	private int sort;// 排列顺序
+	private String memo;  //备注
+	private Date lastModifyTime;// 最后修改时间
+	private User lastModifier;// 最后修改人
+	private String title;  //节点名称
+	private Integer nodeFormat;  //节点格式类型
+	private Integer isConfigure;  //是否已配置
+	private Integer isCopy;  //是否为复制节点
+	
+	
+	public Integer getIsCopy() {
+		return isCopy;
+	}
+	public void setIsCopy(Integer isCopy) {
+		this.isCopy = isCopy;
+	}
+	public Integer getIsConfigure() {
+		return isConfigure;
+	}
+	public void setIsConfigure(Integer isConfigure) {
+		this.isConfigure = isConfigure;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public Integer getNodeFormat() {
+		return nodeFormat;
+	}
+	public void setNodeFormat(Integer nodeFormat) {
+		this.nodeFormat = nodeFormat;
+	}
+	public Date getLastModifyTime() {
+		return lastModifyTime;
+	}
+	public void setLastModifyTime(Date lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+	public User getLastModifier() {
+		return lastModifier;
+	}
+	public void setLastModifier(User lastModifier) {
+		this.lastModifier = lastModifier;
+	}
+	public String getNodeName() {
+		return nodeName;
+	}
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+	public Template getTemplate() {
+		return template;
+	}
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public User getCreator() {
+		return creator;
+	}
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	
+	public Integer getNodeType() {
+		return nodeType;
+	}
+	public void setNodeType(Integer nodeType) {
+		this.nodeType = nodeType;
+	}
+	public Integer getCircleType() {
+		return circleType;
+	}
+	public void setCircleType(Integer circleType) {
+		this.circleType = circleType;
+	}
+	public Node getUpNode() {
+		return upNode;
+	}
+	public void setUpNode(Node upNode) {
+		this.upNode = upNode;
+	}
+	public int getSort() {
+		return sort;
+	}
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+	@Override
+	public String toString() {
+		return "Node [nodeName=" + nodeName + ", template=" + template
+				+ ", creator=" + creator + ", createTime=" + createTime
+				+ ", nodeType=" + nodeType + ", circleType=" + circleType
+				+ ", upNode=" + upNode + ", sort=" + sort + ", memo=" + memo
+				+ "]";
+	}
+	
+	
+}

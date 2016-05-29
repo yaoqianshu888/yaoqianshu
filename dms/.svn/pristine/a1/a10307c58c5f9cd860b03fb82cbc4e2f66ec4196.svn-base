@@ -1,0 +1,37 @@
+package com.landicorp.dms.action.documentVersion;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.service.IDocumentService;
+
+public class DocumentVersionDetailAction extends BaseActionSupport {
+
+	private Document document;
+	private IDocumentService documentService;
+	
+	
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+
+	public Document getDocument() {
+		return document;
+	}
+
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+
+	public String detailDocumentVersion(){
+		document=documentService.getById(document.getId());
+		return "detail";
+	}
+}

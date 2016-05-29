@@ -1,0 +1,54 @@
+package com.landicorp.dms.action.template;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.INodeService;
+import com.landicorp.dms.service.ITemplateService;
+
+public class TemplateDeleteAction extends BaseActionSupport {
+	private Integer[] delete;
+	private ITemplateService templateService;
+	private Template template;
+	private INodeService nodeService;
+	
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+	public Integer[] getDelete() {
+		return delete;
+	}
+	public void setDelete(Integer[] delete) {
+		this.delete = delete;
+	}
+	public ITemplateService getTemplateService() {
+		return templateService;
+	}
+	public void setTemplateService(ITemplateService templateService) {
+		this.templateService = templateService;
+	}
+	
+	
+	public Template getTemplate() {
+		return template;
+	}
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+	public String  deleteTemplate() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		nodeService.deleteByTemplateId(template.getId());  //删除所属模板的所有节点
+		templateService.deleteById(template.getId());
+		
+		return SUCCESS;
+	}
+}

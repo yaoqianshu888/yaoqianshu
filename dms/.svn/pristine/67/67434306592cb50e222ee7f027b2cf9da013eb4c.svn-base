@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IExamineDao">
+	<resultMap type="examine" id="examine">
+		<result property="id" column="ID"/>
+		<result property="versionId" column="VERSION_ID" />
+		<result property="document.id" column="DOCUMENT_ID" />
+		<result property="examiner.id" column="EXAMINER" />
+		<result property="examiner.userName" column="userName" />
+		<result property="examineTime" column="EXAMINE_TIME" />
+		<result property="projectDoc.id" column="PROJECT_ID" />
+		<result property="function.id" column="FUNCTION_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="result" column="RESULT" />
+		<result property="reason" column="REASON" />
+		<association property="examiner" column="EXAMINER"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+		<association property="function" column="FUNCTION_ID"
+			javaType="com.landicorp.dms.entities.Function" select="com.landicorp.dms.dao.IFunctionDao.getById" />
+		<association property="document" column="DOCUMENT_ID"
+			javaType="com.landicorp.dms.entities.Document" select="com.landicorp.dms.dao.IDocumentDao.getById" />
+		<association property="projectDoc" column="PROJECT_ID"
+			javaType="com.landicorp.dms.entities.ProjectDoc" select="com.landicorp.dms.dao.IProjectDocDao.getById" />
+	</resultMap>
+
+	<sql id="keyColumns">VERSION_ID,DOCUMENT_ID,EXAMINER,EXAMINE_TIME,PROJECT_ID,CONTENT,FUNCTION_ID,RESULT,REASON
+	</sql>
+	<sql id="valueColumns">#{versionId,jdbcType=VARCHAR},
+		#{document.id,jdbcType=NUMERIC},
+		#{examiner.id,jdbcType=NUMERIC},
+		#{examineTime,jdbcType=TIMESTAMP},
+		#{projectDoc.id,jdbcType=NUMERIC},#{content,jdbcType=LONGVARCHAR},
+		#{function.id,jdbcType=NUMERIC},#{result,jdbcType=NUMERIC},
+		#{reason,jdbcType=VARCHAR}
+	</sql>
+	
+	
+	<insert id="save" parameterType="examine">
+
+		insert into t_dms_examine_records(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	
+	<update id="update" parameterType="examine">
+		update t_dms_examine_records
+		<set>
+			<if test="versionId!=null">VERSION_ID=#{versionId},</if>
+			<if test="reason!=null">REASON=#{reason},</if>
+			<if test="result!=null">RESULT=#{result},</if>
+			<if test="document!=null and document.id!=null">DOCUMENT_ID=#{document.id},</if>
+			<if test="project!=null and project.id!=null">PROJECT_ID=#{project.id},</if>
+			<if test="function!=null and function.id!=null">FUNCTION_ID=#{function.id},</if>
+			<if test="examineTime!=null">EXAMINE_TIME=#{examineTime},</if>
+			<if test="examiner!=null and examiner.id!=null">EXAMINER=#{examiner.id},</if>
+			<if test="content!=null">CONTENT=#{content}</if>
+		</set>
+		where id=#{id}
+	</update>
+	<select id="getById" parameterType="int" resultMap="examine">
+		select *
+		from
+		t_dms_examine_records
+		where id=#{id}
+	</select>
+	
+	<select id="getMaxId"  resultType="Integer">
+		select max(id)
+		from
+		t_dms_examine_records
+	</select>
+	
+</mapper>

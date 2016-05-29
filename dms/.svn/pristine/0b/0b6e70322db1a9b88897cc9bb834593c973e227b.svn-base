@@ -1,0 +1,12 @@
+package com.landicorp.dms.dao;
+
+import java.util.List;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.dms.entities.DmsPhoto;
+
+public interface IDmsPhotoDao extends IMyBatisDao<DmsPhoto, Integer> {
+	public List<DmsPhoto> getAllByDocumentId(Integer id); //根据文档id得到所有的图片
+	public List<DmsPhoto> getAllByNoDocument();  //得到所有文档为空的图片
+	public void updatePhoto(Integer id);  //将文档id为空的图片的文档id设置 
+}

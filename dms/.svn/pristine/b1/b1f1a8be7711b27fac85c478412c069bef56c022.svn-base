@@ -1,0 +1,76 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IDraftDao;
+import com.landicorp.dms.entities.Draft;
+import com.landicorp.dms.service.IDraftService;
+
+public class DraftServiceImpl extends AbstractBaseServiceImpl<Draft, Integer> implements
+		IDraftService {
+	private IDraftDao draftDao;
+	
+
+	public IDraftDao getDraftDao() {
+		return draftDao;
+	}
+
+	public void setDraftDao(IDraftDao draftDao) {
+		this.draftDao = draftDao;
+	}
+
+	@Override
+	public int add(Draft arg0) {
+		return draftDao.save(arg0);
+	}
+
+	
+	@Override
+	public void delete(Integer[] arg0) {
+		draftDao.delete(arg0);
+	}
+
+
+	@Override
+	public Draft getById(Integer arg0) {
+		return draftDao.getById(arg0);
+	}
+
+	
+	@Override
+	public int update(Draft arg0) {
+		return draftDao.update(arg0);
+	}
+
+	@Override
+	public List<Draft> getDraftListByDraft(Draft draft, Date startCreateTime,
+			Date endCreateTime, Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(draftDao.getDraftCountByDraft(draft, startCreateTime, endCreateTime));
+		}
+		return draftDao.getDraftListByDraft(draft, startCreateTime, endCreateTime, pager);
+	}
+
+	@Override
+	public List<Draft> getAllDraft(Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(draftDao.getAllDraftCount());
+		}
+		return draftDao.getAllDraft(pager);
+	}
+
+	@Override
+	public IMyBatisDao<Draft, Integer> getMyBatisDao() {
+		return draftDao;
+	}
+
+	@Override
+	public void deleteById(Integer id) {
+		draftDao.deleteById(id);
+	}
+
+}

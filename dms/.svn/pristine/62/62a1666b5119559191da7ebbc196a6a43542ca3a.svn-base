@@ -1,0 +1,243 @@
+package com.landicorp.dms.action.document;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.BasicNodeCont;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.DocumentModule;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.service.IBasicNodeContService;
+import com.landicorp.dms.service.IDocumentModuleService;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IFunctionService;
+import com.landicorp.dms.service.INodeService;
+
+public class DocumentContentAction extends BaseActionSupport {
+	private Document document;
+	private IDocumentService documentService;
+	private List<Node> nodeList;
+	private INodeService nodeService;
+	private IDocumentModuleService documentModuleService;
+	private List<DocumentModule> documentModulelList;
+	private IFunctionService functionService;
+	private List<Function> functionList;
+	private List<List<Node>> nodeLists;
+	private Map<Integer, String> map;
+	private IBasicNodeContService basicNodeContService;
+	
+
+	public Document getDocument() {
+		return document;
+	}
+
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+
+	public IDocumentModuleService getDocumentModuleService() {
+		return documentModuleService;
+	}
+
+
+	public void setDocumentModuleService(
+			IDocumentModuleService documentModuleService) {
+		this.documentModuleService = documentModuleService;
+	}
+
+
+	public List<DocumentModule> getDocumentModulelList() {
+		return documentModulelList;
+	}
+
+
+	public void setDocumentModulelList(List<DocumentModule> documentModulelList) {
+		this.documentModulelList = documentModulelList;
+	}
+
+
+	public IFunctionService getFunctionService() {
+		return functionService;
+	}
+
+
+	public void setFunctionService(IFunctionService functionService) {
+		this.functionService = functionService;
+	}
+
+
+	public List<Function> getFunctionList() {
+		return functionList;
+	}
+
+
+	public void setFunctionList(List<Function> functionList) {
+		this.functionList = functionList;
+	}
+
+
+	public List<List<Node>> getNodeLists() {
+		return nodeLists;
+	}
+
+
+	public void setNodeLists(List<List<Node>> nodeLists) {
+		this.nodeLists = nodeLists;
+	}
+
+
+	public Map<Integer, String> getMap() {
+		return map;
+	}
+
+
+	public void setMap(Map<Integer, String> map) {
+		this.map = map;
+	}
+
+
+	public IBasicNodeContService getBasicNodeContService() {
+		return basicNodeContService;
+	}
+
+
+	public void setBasicNodeContService(IBasicNodeContService basicNodeContService) {
+		this.basicNodeContService = basicNodeContService;
+	}
+
+
+	public String getContent(){
+		document=documentService.getById(document.getId());
+		
+		//传标题
+		nodeList=nodeService.getAllNodesByTid(document.getTemplate().getId());
+		nodeLists=new ArrayList<List<Node>>();
+		int count=0; //显示标题号数
+		for(int i=0;i<nodeList.size();i++){
+			if(nodeList.get(i).getNodeType()!=null && nodeList.get(i).getNodeType()==0){   //当为功能节点的时候
+				
+				int num=1000;
+				documentModulelList=documentModuleService.getByDocumentId(document.getId());
+				for(int k=0;k<documentModulelList.size();k++){
+				  if(documentModulelList.get(k).getModule().getAvailable()==1){  //模块有效时
+					functionList=functionService.getAllFunctionByModuleId(documentModulelList.get(k).getModule().getId());
+					for(int t=0;t<functionList.size();t++){
+						List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+						nodes.get(0).setTitleNo((count+1)+"");
+						for(int j=0;j<nodes.size();j++){
+							int c=1;
+							for(int m=1;m<nodes.size();m++){
+								if(nodes.get(m).getUpNode().getId().equals(nodes.get(j).getId())){
+									nodes.get(m).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+									c++;
+								}
+							}
+						}
+						count++;
+						
+						//每个模板的节点id
+						for(int j=0;j<nodes.size();j++){
+								if(nodes.get(j).getUpNode()==null){
+									nodes.get(j).setId(num+nodes.get(j).getId());
+									nodes.get(j).setTitle(functionList.get(t).getFunctionName());
+								}else{
+									nodes.get(j).setId(num+nodes.get(j).getId());
+									nodes.get(j).getUpNode().setId(num+nodes.get(j).getUpNode().getId());
+									nodes.get(j).setUpNode(nodes.get(j).getUpNode());
+								}
+						}
+						
+						nodeLists.add(nodes);
+						num=num*2;
+					}
+				  }
+				}
+			}else {   
+				List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+				
+				nodes.get(0).setTitleNo((count+1)+"");
+				for(int j=0;j<nodes.size();j++){
+					int c=1;
+					for(int k=1;k<nodes.size();k++){
+						if(nodes.get(k).getUpNode().getId().equals(nodes.get(j).getId())){
+							nodes.get(k).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+							c++;
+						}
+					}
+				}
+				count++;
+				
+				nodeLists.add(nodes);
+			}
+			
+		}
+		//内容传值
+		map=new HashMap<Integer, String>();
+		List<BasicNodeCont> basicNodeContList=basicNodeContService.getByDocumentId(document.getId());   //传复合节点时
+		for(int i=0;i<basicNodeContList.size();i++){
+			if(basicNodeContList.get(i).getNode().getNodeFormat()==3){//对字符串进行反转义
+				basicNodeContList.get(i).setContent(basicNodeContList.get(i).getContent().replaceAll("&lt;", "<"));
+				basicNodeContList.get(i).setContent(basicNodeContList.get(i).getContent().replaceAll("&quot;", "\""));
+				basicNodeContList.get(i).setContent(basicNodeContList.get(i).getContent().replaceAll("&gt;", ">"));
+			}
+			map.put(basicNodeContList.get(i).getNode().getId(), basicNodeContList.get(i).getContent());
+		}
+		
+		documentModulelList=documentModuleService.getByDocumentId(document.getId());   //传功能节点时
+		int num=1000;
+		for(int k=0;k<documentModulelList.size();k++){
+			functionList=functionService.getAllFunctionByModuleId(documentModulelList.get(k).getModule().getId());
+			for(int t=0;t<functionList.size();t++){
+				List<BasicNodeCont> basicNodeContList2=basicNodeContService.getByDocumentIdAndFunctionId(document.getId(), functionList.get(t).getId());
+				for(int i=0;i<basicNodeContList2.size();i++){
+					if(basicNodeContList2.get(i).getNode().getNodeFormat()==3){//对字符串进行反转义
+						basicNodeContList2.get(i).setContent(basicNodeContList2.get(i).getContent().replaceAll("&lt;", "<"));
+						basicNodeContList2.get(i).setContent(basicNodeContList2.get(i).getContent().replaceAll("&quot;", "\""));
+						basicNodeContList2.get(i).setContent(basicNodeContList2.get(i).getContent().replaceAll("&gt;", ">"));
+					}
+					map.put(num+basicNodeContList2.get(i).getNode().getId(), basicNodeContList2.get(i).getContent());
+				}
+				num=num*2;
+			}
+		}
+		
+		
+		return "content";
+	}
+}

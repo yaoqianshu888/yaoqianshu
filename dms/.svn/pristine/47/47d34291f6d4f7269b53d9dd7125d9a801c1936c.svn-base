@@ -1,0 +1,28 @@
+package com.landicorp.dms.dao;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.ProjectDoc;
+
+public interface IProjectDocDao  extends IMyBatisDao<ProjectDoc, Integer>{
+	public List<ProjectDoc> getAllProject(@Param("pager") Pager pager); //得到所有的项目
+	public Integer getAllProjectCount();     //得到所有的项目数
+	
+	public List<ProjectDoc> getProjectListByProject(     //按条件得到项目
+			@Param("projectDoc") ProjectDoc projectDoc,
+			@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime,
+			@Param("pager") Pager pager);
+		
+	public int getProjectCountByProject(@Param("projectDoc") ProjectDoc projectDoc,  //按条件得到项目数
+			@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime);
+	
+	public List<ProjectDoc> getAll();
+	public int getMaxNo();   //得到最大的项目编号
+}

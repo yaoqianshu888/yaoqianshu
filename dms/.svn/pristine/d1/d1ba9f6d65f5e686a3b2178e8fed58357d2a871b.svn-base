@@ -1,0 +1,113 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+	<div class="dialogTop">
+		<table width="100%" align="center" cellspacing="10"
+			cellpadding="0" class="ld-detailTable">
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					节点名称：
+				</td>
+				<td>${node.nodeName}
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					节点类型：
+				</td>
+				<td>
+					<c:if test="${node.nodeType==1 }">复合节点</c:if>
+					<c:if test="${node.nodeType==0 }">功能节点</c:if>
+				</td>
+			</tr>
+			<%--<tr>
+				<td width="100" class="right evenTrBgColor">
+					循环类型：
+				</td>
+				<td>1
+				</td>
+			</tr>--%>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					所属模板：
+				</td>
+				<td id="templateId">
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					创建人：
+				</td>
+				<td>${ node.creator.userName}
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					创建时间：
+				</td>
+				<td>
+				<f:formatDate value="${ node.createTime}" pattern="yyyy-MM-dd  HH:mm:ss" />
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					最后修改人：
+				</td>
+				<td>${ node.lastModifier.userName}
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					最后修改时间：
+				</td>
+				<td>
+				<f:formatDate value="${ node.lastModifyTime}" pattern="yyyy-MM-dd  HH:mm:ss" />
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">备注：</td>
+				<td>${ node.memo}
+				</td>
+			</tr>
+			
+		</table>
+	</div>
+	<div class="dialogBottom">
+		<div class="btns">
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+//得到模板名称
+	$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/templateSearch!getTemplateName.action?template.id="+${node.template.id},
+	        dataType:"html",
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+					  $("#templateId").html(msg);
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                alert("获取模板名称出错");
+	           }
+	        });
+</script>
+</html>
+

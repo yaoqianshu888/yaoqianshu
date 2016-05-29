@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Struts2Diagram version="2.0">
+  <package name="lease" location="0,0" size="0,0">
+    <action name="siteSearch" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="siteScan" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="scan" />
+    </action>
+    <action name="settleCounterSelect" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="selectCounter" />
+    </action>
+    <action name="settleMerchantSelect" location="0,0" size="0,0">
+      <result name="searchMerchant" />
+      <result name="success" />
+    </action>
+    <action name="contractSearch" location="0,0" size="0,0">
+      <result name="search" />
+      <result name="detail" />
+      <result name="error" />
+      <result name="delete" />
+      <result name="audit" />
+      <result name="reset" />
+    </action>
+    <action name="contractForChoose" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="contractInsert" location="0,0" size="0,0">
+      <result name="input" />
+      <result name="success" />
+    </action>
+    <action name="contractUpdate" location="0,0" size="0,0">
+      <result name="input" />
+      <result name="success" />
+      <result name="error" />
+    </action>
+    <action name="contractCharge" location="0,0" size="0,0">
+      <result name="search" />
+      <result name="input" />
+      <result name="success" />
+    </action>
+    <action name="contractReturn" location="0,0" size="0,0">
+      <result name="search" />
+      <result name="input" />
+      <result name="success" />
+    </action>
+    <action name="contractChargeSearch" location="0,0" size="0,0">
+      <result name="search" />
+      <result name="detail" />
+      <result name="delete" />
+      <result name="error" />
+    </action>
+    <action name="contractChargeInsert" location="0,0" size="0,0">
+      <result name="input" />
+      <result name="chargeInput" />
+      <result name="success" />
+    </action>
+    <action name="counterSearch" location="0,0" size="0,0">
+      <result name="search" />
+      <result name="detail" />
+      <result name="delete" />
+      <result name="error" />
+    </action>
+    <action name="counterInsert" location="0,0" size="0,0">
+      <result name="input" />
+      <result name="success" />
+    </action>
+    <action name="counterUpdate" location="0,0" size="0,0">
+      <result name="input" />
+      <result name="success" />
+    </action>
+    <action name="counterForChoose" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="merchantSearch" location="0,0" size="0,0">
+      <result name="searchMerchant" />
+      <result name="detail" />
+      <result name="resetLoginPsw" />
+      <result name="delayBack" />
+      <result name="cancelDelayBack" />
+      <result name="enable" />
+      <result name="disable" />
+      <result name="relieveLoginCard" />
+      <result name="delete" />
+      <result name="error" />
+    </action>
+    <action name="merchantSetLoginCard" location="0,0" size="0,0">
+      <result name="input" />
+      <result name="success" />
+    </action>
+    <action name="merchantInsert" location="0,0" size="0,0">
+      <result name="input" />
+      <result name="success" />
+    </action>
+    <action name="merchantUpdate" location="0,0" size="0,0">
+      <result name="input" />
+      <result name="success" />
+      <result name="merchantSearch" />
+    </action>
+    <action name="merchantForChoose" location="0,0" size="0,0">
+      <result name="merchantMultiChooseSearch" />
+      <result name="merchantSingleChooseSearch" />
+    </action>
+    <action name="merchantDelete" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="settleWizard" location="0,0" size="0,0">
+      <result name="start" />
+      <result name="success" />
+    </action>
+    <action name="success" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="typeCounterSum" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="detail" />
+    </action>
+    <action name="floorCounterSum" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="detail" />
+    </action>
+    <action name="contractChargeFloorSum" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="detail" />
+    </action>
+    <action name="contractChargeMerchantSum" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="detail" />
+    </action>
+    <action name="contractChargeSum" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="contractChargeDaySum" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="detail" />
+    </action>
+    <action name="contractIncomeMerchantSum" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="guarantee" />
+    </action>
+    <action name="contractIncomeFloorSum" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="guarantee" />
+    </action>
+    <action name="returnStatistics" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="typeReturnStatistics" location="0,0" size="0,0">
+      <result name="prepare" />
+      <result name="success" />
+      <result name="detail" />
+    </action>
+    <action name="floorReturnStatistics" location="0,0" size="0,0">
+      <result name="prepare" />
+      <result name="success" />
+      <result name="detail" />
+    </action>
+    <action name="contractReturnSearch" location="0,0" size="0,0">
+      <result name="prepare" />
+      <result name="success" />
+      <result name="detail" />
+    </action>
+  </package>
+</Struts2Diagram>
+

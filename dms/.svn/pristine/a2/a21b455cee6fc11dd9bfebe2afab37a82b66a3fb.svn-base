@@ -1,0 +1,75 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+<script type="text/javascript">
+	function checkSubmit() {
+		if (!checkData(true, 'module.moduleName', "模块名称", 2, 30)) {
+			return false;
+		}
+		if (!checkData(false, 'module.memo', "备注", 1, 255)) {
+			return false;
+		}
+		document.submitForm.submit();
+	}
+	
+</script>
+</head>
+
+<body>
+	<form method="post" id="submitForm" name="submitForm" action="${basePath}dms/moduleUpdate!updateModule.action">
+		<input name="module.id" id="module.id" value="${module.id}"
+			type="hidden" />
+		<div class="dialogTop">
+			<table width="400" border="0" align="center" cellpadding="0"
+				cellspacing="10">
+				<tr>
+					<td width="70" align="right">
+						<font color=red>*</font>模块名称：
+					</td>
+					<td>
+						<input type="text" name="module.moduleName"
+							id="module.moduleName" value="${module.moduleName}"
+							class="ldText" maxlength="30" />
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						所属项目：
+					</td>
+					<td>${ document.project.projectName}
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						所属文档：
+					</td>
+					<td>
+						${ document.documentName}
+					</td>
+				</tr>
+				<tr>
+					<td width="70" class="right yhItem1">备注：</td>
+					<td>
+						<textarea name="module.memo" id="module.memo" rows="5" cols="30"
+							maxlength="255">${module.memo}</textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="dialogBottom">
+			<div class="btns">
+				<ld:check mark="modelUpdateCommit">
+					<input type="button" value="确 定" class="ldBtnGreen"
+						onclick="return checkSubmit(${area.id});" />
+				</ld:check>
+				<input type="button" value="关 闭" class="ldBtnGray"
+					onclick="ldDialog.close();" />
+			</div>
+		</div>
+	</form>
+</body>
+</html>
+

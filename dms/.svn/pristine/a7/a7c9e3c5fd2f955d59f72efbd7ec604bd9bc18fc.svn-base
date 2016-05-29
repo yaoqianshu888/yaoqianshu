@@ -1,0 +1,92 @@
+package com.landicorp.dms.entities;
+
+import java.util.Date;
+
+import com.landicorp.core.entities.User;
+import com.landicorp.core.entities.base.BaseEntity;
+
+public class Function extends BaseEntity{
+	private Integer id;
+	private Module module;  //所属模块
+	private String versionId;//版本号
+	private String functionName; //功能点名称
+	private Integer available;  //状态（是否有效）
+	private User creator;  //创建人
+	private Date createTime;// 创建时间
+	private String urlPath;//请求url
+	private Integer operationType;//操作状态（未审核，审核通过，未提交）
+	private String memo;//备注
+	private String requestCode;  //请求码
+	
+	public String getRequestCode() {
+		return requestCode;
+	}
+	public void setRequestCode(String requestCode) {
+		this.requestCode = requestCode;
+	}
+	public Module getModule() {
+		return module;
+	}
+	public void setModule(Module module) {
+		this.module = module;
+	}
+	
+	public String getVersionId() {
+		return versionId;
+	}
+	public void setVersionId(String versionId) {
+		this.versionId = versionId;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	
+	public String getFunctionName() {
+		return functionName;
+	}
+	public void setFunctionName(String functionName) {
+		this.functionName = functionName;
+	}
+	public Integer getAvailable() {
+		return available;
+	}
+	public void setAvailable(Integer available) {
+		this.available = available;
+	}
+	public User getCreator() {
+		return creator;
+	}
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public String getUrlPath() {
+		return urlPath;
+	}
+	public void setUrlPath(String urlPath) {
+		this.urlPath = urlPath;
+	}
+	
+	public Integer getOperationType() {
+		return operationType;
+	}
+	public void setOperationType(Integer operationType) {
+		this.operationType = operationType;
+	}
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+	
+}

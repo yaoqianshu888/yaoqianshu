@@ -1,0 +1,65 @@
+package com.landicorp.dms.action.template;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.ITemplateService;
+
+public class TemplateUpdateAction extends BaseActionSupport {
+	private Template template;
+	private ITemplateService templateService;
+	
+	
+	public Template getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+
+	public ITemplateService getTemplateService() {
+		return templateService;
+	}
+
+	public void setTemplateService(ITemplateService templateService) {
+		this.templateService = templateService;
+	}
+
+	public String prepare() {
+		template=templateService.getById(template.getId());
+		return INPUT;
+	}
+	
+	public void templateUpdate() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		String reason="";
+		int code=0;
+		String returnValue="";
+		
+		try {
+			Template updateTemplate=templateService.getById(template.getId());
+			updateTemplate.setTempletName(template.getTempletName());
+			updateTemplate.setMemo(template.getMemo());
+			updateTemplate.setLastModifier(getSessionUser());
+			updateTemplate.setLastModifyTime(new Date());
+			
+			templateService.update(updateTemplate);
+			returnValue="修改成功";
+			code=1;
+			//setWindowReturnValue(returnValue);
+		}catch (Exception e) {
+			reason="修改失败";
+		}
+		
+		response.getWriter().write("[{\"code\":\""+code+"\",\"reason\":\""+reason+"\",\"returnValue\":\""+returnValue+"\"}]");
+	}
+}

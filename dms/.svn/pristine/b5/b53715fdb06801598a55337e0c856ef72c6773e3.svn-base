@@ -1,0 +1,105 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+<script type="text/javascript">
+	function checkSubmit() {
+		if (!checkData(true, 'model.name', "模块名称", 2, 30)) {
+			return false;
+		}
+		if (!checkData(false, 'model.memo', "备注", 1, 255)) {
+			return false;
+		}
+		submitForm();
+	}
+	function submitForm(){
+		var url = "${basePath}coreAjax/modelInsert!insertModel.action";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			data : $("#submitForm").serialize(),
+			success : function(result) {
+				var res = JSON.parse(result);
+				if (res.code == 1) {
+					//ldDialog.tips("新增成功");
+					ldDialog.close(res.returnValue);
+				} else {
+					ldDialog.alert(res.reason);
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+			}
+		});
+	}
+	
+</script>
+</head>
+<body>
+	<form method="post" id="submitForm">
+		<div class="dialogTop">
+			<table width="400" border="0" align="center" cellpadding="0"
+				cellspacing="10">
+				<tr>
+					<td width="70" align="right">
+						模块编号：
+					</td>
+					<td>
+						<input type="text" name="model.no" id="model.no" value="008"
+							value="${model.no}" class="ldText" maxlength="30" readonly />
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>模块名称：
+					</td>
+					<td>
+						<input type="text" name="model.name" id="model.name" 
+							value="${model.name}" class="ldText" maxlength="30" />
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						所属项目：
+					</td>
+					<td><select class="ldSelect input138" name="model.document.project.name" >
+							<option>银销通项目</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						所属文档：
+					</td>
+					<td>
+						<select class="ldSelect input138" name="model.document.name" >
+							<option>接口说明文档</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">备注：</td>
+					<td>
+						<textarea name="model.memo" id="model.memo" cols="30" rows="5"
+							maxlength="255">${model.memo}</textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="dialogBottom">
+			<div class="btns">
+				<ld:check mark="modelInsertCommit">
+					<input type="button" value="确 定" class="ldBtnGreen"
+						onclick="return checkSubmit();" />
+				</ld:check>
+				<input type="button" value="关 闭" class="ldBtnGray"
+					onclick="ldDialog.close();" />
+			</div>
+		</div>
+	</form>
+</body>
+</html>
+

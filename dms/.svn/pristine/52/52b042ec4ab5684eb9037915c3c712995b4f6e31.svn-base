@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+	default-autowire="byName">
+
+
+	<!-- initTask -->
+
+	<!-- dao -->
+	
+	<!-- service -->
+
+	<!-- struts2 action -->
+	<bean id="mainFormTopAction" class="com.landicorp.upms.action.main.MainFormTopAction"
+		scope="prototype" />
+	<bean id="mainFormMenuAction" class="com.landicorp.upms.action.main.MainFormMenuAction"
+		scope="prototype" />
+
+	<bean id="userDetailAction" class="com.landicorp.upms.action.user.UserDetailAction"
+		scope="prototype" />
+	<bean id="userLoginAction" class="com.landicorp.upms.action.user.UserLoginAction"
+		scope="prototype">
+	</bean>
+	<bean id="userForChooseAction" class="com.landicorp.upms.action.user.UserForChooseAction"
+		scope="prototype">
+	</bean>
+	<bean id="coreLoginAction" class="com.landicorp.upms.action.user.CoreLoginAction"
+		scope="prototype">
+	</bean>
+	<bean id="userUpdatePasswordAction" class="com.landicorp.upms.action.user.UserUpdatePasswordAction"
+		scope="prototype" />
+	<bean id="userSearchAction" class="com.landicorp.upms.action.user.UserSearchAction"
+		scope="prototype" />
+	<bean id="userInsertAction" class="com.landicorp.upms.action.user.UserInsertAction"
+		scope="prototype" />
+	<bean id="userUpdateAction" class="com.landicorp.upms.action.user.UserUpdateAction"
+		scope="prototype" />
+
+
+	<bean id="userImportAction" class="com.landicorp.upms.action.user.UserImportAction"
+		scope="prototype" />
+	<!-- 角色管理 -->
+	<bean id="roleSearchAction" class="com.landicorp.upms.action.role.RoleSearchAction"
+		scope="prototype" />
+	<bean id="roleInsertAction" class="com.landicorp.upms.action.role.RoleInsertAction"
+		scope="prototype" />
+	<bean id="roleUpdateAction" class="com.landicorp.upms.action.role.RoleUpdateAction"
+		scope="prototype" />
+	<bean id="roleUpdateRightAction" class="com.landicorp.upms.action.role.RoleUpdateRightAction"
+		scope="prototype" />
+
+	<!-- 权限管理 -->
+	<bean id="rightSearchAction" class="com.landicorp.upms.action.right.RightSearchAction"
+		scope="prototype" />
+	<bean id="rightInsertAction" class="com.landicorp.upms.action.right.RightInsertAction"
+		scope="prototype" />
+	<bean id="rightUpdateAction" class="com.landicorp.upms.action.right.RightUpdateAction"
+		scope="prototype" />
+
+	<!-- 部门管理 -->
+	<bean id="areaSearchAction" class="com.landicorp.upms.action.area.AreaSearchAction"
+		scope="prototype" />
+	<bean id="areaForChooseAction" class="com.landicorp.upms.action.area.AreaForChooseAction"
+		scope="prototype" />
+	<bean id="areaInsertAction" class="com.landicorp.upms.action.area.AreaInsertAction"
+		scope="prototype" />
+	<bean id="areaUpdateAction" class="com.landicorp.upms.action.area.AreaUpdateAction"
+		scope="prototype" />
+ 	
+	<!-- 用户角色管理 -->
+	<bean id="roleUserSearchAction" class="com.landicorp.upms.action.roleUser.RoleUserSearchAction"
+		scope="prototype" />
+
+	<!-- 日志管理 -->
+	<bean id="operateLogSearch"
+		class="com.landicorp.upms.action.operatelog.OperateLogSearchAction"
+		scope="prototype" />
+	<bean id="operateLogDetail"
+		class="com.landicorp.upms.action.operatelog.OperateLogDetailAction"
+		scope="prototype" />
+
+	<!-- 软件升级action -->
+	<bean id="checkstandVersionSearchAction"
+		class="com.landicorp.upms.action.checkstandversion.CheckstandVersionSearchAction"
+		scope="prototype" />
+	<bean id="checkstandVersionUpdateAction"
+		class="com.landicorp.upms.action.checkstandversion.CheckstandVersionUpdateAction"
+		scope="prototype" />
+	<bean id="checkstandVersionInsertAction"
+		class="com.landicorp.upms.action.checkstandversion.CheckstandVersionInsertAction"
+		scope="prototype" />
+	<bean id="versionUpdateAction"
+		class="com.landicorp.upms.action.checkstandversion.VersionUpdateAction"
+		scope="prototype" />
+
+	<!-- 系统信息 -->
+	<bean id="systemMonitorAction" class="com.landicorp.upms.action.monitor.SystemMonitorAction"
+		scope="prototype" />
+
+	<!-- 项目管理action -->
+	<bean id="projectSearchAction" class="com.landicorp.upms.action.project.ProjectSearchAction"
+		scope="prototype" />
+	<bean id="projectUpdateAction" class="com.landicorp.upms.action.project.ProjectUpdateAction"
+		scope="prototype" />
+	<bean id="projectInsertAction" class="com.landicorp.upms.action.project.ProjectInsertAction"
+		scope="prototype" />
+
+	<!-- 平台管理action -->
+
+
+	<!-- 选项管理action -->
+	<bean id="optionManageAction" class="com.landicorp.upms.action.option.OptionManageAction"
+		scope="prototype"/>
+	<bean id="optionUpdateAction" class="com.landicorp.upms.action.option.OptionUpdateAction"
+		scope="prototype" />
+
+	<!-- 服务器同步 -->
+	<bean id="serverSyncAction" class="com.landicorp.upms.action.ServerSyncAction"
+		scope="prototype" />
+		
+	<!-- 选择 -->
+	<bean id="selectForChooseAction" class="com.landicorp.upms.action.basicdata.SelectForChooseAction"
+		scope="prototype" />
+
+</beans>

@@ -1,0 +1,132 @@
+package com.landicorp.dms.action.document;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IDocumentService;
+
+public class DocumentSearchAction extends BaseActionSupport {
+	
+	private static final long serialVersionUID = 1L;
+	private Document document;
+	private List<Document> documentList;
+	private Date startCreateTime;
+	private Date endCreateTime;
+	private IDocumentService documentService;
+	private ProjectDoc projectDoc;
+	
+	
+
+	public ProjectDoc getProjectDoc() {
+		return projectDoc;
+	}
+
+	public void setProjectDoc(ProjectDoc projectDoc) {
+		this.projectDoc = projectDoc;
+	}
+
+	public Date getStartCreateTime() {
+		return startCreateTime;
+	}
+
+	public void setStartCreateTime(Date startCreateTime) {
+		this.startCreateTime = startCreateTime;
+	}
+
+	public Date getEndCreateTime() {
+		return endCreateTime;
+	}
+
+	public void setEndCreateTime(Date endCreateTime) {
+		this.endCreateTime = endCreateTime;
+	}
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+	public String searchDocument() {
+		document=null;
+		documentList=documentService.getAllDocument(getPager());
+		return SUCCESS;
+	}
+
+	public String detail() {
+		document=documentService.getById(document.getId());
+		return "detail";
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+	public List<Document> getDocumentList() {
+		return documentList;
+	}
+
+	public void setDocumentList(List<Document> documentList) {
+		this.documentList = documentList;
+	}
+
+	
+	//得到有效的文档
+	public String searchDocumentsByInfo() throws ParseException {
+		document.setAvailable(1);
+		documentList=documentService.getDocumentListByDocument(document, startCreateTime, endCreateTime, getPager());
+		return SUCCESS; 
+	}
+	
+	//得到所有的文档
+	public String searchDocumentAllByInfo() throws ParseException {
+		documentList=documentService.getDocumentListByDocumentAll(document,null,null,getPager());
+		return SUCCESS;
+	}
+	
+	//改变文档的状态
+	public String setAvailable(){
+		Document statue=documentService.getById(document.getId());
+		statue.setAvailable(1 - statue.getAvailable());
+		statue.setLastModifier(getSessionUser());
+		statue.setLastModifyTime(new Date());
+		documentService.update(statue);
+		documentList=documentService.getDocumentListByDocumentAll(document, null, null, getPager());
+		return SUCCESS;
+	}
+
+	public void getAllDocument() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		StringBuffer sb=new StringBuffer("[");
+		if(projectDoc.getId()!=null){
+		documentList=documentService.getByProjectId(projectDoc.getId());
+		
+		for(int i=0;i<documentList.size();i++){
+			sb.append("{\"id\":\""+documentList.get(i).getId()+"\",\"documentName\":\""+documentList.get(i).getDocumentName()+"\"},");
+		}
+		if(sb.length()>1){
+			sb.deleteCharAt(sb.length()-1);
+		}
+		}
+		sb.append("]");
+		//System.out.println(sb.toString());
+		response.getWriter().write(sb.toString());
+	}
+}

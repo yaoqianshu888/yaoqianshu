@@ -1,0 +1,423 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link href="${basePath}dms/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="${basePath}dms/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+    var start=0;
+    var end=0;
+    function add(obj){      
+        var textBox = $(obj).prev()[0];
+        var pre = textBox.value.substr(0, start);
+        var post = textBox.value.substr(end);
+        ldDialog.open("${basePath}dms/functionInsert!addPhoto.action", "上传图片",
+				function(window) {
+					var returnValue = window.returnValue;
+					if (returnValue == undefined||returnValue == "") {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						textBox.value = pre +"<photo>"+returnValue +"</photo>"+ post;
+						return true;
+					}
+				});
+    }
+    function savePos(textBox){
+        //如果是Firefox(1.5)的话，方法很简单
+        if(typeof(textBox.selectionStart) == "number"){
+            start = textBox.selectionStart;
+            end = textBox.selectionEnd;
+            end = textBox.selectionEnd;
+        }
+        //下面是IE(6.0)的方法，麻烦得很，还要计算上'/n'
+        else if(document.selection){
+            var range = document.selection.createRange();
+            if(range.parentElement().id == textBox.id){
+                var range_all = document.body.createTextRange();
+                range_all.moveToElementText(textBox);
+                for (start=0; range_all.compareEndPoints("StartToStart", range) < 0; start++)
+                    range_all.moveStart('character', 1);
+                for (var i = 0; i <= start; i ++){
+                    if (textBox.value.charAt(i) == '/n')
+                        start++;
+                }
+                 var range_all = document.body.createTextRange();
+                 range_all.moveToElementText(textBox);
+                 // calculate selection end point by moving beginning of range_all to end of range
+                 for (end = 0; range_all.compareEndPoints('StartToEnd', range) < 0; end ++)
+                     range_all.moveStart('character', 1);
+                     // get number of line breaks from textarea start to selection end and add them to end
+                     for (var i = 0; i <= end; i ++){
+                         if (textBox.value.charAt(i) == '/n')
+                             end ++;
+                     }
+                }
+            }
+        /*document.getElementById("start").value = start;
+        document.getElementById("end").value = end;*/
+    }
+</script>
+<script type="text/javascript">
+	var i=2;
+	function AddRow(table, index){
+		i++;
+	    var lastRow = table.rows[table.rows.length-1];
+	    var newRow = lastRow.cloneNode(true);
+	    $(newRow).find("input:radio").attr("name","yes"+i);
+	    table.tBodies[0].appendChild(newRow);
+	/*    SetRowCanEdit(newRow);*/
+	    return newRow;
+	}
+	
+	
+	//删除行
+	function DeleteRow(table, index){
+	    for(var i=table.rows.length - 1; i>0;i--){
+	        var chkOrder = table.rows[i].cells[0].firstChild;
+	        if(chkOrder){
+	            if(chkOrder.type = "CHECKBOX"){
+	                if(chkOrder.checked){
+	                    //执行删除
+	                    table.deleteRow(i);
+	                }
+	            }
+	        }
+	    }
+	}
+	function checkSubmit() {
+		if (!checkData(true, 'template.name', "模板名称", 2, 30)) {
+			return false;
+		}
+		if (!checkData(false, 'template.memo', "备注", 1, 255)) {
+			return false;
+		}
+		submitForm();
+	}
+	function submitForm(){
+		var url = "${basePath}coreAjax/templateInsert!insertTemplate.action";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			data : $("#submitForm").serialize(),
+			success : function(result) {
+				var res = JSON.parse(result);
+				if (res.code == 1) {
+					//ldDialog.tips("新增成功");
+					ldDialog.close(res.returnValue);
+				} else {
+					ldDialog.alert(res.reason);
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+
+			}
+		});
+	}
+	
+	 function initRemove() {
+        $(".glyphicon-remove").on("click", function () {
+            $(this).parents("div.form-group").remove();
+        });
+    }
+	
+	function initMoveUp() {
+        $(".glyphicon-arrow-up").on("click", function () {
+            $(this).parents("div.form-group").prev().before($(this).parents("div.form-group"));
+            adjustArrow();
+        });
+    }
+
+    function initMoveDown() {
+        $(".glyphicon-arrow-down").on("click", function () {
+            $(this).parents("div.form-group").next().after($(this).parents("div.form-group"));
+        });
+    }
+
+
+    function adjustArrow() {
+        $("#interfaceBody>.form-group:last").find(".glyphicon-arrow-down").parent().parent().remove();
+        if (!$("#interfaceBody>.form-group:last").prev().find("li:last span").hasClass("glyphicon-arrow-down")) {
+            var li = "<li> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-arrow-down'></span> </a> </li>";
+            $("#interfaceBody>.form-group:last").prev().find("ul").append(li);
+        }
+        $("#interfaceBody>.form-group:eq(3)").find(".glyphicon-arrow-up").parent().parent().remove();
+        if (!$("#interfaceBody>.form-group:eq(3)").next().find("li:eq(1) span").hasClass("glyphicon-arrow-up")) {
+            var li = "<li> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span onclick='javascript:$(this).parents(\"div.form-group\").prev().before($(this).parents(\"div.form-group\"));adjustArrow();' class='glyphicon glyphicon-arrow-up'></span> </a> </li>";
+            $("#interfaceBody>.form-group:eq(3)").next().find("li:last").before(li);
+        }
+        //initMoveUp();
+    }
+    
+    function addNode(){
+    	var type=$("#nodeType").val();
+    	var name=$("#templateName").val();
+    	switch(type)
+    	{
+    	case "title":
+    		addTitleNode(name);
+    		break;
+    	case "text":
+    		addTextNode(name);
+    		break;
+    	
+	    case "table":
+			addTableNode(name);
+			break;
+		
+    	case "photo":
+    		addPhotoNode(name);
+    		break;
+    	case "askbaowen":
+    		addAskBaowenNode(name);
+    		break;
+    	case "backbaowen":
+    		addBackBaowenNode(name);
+    		break;
+    	}
+		
+	}
+    function addTextNode(name){
+    	var html = "";
+        html += "<div class='form-group'>";
+        html += "<div style='padding:10px;'><input class='ldText input138' value='"+name+"' placeholder='标题名称'/></div>";
+        html += "<div class='col-md-11'><input style='border-left: 4px solid #ccc;' id='header1' class='form-control' placeholder='文本节点'></input> </div> ";
+        html += "<div class='col-md-1'> <ul class='nav nav-pills nav-stacked' style='float: left;display: inline-block'> <li class=''> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-remove'></span> </a> </li> <li><a style='padding: 0px 5px 0px;' href='javascript:void(0);'><span class='glyphicon glyphicon-arrow-up'></span></a></li>  </ul> </div> </div>";
+
+        var li = "<li> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-arrow-down'></span> </a> </li>";
+
+        $("#interfaceBody>.form-group:last ul").append(li);
+        /* $("#interfaceBody>.form-group:last").after(html); */
+        $("#interfaceBody").append(html);
+        initRemove();
+        initMoveUp();
+        initMoveDown();
+    }
+    function addTitleNode(name){
+    	var html = "";
+        html += "<div class='form-group'>";
+        html += "<div class='col-md-11'><div style='padding:10px;'><input class='ldText input138' value='"+name+"' placeholder='标题名称'/></div></div> ";
+        html += "<div class='col-md-1'> <ul class='nav nav-pills nav-stacked' style='float: left;display: inline-block'> <li class=''> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-remove'></span> </a> </li> <li><a style='padding: 0px 5px 0px;' href='javascript:void(0);'><span class='glyphicon glyphicon-arrow-up'></span></a></li>  </ul> </div> </div>";
+
+        var li = "<li> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-arrow-down'></span> </a> </li>";
+
+        $("#interfaceBody>.form-group:last ul").append(li);
+        /* $("#interfaceBody>.form-group:last").after(html); */
+        $("#interfaceBody").append(html);
+        initRemove();
+        initMoveUp();
+        initMoveDown();
+    }
+    function addPhotoNode(name){
+    	var html = "";
+        html += "<div class='form-group'>";
+        html += "<div style='padding:10px;'><input class='ldText input138' value='"+name+"' placeholder='标题名称'/> </div> ";
+        html +="<div class='col-md-11'><textarea name=\"remark\" cols=\"20\" rows=\"3\"style=\"width:700px\" class=\"ldTextArea\" onkeydown=\"savePos(this)\""
+        +"onkeyup=\"savePos(this)\""
+        +"onmousedown=\"savePos(this)\""
+        +"onmouseup=\"savePos(this)\""
+        +"onfocus=\"savePos(this)\"></textarea><input type=\"button\" name=\"Submit2\" style=\"float:right;\"  class=\"ldBtnGreen add\" value=\"添加图片\"  onclick=\"add(this)\" disabled=\"disabled\"/></div>";
+        html += "<div class='col-md-1'> <ul class='nav nav-pills nav-stacked' style='float: left;display: inline-block'> <li class=''> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-remove'></span> </a> </li> <li><a style='padding: 0px 5px 0px;' href='javascript:void(0);'><span class='glyphicon glyphicon-arrow-up'></span></a></li>  </ul> </div> </div>";
+
+        var li = "<li> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-arrow-down'></span> </a> </li>";
+
+        $("#interfaceBody>.form-group:last ul").append(li);
+        /* $("#interfaceBody>.form-group:last").after(html); */
+        $("#interfaceBody").append(html);
+        initRemove();
+        initMoveUp();
+        initMoveDown();
+    }
+    var p=1;
+    function addBackBaowenNode(name){
+    	p++;
+    	var html = "";
+        html += "<div class='form-group'>";
+        html += "<div style='padding:10px;'><input class='ldText input138' value='"+name+"' placeholder='标题名称'/> </div> ";
+        html += "<div class='col-md-11'>"
+        +"<div class=\"d_edit_part_d\" style=\"float: left; padding: 10px 0px; width: 725px;\">"
+        +"<div>"
+        +"<span style=\"float:right;\"> <input type=\"radio\" name='backbao"+p+"' value=\"1\" checked/> xml"
+        +"<input type=\"radio\" name='backbao"+p+"' value=\"0\"/> json</span>"
+        +"<div class=\"clear\"></div>"
+        +"</div>"
+        +"<textarea id=\"code_area1\" placeholder=\"\" rows=\"1\" name=\"content_2\" autocomplete=\"off\" style=\"border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:100%\" onfocus=\"resizeTextarea(this,5);\" onclick=\"resizeTextarea(this, 5);\" onkeyup=\"resizeTextarea(this,5);\" onkeydown=\"resizeTextarea(this,5);\" onpaste=\"textareaRightMenu(this);\" oncut=\"textareaRightMenu(this);\"> </textarea>"
+        +"</div>"
+        +"</div>";
+        html += "<div class='col-md-1'> <ul class='nav nav-pills nav-stacked' style='float: left;display: inline-block'> <li class=''> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-remove'></span> </a> </li> <li><a style='padding: 0px 5px 0px;' href='javascript:void(0);'><span class='glyphicon glyphicon-arrow-up'></span></a></li>  </ul> </div> </div>";
+
+        var li = "<li> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-arrow-down'></span> </a> </li>";
+
+        $("#interfaceBody>.form-group:last ul").append(li);
+        /* $("#interfaceBody>.form-group:last").after(html); */
+        $("#interfaceBody").append(html);
+        initRemove();
+        initMoveUp();
+        initMoveDown();
+    	
+    }
+    function addAskBaowenNode(name){
+    	p++;
+    	var html = "";
+        html += "<div class='form-group'>";
+        html += "<div style='padding:10px;'><input class='ldText input138' value='"+name+"' placeholder='标题名称'/> </div> ";
+        html += "<div class='col-md-11'>"
+        +"<div class=\"d_edit_part_d\" style=\"float: left; padding: 10px 0px; width: 725px;\">"
+        +"<div>"
+        +"<span style=\"float:right;\"> <input type=\"radio\" name='askbao"+p+"' value=\"1\" checked/> xml"
+        +"<input type=\"radio\" name='askbao"+p+"' value=\"0\"/> json<input type=\"radio\" name='askbao"+p+"' value=\"0\"/> url</span>"
+        +"<div class=\"clear\"></div>"
+        +"</div>"
+        +"<textarea id=\"code_area1\" placeholder=\"\" rows=\"1\" name=\"content_2\" autocomplete=\"off\" style=\"border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:100%\" onfocus=\"resizeTextarea(this,5);\" onclick=\"resizeTextarea(this, 5);\" onkeyup=\"resizeTextarea(this,5);\" onkeydown=\"resizeTextarea(this,5);\" onpaste=\"textareaRightMenu(this);\" oncut=\"textareaRightMenu(this);\"> </textarea>"
+        +"</div>"
+        +"</div>";
+        html += "<div class='col-md-1'> <ul class='nav nav-pills nav-stacked' style='float: left;display: inline-block'> <li class=''> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-remove'></span> </a> </li> <li><a style='padding: 0px 5px 0px;' href='javascript:void(0);'><span class='glyphicon glyphicon-arrow-up'></span></a></li>  </ul> </div> </div>";
+
+        var li = "<li> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-arrow-down'></span> </a> </li>";
+
+        $("#interfaceBody>.form-group:last ul").append(li);
+        /* $("#interfaceBody>.form-group:last").after(html); */
+        $("#interfaceBody").append(html);
+        initRemove();
+        initMoveUp();
+        initMoveDown();
+    	
+    }
+	var j=0;
+    function addTableNode(name){
+    	j++;
+    	var html = "";
+        html += "<div class='form-group'>";
+        html += "<div style='padding:10px;'><input class='ldText input138' value='"+name+"' placeholder='标题名称'/> </div> ";
+        html +=" <div class='col-md-11'><table width=\"698px\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id='tabProduct"+j+"' class=\"newtable\">"
+        +"<tr>"
+        +"<td width=\"32\" align=\"center\" bgcolor=\"#EFEFEF\" Name=\"Num\"></td>"
+        +"<td width=\"120\" bgcolor=\"#EFEFEF\" Name=\"Num\">参数名</td>"
+        +"<td width=\"152\" bgcolor=\"#EFEFEF\" Name=\"ProductName\" >描述</td>"
+        +"<td width=\"103\" bgcolor=\"#EFEFEF\" Name=\"Amount\">是否必填</td>"
+        +"<td width=\"153\" bgcolor=\"#EFEFEF\" Name=\"Price\">说明</td>"
+        +" </tr>"
+        +"<tr>"
+        +"<td align=\"center\"><input type=\"checkbox\" name=\"checkbox2\" value=\"checkbox\" /></td>"
+        +"<td><input type=\"text\" class=\"ldText input138\" name=\"grouptitle\" value=\"\"></td>"
+        +"<td><input type=\"text\" class=\"ldText input138\" name=\"grouptitle\" value=\"\"></td>"
+        +"<td><input type=\"radio\"  class=\"ldRadio\" name='yes"+i+j+"' value=\"1\" checked/>是"
+        +"<input type=\"radio\" class=\"ldRadio\" name='yes"+i+j+"' value=\"0\"/>否</td>"
+        +"<td><input type=\"text\" class=\"ldText input138\" name=\"grouptitle\" value=\"\"></td>"
+        +"</tr>"
+        +"</table>"
+        +"<br />"
+        +"<input type=\"button\" name=\"Submit\" class=\"ldBtnGreen\" value=\"新增\" onclick=\"AddRow(document.getElementById('tabProduct"+j+"'),1)\" />"
+        +"<input type=\"button\" name=\"Submit2\" class=\"ldBtnGreen\" value=\"删除\" onclick=\"DeleteRow(document.getElementById('tabProduct"+j+"'),1)\" />"
+        +"</div>";
+        html += "<div class='col-md-1'> <ul class='nav nav-pills nav-stacked' style='float: left;display: inline-block'> <li class=''> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-remove'></span> </a> </li> <li><a style='padding: 0px 5px 0px;' href='javascript:void(0);'><span class='glyphicon glyphicon-arrow-up'></span></a></li>  </ul> </div> </div>";
+
+        var li = "<li> <a style='padding: 0px 5px 0px;' href='javascript:void(0);'> <span class='glyphicon glyphicon-arrow-down'></span> </a> </li>";
+
+        $("#interfaceBody>.form-group:last ul").append(li);
+        /* $("#interfaceBody>.form-group:last").after(html); */
+        $("#interfaceBody").append(html);
+        initRemove();
+        initMoveUp();
+        initMoveDown();
+    }
+    function saveTemplate(){
+    	ldDialog.alert("保存成功！");
+    	ldDialog.close();
+    }
+    
+</script>
+</head>
+<body>
+		<div class="yhlist1">
+			<div class="yhlist1L">您当前位置：配置功能点模板</div>
+		</div>
+<form id="submitForm" name="submitForm" method="post">
+		<div class="yhbox" style="margin-bottom:50px; ">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="height: 420px">
+				<tr>
+					<td width="280" class="yhbox2" valign="top">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="2" class="treetitle">节点选择</td>
+							</tr>
+							<tr>
+								<td align="right">所属上级：</td>
+								<td>
+									<select class="ldSelect select144">
+										<option>模块名称</option>
+										<option>签到</option>
+									</select>
+								</td>
+							</tr>
+							<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+							<tr>
+								<td align="right">内容格式：</td>
+								<td>
+									<select class="ldSelect select144" id="nodeType">
+										<option value="title">标题节点</option>
+										<option value="text">文本节点</option>
+										<option value="photo">图文节点</option>
+										<option value="table">表格节点</option>
+										<option value="askbaowen">请求报文节点</option>
+										<option value="backbaowen">返回报文节点</option>
+									</select>
+								</td>
+							</tr>
+							<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+							<tr>	
+								<td align="right">当前标题名：</td>
+								<td align="left">
+									<input type="text" name="template.name" id="templateName"
+										value="" class="ldText input138" maxlength="30" />
+								</td>
+							</tr>
+							<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td>
+									<input type="button" class="ldBtnGreen" value="节点生成" onclick="addNode();" />
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td valign="top" class="yhbox3">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="treetitle" id="userName">模板内容：</td>
+							</tr>
+							<tr>
+								<td>
+								 <div class="container-fluid">
+								    <div class="form-horizontal">
+								        <fieldset id="interfaceBody">
+								 		</fieldset>
+								 	</div>
+								 </div>
+								 </td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="dialogBottom">
+		<div class="btns">
+			<ld:check mark="roleUpdateRightCommit">
+				<input type="button" value="保存" class="ldBtnGreen"
+					onclick="saveTemplate();" />
+			</ld:check>
+			&nbsp;
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+	</form>
+	
+</body>
+</html>
+

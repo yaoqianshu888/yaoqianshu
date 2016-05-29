@@ -1,0 +1,16 @@
+package com.landicorp.dms.action.node;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class NodeUpdateAction extends BaseActionSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public String updateNode(){
+		return SUCCESS;
+	}
+
+
+}

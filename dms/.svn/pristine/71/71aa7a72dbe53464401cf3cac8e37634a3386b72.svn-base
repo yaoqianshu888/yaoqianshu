@@ -1,0 +1,57 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IExamineDao;
+import com.landicorp.dms.entities.Examine;
+import com.landicorp.dms.service.IExamineService;
+
+public class ExamineServiceImpl extends
+		AbstractBaseServiceImpl<Examine, Integer> implements IExamineService {
+
+	private IExamineDao examineDao;
+	
+	public IExamineDao getExamineDao() {
+		return examineDao;
+	}
+
+	public void setExamineDao(IExamineDao examineDao) {
+		this.examineDao = examineDao;
+	}
+
+	@Override
+	public int add(Examine arg0) {
+		return examineDao.save(arg0);
+	}
+
+	
+	@Override
+	public Examine getById(Integer arg0) {
+		return examineDao.getById(arg0);
+	}
+
+	
+	@Override
+	public int update(Examine arg0) {
+		return examineDao.update(arg0);
+	}
+
+	@Override
+	public IMyBatisDao<Examine, Integer> getMyBatisDao() {
+		return examineDao;
+	}
+
+	@Override
+	public Integer getMaxId() {
+		Integer maxId=examineDao.getMaxId();
+		if(maxId!=null){
+			return maxId;
+		}
+		return 0;
+	}
+
+}

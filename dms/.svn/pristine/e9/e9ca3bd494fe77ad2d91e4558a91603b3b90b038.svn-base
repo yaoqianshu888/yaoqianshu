@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IDocumentDao">
+	<resultMap type="document" id="document">
+		<result property="id" column="ID"/>
+		<result property="no" column="NO" />
+		<result property="versionId" column="VERSION_ID" />
+		<result property="documentName" column="DOCUMENT_NAME" />
+		<result property="docType" column="DOC_TYPE" />
+		<result property="available" column="AVAILABLE" />
+		<result property="project.id" column="PROJECT_ID" />
+		<result property="project.projectName" column="PROJECT_NAME" />
+		<result property="creator.id" column="creator" />
+		<result property="creator.userName" column="user_name" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="urlPath" column="URL_PATH" />
+		<result property="memo" column="MEMO" />
+		<result property="template.id" column="TEMPLET_ID" />
+		<result property="lastModifyTime" column="LAST_MODIFY_TIME" />
+		<result property="lastModifier.userName" column="LAST_MODIFIER" />
+		<result property="modifyContent" column="MODIFY_CONTENT" />
+		<result property="documentPath" column="DOCUMENT_PATH" />
+		<result property="isNowVer" column="IS_NOW_VER" />
+		<result property="examine.id" column="EXAMINE" />
+		<result property="examine.examiner.userName" column="EXAMINE_USERNAME" />
+		<result property="examine.content" column="content" />
+		<association property="creator" column="creator"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+		<association property="lastModifier" column="LAST_MODIFIER"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+		<association property="project" column="PROJECT_ID"
+			javaType="com.landicorp.dms.entities.ProjectDoc" select="com.landicorp.dms.dao.IProjectDocDao.getById" />
+		<association property="examine" column="EXAMINE"
+			javaType="com.landicorp.dms.entities.Examine" select="com.landicorp.dms.dao.IExamineDao.getById" />
+	</resultMap>
+
+	<sql id="keyColumns">NO,VERSION_ID,DOCUMENT_NAME,DOC_TYPE,AVAILABLE,PROJECT_ID,CREATOR,
+	                     CREATE_TIME,URL_PATH,MEMO,TEMPLET_ID,LAST_MODIFY_TIME,LAST_MODIFIER,MODIFY_CONTENT,DOCUMENT_PATH,IS_NOW_VER,EXAMINE
+	</sql>
+	<sql id="valueColumns">#{no,jdbcType=VARCHAR},#{versionId,jdbcType=VARCHAR},
+		#{documentName,jdbcType=VARCHAR},#{docType,jdbcType=NUMERIC},
+		#{available,jdbcType=NUMERIC},#{project.id,jdbcType=NUMERIC},
+		#{creator.id,jdbcType=NUMERIC},#{createTime,jdbcType=TIMESTAMP},
+		#{urlPath,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},
+		#{template.id,jdbcType=NUMERIC},#{lastModifyTime,jdbcType=TIMESTAMP},
+		#{lastModifier.id,jdbcType=NUMERIC},#{modifyContent,jdbcType=VARCHAR},
+		#{documentPath,jdbcType=VARCHAR},#{isNowVer,jdbcType=NUMERIC},
+		#{examine.id,jdbcType=NUMERIC}
+	</sql>
+	
+	<!-- 两处查询均可用 -->
+	<sql id="whereColumns">
+			<if
+				test="document!=null and document.documentName!=null and document.documentName!=''">
+				and t1.DOCUMENT_NAME like '%${document.documentName}%'
+			</if>
+			<if test="document!=null and document.project!=null and document.project.id!=null and document.project.id!=''">
+				and t1.PROJECT_ID=#{document.project.id}
+			</if>
+			<if test="startCreateTime!=null and startCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) > DATE(#{startCreateTime})
+			 ]]>
+			</if>
+			<if test="endCreateTime!=null and endCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) < DATE(#{endCreateTime})
+			 ]]>
+			</if>
+			<if test="document!=null and document.creator!=null and document.creator.userName!=null and document.creator.userName!=''">
+				and t2.user_name like '%${document.creator.userName}%'
+			</if>
+			<if test="document!=null and document.docType!=null">
+				and t1.DOC_TYPE=#{document.docType}
+			</if>
+			<if test="document!=null and document.available!=null">
+				and t1.AVAILABLE=#{document.available}
+			</if>
+	</sql>
+	
+	<insert id="save" parameterType="document">
+
+		insert into t_dms_document(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	
+	<insert id="saveEdit" parameterType="document">
+		insert into t_dms_document(ID,
+		<include refid="keyColumns" />
+		) values(#{id,jdbcType=NUMERIC},
+		<include refid="valueColumns" />
+		)
+	</insert>
+	
+	<update id="update" parameterType="document">
+		update t_dms_document
+		<set>
+			<if test="no!=null">NO=#{no},</if>
+			<if test="versionId!=null">VERSION_ID=#{versionId},</if>
+			<if test="documentName!=null">DOCUMENT_NAME=#{documentName},</if>
+			<if test="docType!=null">DOC_TYPE=#{docType},</if>
+			<if test="available!=null">AVAILABLE=#{available},</if>
+			<if test="project!=null and project.id!=null">PROJECT_ID=#{project.id},</if>
+			<if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+			<if test="creator!=null and creator.id!=null">CREATOR=#{creator.id},</if>
+			<if test="lastModifyTime!=null">LAST_MODIFY_TIME=#{lastModifyTime},</if>
+			<if test="lastModifier!=null and lastModifier.id!=null">LAST_MODIFIER=#{lastModifier.id},</if>
+			<if test="urlPath!=null">URL_PATH=#{urlPath},</if>
+			<if test="memo!=null">MEMO=#{memo},</if>
+			<if test="template!=null and template.id!=null">TEMPLET_ID=#{template.id},</if>
+			<if test="modifyContent!=null">MODIFY_CONTENT=#{modifyContent},</if>
+			<if test="documentPath!=null">DOCUMENT_PATH=#{documentPath},</if>
+			<if test="isNowVer!=null">IS_NOW_VER=#{isNowVer},</if>
+			<if test="examine!=null and examine.id!=null">EXAMINE=#{examine.id}</if>
+		</set>
+		where id=#{id}
+	</update>
+	<select id="getById" parameterType="int" resultMap="document">
+		select *
+		from
+		t_dms_document
+		where id=#{id}
+	</select>
+	<delete id="delete" parameterType="int">
+		delete from t_dms_document where
+		id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="getDocumentListByDocument" parameterType="map"
+		resultMap="document">
+		select * from t_dms_document t1,t_core_user t2
+		<where>
+			t1.CREATOR=t2.ID and  IS_NOW_VER=1 and
+			t1.AVAILABLE=1 
+			<include refid="whereColumns" />
+		</where>		
+		order by t1.id desc
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getDocumentListByDocumentAll" parameterType="map"
+		resultMap="document">
+		select * from t_dms_document t1,t_core_user t2
+		<where>
+			t1.CREATOR=t2.ID  and t1.IS_NOW_VER=1
+			<include refid="whereColumns" />
+		</where>		
+		order by t1.id desc
+		<include refid="Sql.pager" />
+	</select>
+	
+	<select id="getDocumentCountByDocument" parameterType="map" resultType="int">
+		select count(*) from t_dms_document t1,t_core_user t2
+		<where>
+			t1.CREATOR=t2.ID and IS_NOW_VER=1 and
+		    t1.AVAILABLE=1
+			<include refid="whereColumns" />
+		</where>		
+	</select>
+	
+	<select id="getDocumentCountByDocumentAll" parameterType="map" resultType="int">
+		select count(*) from t_dms_document t1,t_core_user t2
+		<where>
+			t1.CREATOR=t2.ID and t1.IS_NOW_VER=1
+			<include refid="whereColumns" />
+		</where>		
+	</select>
+	
+	<!-- 得到有效的文档 -->
+	<select id="getAllDocumentAila" resultMap="document">
+		SELECT
+		*
+		FROM t_dms_document
+		where AVAILABLE=1 and IS_NOW_VER=1
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+
+	<select id="getAllDocumentCountAila" resultType="int">
+		select count(*) from t_dms_document
+		where AVAILABLE=1 and IS_NOW_VER=1
+	</select>
+	
+	<select id="getAllDocument" resultMap="document">
+		SELECT
+		*
+		FROM t_dms_document where IS_NOW_VER=1
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+
+	<select id="getAllDocumentCount" resultType="int">
+		select count(*) from t_dms_document where IS_NOW_VER=1
+	</select>
+	<select id="getMaxId" resultType="Integer">
+		select Max(id)+1 from t_dms_document
+	</select>
+	
+	<!-- 通过文档编号得到文档 -->
+	<select id="getAllDocumentByNo" resultMap="document" parameterType="map">
+		SELECT
+		*
+		FROM t_dms_document
+		where NO=#{no}
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getAllDocumentCountByNo" resultType="int" parameterType="String">
+		select count(*) from t_dms_document
+		where NO=#{no}
+	</select>
+	
+	<!-- 通过文档编号和版本号得到文档 -->
+	<select id="getAllDocumentByNoAndVerId" resultMap="document" parameterType="map">
+		SELECT
+		*
+		FROM t_dms_document
+		where NO=#{document.no}
+		<if test="document!=null and document.versionId!=null and document.versionId!=''">
+			and VERSION_ID like '%${document.versionId}%'
+		</if>
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getAllDocumentCountByNoAndVerId" resultType="int" parameterType="document">
+		select count(*) from t_dms_document
+		where NO=#{no}
+		<if test="versionId!=null and versionId!=''">
+			and VERSION_ID like '%${versionId}%'
+		</if>
+	</select>
+	<!-- 根据文档编号设置不是当前版本 -->
+	<update id="setDocumentByNo" parameterType="document">
+		update t_dms_document
+		set IS_NOW_VER=0
+		where NO=#{no} 
+	</update>
+	
+	<!-- 根据文档id设置为当前版本 -->
+	<update id="setDocumentById" parameterType="document">
+		update t_dms_document
+		set IS_NOW_VER=1
+		where id=#{id} 
+	</update>
+</mapper>

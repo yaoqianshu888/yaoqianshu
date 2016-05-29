@@ -1,0 +1,8 @@
+package com.landicorp.dms.service;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.dms.entities.Examine;
+
+public interface IExamineService extends IBaseService<Examine, Integer> {
+	public Integer getMaxId();  //得到最大的id
+}

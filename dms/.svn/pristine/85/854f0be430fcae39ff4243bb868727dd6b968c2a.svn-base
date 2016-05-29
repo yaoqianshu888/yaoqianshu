@@ -1,0 +1,170 @@
+package com.landicorp.dms.action.function;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IFunctionService;
+import com.landicorp.dms.service.IModuleService;
+import com.landicorp.dms.service.IProjectDocService;
+
+public class FunctionCheckSearchAction extends BaseActionSupport{
+
+	private static final long serialVersionUID = -3059600828982672923L;
+	private Function function;
+	private IFunctionService functionService;
+	private Date startCreateTime;
+	private Date endCreateTime;
+	private Document document;
+	private ProjectDoc project;
+	private Module module;
+	private List<Function> functionList;
+	private IProjectDocService projectDocService;
+	private IDocumentService documentService;
+	private IModuleService moduleService;
+	
+
+	public IModuleService getModuleService() {
+		return moduleService;
+	}
+
+
+	public void setModuleService(IModuleService moduleService) {
+		this.moduleService = moduleService;
+	}
+
+
+	public IProjectDocService getProjectDocService() {
+		return projectDocService;
+	}
+
+
+	public void setProjectDocService(IProjectDocService projectDocService) {
+		this.projectDocService = projectDocService;
+	}
+
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+
+	public List<Function> getFunctionList() {
+		return functionList;
+	}
+
+
+	public void setFunctionList(List<Function> functionList) {
+		this.functionList = functionList;
+	}
+
+
+	
+
+	public Document getDocument() {
+		return document;
+	}
+
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+
+	public ProjectDoc getProject() {
+		return project;
+	}
+
+
+	public void setProject(ProjectDoc project) {
+		this.project = project;
+	}
+
+
+	public Module getModule() {
+		return module;
+	}
+
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+
+	public Function getFunction() {
+		return function;
+	}
+
+
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+
+
+	public IFunctionService getFunctionService() {
+		return functionService;
+	}
+
+
+	public void setFunctionService(IFunctionService functionService) {
+		this.functionService = functionService;
+	}
+
+
+	public Date getStartCreateTime() {
+		return startCreateTime;
+	}
+
+
+	public void setStartCreateTime(Date startCreateTime) {
+		this.startCreateTime = startCreateTime;
+	}
+
+
+	public Date getEndCreateTime() {
+		return endCreateTime;
+	}
+
+
+	public void setEndCreateTime(Date endCreateTime) {
+		this.endCreateTime = endCreateTime;
+	}
+
+
+	public String execute() {
+		function=null;
+		startCreateTime=null;
+		endCreateTime=null;
+		project=null;
+		document=null;
+		functionList=functionService.getAllFunctionExamimePage(getPager());
+		return SUCCESS;
+	}
+	
+	public String searchFunctionExamineByInfo(){
+		if(project.getId()!=null){
+			project=projectDocService.getById(project.getId());
+		}
+		if(document.getId()!=null){
+			document=documentService.getById(document.getId());
+			document.setProject(project);
+		}
+		module=moduleService.getById(module.getId());
+		function.setModule(module);
+		function.setDocument(document);
+		functionList=functionService.getAllFunctionExamimePageByInfo(getPager(), function, startCreateTime, endCreateTime);
+		return SUCCESS;
+	}
+	
+}

@@ -1,0 +1,44 @@
+package com.landicorp.dms.web.option;
+
+public class Dms {
+	public static final String PHOTO_PATH="/upload/picture/";  //环境
+	
+	public static final String DOCUMENT_PATH="/upload/document/";
+	
+	public static final Integer ALL_EMPTY = null;
+	
+	public static final int COMPOSITE=1;   //复合节点
+	public static final int FUNCTION=0;   //功能节点
+	
+	public static final int ONCE=1;   //循环类型  单次
+	public static final int REPEATE=0;   //循环类型  多次
+	
+	public static final int EDIT=0;   //文档类型  在线编辑
+	public static final int UPLOAD=1;   //文档类型  外部上传
+	
+	public static final int NO_NOW_VER=0;   //不是当前版本
+	public static final int IS_NOW_VER=1;   //是当前版本
+	
+	//基本节点类型
+	public static final int NODE_FORMAT=0;   //新增节点
+	
+	public static final int TITLE=1;   //标题节点
+	public static final int TEXT=2;   //文本节点
+	public static final int PHOTOTEXT=3;   //图文节点
+	public static final int REQUESTPARA=4;   //请求参数节点
+	public static final int RETURNPARA=5;   //返回参数节点
+	public static final int REQUESTMESS=6;   //请求报文节点
+	public static final int RETURNMESS=7;   //返回报文节点
+	
+	//模板是否配置
+	public static final int NO_CONFIGURE=0;   //未配置
+	public static final int CONFIGURE=1;   //已配置
+	
+	//是否未复制节点
+	public static final int NO_COPY=0;  //不是复制
+	public static final int COPY=1;  //复制
+	
+	//草稿的状态
+	public static final int NO_SUBMIT=0;  //未提交
+	public static final int NO_EXAMINE=1;  //未审核
+}

@@ -1,0 +1,64 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ request.getContextPath() + "/";
+	pageContext.setAttribute("basePath", basePath);
+%>
+<html>
+<head>
+<link href="${basePath}/core/css/menu.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${basePath}/core/js/jquery.min.js"></script>
+<script type="text/javascript">
+		$(function() {
+		$(".menutitler").click(
+				function() {
+					var obj = $(this);
+					$(obj).next().slideToggle(
+							"fast",
+							function() {
+								if ($(this).is(":hidden")) {
+									$(obj).removeClass("menutitlerDown")
+											.addClass("menutitlerUp");
+								} else {
+									$(obj).removeClass("menutitlerUp")
+											.addClass("menutitlerDown");
+								}
+							});
+				});
+		$(".menu_sidebar").mouseover(function() {
+			$(this).css("overflow", "auto");
+		});
+		$(".menu_sidebar").mouseleave(function() {
+			$(this).css("overflow", "hidden");
+		});
+		//展开菜单
+		$(".menutitler").click();
+	});
+	function openMenu(id, name, url, obj) {
+		parent.addTab(id, name, url);
+		$(".menuselected").removeClass("menuselected").addClass("menuitem");
+		$(obj).removeClass("menuitem").addClass("menuselected");
+	}
+</script>
+</head>
+<body>
+	<div class="menu_sidebar">
+		<div class="menubox">
+		
+		<div class='menutitler menutitlerUp'>指令格式说明</div>
+		<div class='menuchild'>
+		<div class="menuitem" onclick="openMenu('1','请求说明','dms/documentVersionContent!getDocumentVersionContent.action',this);">请求说明</div>
+		<div class="menuitem" onclick="openMenu('2','返回说明','dms/documentVersionContent!getDocumentVersionContent.action',this);">返回说明</div>
+		</div>
+		<div class='menutitler menutitlerUp'>终端管理</div>
+		<div class='menuchild'>
+		<div class="menuitem" onclick="openMenu('3','签到','dms/documentVersionContent!getDocumentVersionContent.action',this);">签到</div>
+		<div class="menuitem" onclick="openMenu('4','版本升级','dms/documentVersionContent!getDocumentVersionContent.action',this);">版本升级</div>
+		</div>
+		
+		</div>
+	</div>
+</body>
+</html>

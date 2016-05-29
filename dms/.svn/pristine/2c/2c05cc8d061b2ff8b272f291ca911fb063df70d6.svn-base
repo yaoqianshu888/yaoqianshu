@@ -1,0 +1,60 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IDocumentModuleDao;
+import com.landicorp.dms.entities.DocumentModule;
+import com.landicorp.dms.service.IDocumentModuleService;
+
+public class DocumentModuleServiceImpl extends AbstractBaseServiceImpl<DocumentModule, Integer>
+		implements IDocumentModuleService {
+
+	private IDocumentModuleDao documentModuleDao;
+	
+	public IDocumentModuleDao getDocumentModuleDao() {
+		return documentModuleDao;
+	}
+
+	public void setDocumentModuleDao(IDocumentModuleDao documentModuleDao) {
+		this.documentModuleDao = documentModuleDao;
+	}
+
+	@Override
+	public int add(DocumentModule arg0) {
+		return documentModuleDao.save(arg0);
+	}
+
+	
+
+	@Override
+	public DocumentModule getById(Integer arg0) {
+		return documentModuleDao.getById(arg0);
+	}
+
+
+
+	@Override
+	public int update(DocumentModule arg0) {
+		return documentModuleDao.update(arg0);
+	}
+
+	@Override
+	public IMyBatisDao<DocumentModule, Integer> getMyBatisDao() {
+		return documentModuleDao;
+	}
+
+	@Override
+	public List<DocumentModule> getByDocumentId(Integer id) {
+		return documentModuleDao.getByDocumentId(id);
+	}
+
+	@Override
+	public List<DocumentModule> getByModuleId(Integer id) {
+		return documentModuleDao.getByModuleId(id);
+	}
+
+}

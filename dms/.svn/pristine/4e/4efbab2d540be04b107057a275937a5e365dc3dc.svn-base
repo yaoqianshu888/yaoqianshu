@@ -1,0 +1,72 @@
+package com.landicorp.dms.action.module;
+
+import java.util.Date;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IModuleService;
+
+public class ModuleUpdateAction extends BaseActionSupport
+{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Module module;
+	private Document document;
+	private IDocumentService documentService;
+	private IModuleService moduleService;
+
+	public String prepare()
+	{
+		document=documentService.getById(document.getId());
+		module=moduleService.getById(module.getId());
+		return INPUT;
+	}
+	
+	public String updateModule(){
+		module.setLastModifier(getSessionUser());
+		module.setLastModifyTime(new Date());
+		moduleService.update(module);
+		setWindowReturnValue("ok");
+		return SUCCESS;
+	}
+
+	public Module getModule() {
+		return module;
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+	public IModuleService getModuleService() {
+		return moduleService;
+	}
+
+	public void setModuleService(IModuleService moduleService) {
+		this.moduleService = moduleService;
+	}
+
+	
+	
+}

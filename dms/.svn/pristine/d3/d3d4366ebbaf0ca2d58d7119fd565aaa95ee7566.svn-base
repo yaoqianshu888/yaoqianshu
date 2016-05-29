@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.documentVersion;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class DocumentVersionSearchAction extends BaseActionSupport {
+
+	public String searchDocumentVersion(){
+		return "version";
+	}
+}

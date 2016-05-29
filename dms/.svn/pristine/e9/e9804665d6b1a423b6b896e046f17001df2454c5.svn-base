@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.document;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class DocumentViewSearchAction extends BaseActionSupport {
+
+	public String searchDocument(){
+		return "document";
+	}
+}

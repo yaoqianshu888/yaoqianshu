@@ -1,0 +1,176 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+	
+	
+	function showDocument(id) {
+		ldDialog.openFullScreen(
+						"${basePath}dms/documentView!viewDocument.action", "文档查看", function(window) {
+		});
+	}
+	
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post" action="${basePath}dms/documentView!searchDocumentsByInfo.action">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">文档名称：</div>
+										<div class="conditionsitemR">
+											<input name="document.documentName" class="ldText input138" id="document.name" value="${document.documentName}" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属项目：</div>
+										<div class="conditionsitemR">
+											<select name="document.project.id" id="document.project.id" class="ldSelect select144" style="width:144px">
+													<option value="">全部</option>
+												</select>
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">创建人：</div>
+										<div class="conditionsitemR">
+											<input name="document.creator.userName" class="ldText input138" id="document.creator.userName" value="${document.creator.userName}" />
+										</div>
+									</div>
+									</div>
+									<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">创建时间：</div>
+										<div class="conditionsitemR">
+											<input name="startCreateTime" type="text" id="startCreateTime"
+												class="ldDateTime input138"
+												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+												value="<f:formatDate value="${startCreateTime}"
+														pattern="yyyy-MM-dd" />" />
+										</div>
+									</div>
+								
+									<div class="conditionsitem">
+										<div class="conditionsitemL">至</div>
+										<div class="conditionsitemR">
+											<input name="endCreateTime" type="text" id="endCreateTime"
+												class="ldDateTime input138"
+												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+												value="<f:formatDate value="${endCreateTime}"
+														pattern="yyyy-MM-dd" />" />
+										</div>
+								</div>
+							</div>	
+								
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarR">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input id="searchBtn" type="submit" class="ldBtnBlue" value="查询"/>
+										 <input type="hidden" value="0" name="pager.curPageNum" />
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+						<th>序号</th>
+						<th>文档名称</th>
+						<th>所属项目</th>
+						<th>创建人</th>
+						<th>创建时间</th>
+						<th>操作</th>
+					</tr>
+					
+					<c:forEach items="${documentList}" var="item" varStatus="status">
+						<tr class="tableitem${6-status.index%2}"
+								onMouseOver="this.className='tableitem9';this.style.cursor='hand';"
+								onMouseOut="this.className='tableitem${6-status.index%2}';this.style.cursor='hand';">
+							<td>${status.count}</td>
+							<td>${item.documentName}</td>
+							<td>${item.project.projectName}</td>
+							<td>${item.creator.userName}</td>
+							<td><f:formatDate value="${item.createTime}" pattern="yyyy-MM-dd" /></td>
+							<td><a href="${basePath}dms/documentView!viewDocument.action" target="_blank"><input type="button" value="查看" class="ldBtnLink" onclick=""></a></td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								<form
+									action="${basePath}dms/documentView!searchDocumentsByInfo.action"
+									method="post" name="pagerForm">
+									    <input name="document.documentName" type="hidden"
+										value="${document.documentName}" /> <input name="document.project.id"
+										type="hidden" id="document.project.id" value="${document.project.id}" /> <input
+										name="startCreateTime" type="hidden" id="startCreateTime"
+										value="${startCreateTime}" /><input name="endCreateTime" type="hidden"
+										id="endCreateTime" value="${endCreateTime}" />
+										<input name="document.creator.userName" type="hidden"
+										value="${document.creator.userName}" />
+									<ld:pager type="form" action="pagerForm" />
+								</form>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+    //得到所有项目  
+	$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/dmsProjectSearch!getAllProjectDoc.action",
+	        dataType:"json",
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+					for(var i=0;i<msg.length;i++){
+						var str="<option value="+msg[i].id+">"+msg[i].projectName+"</option>";
+						
+						$("#document\\.project\\.id").append(str);
+					} 
+					
+					if("${document.project.id}"==""){
+						$("select").get(0).selectedIndex =0;
+					}else{
+						$("#document\\.project\\.id").find("option[value="+"${document.project.id}"+"]").attr("selected", true);
+					}        
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                alert("获取项目名称出错");
+	           }
+	        });
+</script>
+</html>

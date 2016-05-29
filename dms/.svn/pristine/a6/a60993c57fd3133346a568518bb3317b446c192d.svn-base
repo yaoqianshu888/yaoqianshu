@@ -1,0 +1,276 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link href="${basePath}dms/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="${basePath}dms/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="${basePath}dms/css/zTreeStyle/zTreeStyle.css" type="text/css" />
+<script type="text/javascript" src="${basePath}dms/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="${basePath}dms/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="${basePath}dms/js/jquery.ztree.exedit-3.5.js"></script>
+	
+<script type="text/javascript">
+	
+	function checkSubmit() {
+		if (!checkData(true, 'template.name', "模板名称", 2, 30)) {
+			return false;
+		}
+		if (!checkData(false, 'template.memo', "备注", 1, 255)) {
+			return false;
+		}
+		submitForm();
+	}
+	function submitForm(){
+		var url = "${basePath}coreAjax/templateInsert!insertTemplate.action";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			data : $("#submitForm").serialize(),
+			success : function(result) {
+				var res = JSON.parse(result);
+				if (res.code == 1) {
+					//ldDialog.tips("新增成功");
+					ldDialog.close(res.returnValue);
+				} else {
+					ldDialog.alert(res.reason);
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+
+			}
+		});
+	}
+	
+    function saveTemplate(){
+    	ldDialog.alert("创建成功！");
+    	ldDialog.close();
+    }
+    
+    function viewDocTemplate(){
+		ldDialog.openLarge("${basePath}dms/templateDetail!detailTemplate.action",
+			"文档模板查看", 
+			function(window) {
+		});
+    }
+    
+</script>
+<script type="text/javascript">
+		IDMark_A = "_a";
+		
+		var setting = {
+			view: {
+				addDiyDom: addDiyDom,
+				selectedMulti: false
+			},
+			edit: {
+				enable: true,
+				showRemoveBtn: showRemoveBtn,
+				showRenameBtn: showRenameBtn
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+				beforeDrag: beforeDrag,
+				beforeDrop: beforeDrop
+			}
+		};
+		
+		var zNodes ="";
+		
+		$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/nodeInsert!getAllNodesByPidOnlyR.action?node.id="+${node.id},
+	        dataType:"json",
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+	            	zNodes=msg;
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                alert("获取节点树出错");
+	           }
+	        });
+		
+		function addDiyDom(treeId, treeNode) {
+			var aObj = $("#" + treeNode.tId + IDMark_A);
+			/* name = treeNode.name;
+			//var type = (name.split(" "))[1]; */
+			var type=treeNode.type;
+			/* treeNode.name = (name.split(" "))[0]; */
+			var editStr = "<span><font color='red'>"+type+"</font></span>";
+			aObj.after(editStr);
+			/*var btn = $("#diyBtn_"+treeNode.id);
+				if (btn) btn.bind("click", function(){alert("diy Button for " + treeNode.name);});*/
+		}
+		
+		function beforeDrag(treeId, treeNodes) {
+			for (var i=0,l=treeNodes.length; i<l; i++) {
+				if (treeNodes[i].drag === false) {
+					return false;
+				}
+			}
+			return true;
+		}
+		function beforeDrop(treeId, treeNodes, targetNode, moveType) {
+			return targetNode ? targetNode.drop !== false : true;
+		}
+		
+		function showRemoveBtn(treeId, treeNode) {
+			if(treeNode.drop == false){
+				return false;
+			}
+			return true;
+			
+		}
+		function showRenameBtn(treeId, treeNode) {
+			if(treeNode.drop == false){
+			return false;
+			}
+			return true;
+		}
+/* 		function addTreeNodes(arry){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+				nodes = zTree.getSelectedNodes(),
+				treeNode = nodes[0],
+				drop = true; //可拖曳进来
+				drag = true; //可拖曳
+				isParent = true;
+				
+			for(var z=0;z<arry.length;z++){
+				if(z>0){
+				 	var treeNodeId = arry[z].pId;
+					treeNode = zTree.getNodeByParam("id", treeNodeId, null);
+					isParent=false;
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:false, drag:true});
+				}else{
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:false, drag:true});
+				}
+			}
+		} */
+		function addTreeNodes(arry){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+				nodes = zTree.getSelectedNodes(),
+				treeNode = nodes[0],
+				isParent = true;			
+			for(var z=0;z<arry.length;z++){
+				if(z>0){
+				 	var treeNodeId = arry[z].pId;
+					treeNode = zTree.getNodeByParam("id", treeNodeId, null);
+					isParent=false;
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:arry[z].drop, drag:arry[z].drag,type:arry[z].type});
+				}else{
+					treeNode = zTree.getNodeByParam("id", 1, null);
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:arry[z].drop, drag:arry[z].drag,type:arry[z].type});
+				}
+			}
+		}
+		
+		var newCount = 1;
+		function addNode() {
+			var type=$("#nodeType").val(),
+    			name=$("#curTitie").val();
+    			if(type == "(简介节点)"){
+    				addTreeNodes(instructionNode);
+    			}else if(type == "(功能节点)"){
+    				addTreeNodes(functionNode);
+    			}else{addBaseNode(type,name);}
+			
+		};
+		function addBaseNode(type,name){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+			isParent = false,
+			drop = true, //可拖曳进来
+			drag = true, //可拖曳
+			nodes = zTree.getSelectedNodes(),
+			treeNode = nodes[0];
+			
+			if(name==''){
+				name = "请输入标题名";
+			}else{
+				name= name;
+			}
+			if((treeNode!=null && (treeNode.drop == false && treeNode.drag == false)) && treeNode.id != 1){
+				ldDialog.alert("[复合节点/功能节点]下内不可创建节点，请到节点管理进行操作!");	
+				
+			}else{
+			//创建节点	
+				if (treeNode) {
+					treeNode = zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, isParent:isParent, name:name, drop:drop, drag:drag,type:type});
+				} else {
+					treeNode = {name:name};
+					treeNode = zTree.getNodeByParam("id", 1, null);
+					treeNode = zTree.addNodes(treeNode, {id:(100 + newCount), pId:0, isParent:isParent, name:name, drop:drop, drag:drag,type:type});
+				}
+				if (treeNode) {
+					zTree.editName(treeNode[0]);
+				}
+			}
+			
+		}
+		
+		
+		$(document).ready(function(){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			zTree.setting.edit.drag.isCopy = true;
+			zTree.setting.edit.drag.isMove = true;
+			zTree.setting.edit.drag.prev = true;
+			zTree.setting.edit.drag.inner = true;
+			zTree.setting.edit.drag.next = true;
+			//zTree.setting.edit.showRemoveBtn = true;
+			//zTree.setting.edit.showRenameBtn = true;
+			zTree.setting.edit.removeTitle = "remove";
+			zTree.setting.edit.renameTitle = "rename";
+		});
+	</script>
+</head>
+<body>
+		<div class="yhlist1">
+			<div class="yhlist1L">您当前位置：预览节点</div>
+		</div>
+<form id="submitForm" name="submitForm" method="post">
+		<div class="yhbox" style="margin-bottom:50px; ">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="height: 420px">
+				<tr>
+					<td valign="top" class="yhbox3">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="treetitle" id="userName">节点内容：</td>
+							</tr>
+							<tr><td align="center"><br/>
+								<ul id="treeDemo" class="ztree"></ul>
+							 </td></tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="dialogBottom">
+		<div class="btns">
+			&nbsp;
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+	</form>
+	
+</body>
+</html>
+

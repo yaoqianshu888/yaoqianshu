@@ -1,0 +1,59 @@
+package com.landicorp.dms.entities;
+
+import java.util.Date;
+
+import com.landicorp.core.entities.User;
+import com.landicorp.core.entities.base.BaseEntity;
+
+public class Examine extends BaseEntity {//审核记录
+	private Integer id;
+	private Document document;  //所属文档
+	private String versionId;//版本号
+	private User examiner;  //审核人
+	private Date examineTime;  //审核时间
+	private ProjectDoc projectDoc;  //所属项目
+	private String content;   //修改内容
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public Document getDocument() {
+		return document;
+	}
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+	public String getVersionId() {
+		return versionId;
+	}
+	public void setVersionId(String versionId) {
+		this.versionId = versionId;
+	}
+	public User getExaminer() {
+		return examiner;
+	}
+	public void setExaminer(User examiner) {
+		this.examiner = examiner;
+	}
+	public Date getExamineTime() {
+		return examineTime;
+	}
+	public void setExamineTime(Date examineTime) {
+		this.examineTime = examineTime;
+	}
+	public ProjectDoc getProjectDoc() {
+		return projectDoc;
+	}
+	public void setProjectDoc(ProjectDoc projectDoc) {
+		this.projectDoc = projectDoc;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+}

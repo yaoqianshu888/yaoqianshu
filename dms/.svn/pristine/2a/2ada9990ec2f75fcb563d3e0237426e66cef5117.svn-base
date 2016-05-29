@@ -1,0 +1,201 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+function backModules(){
+	$('#backModuleForm').attr("action","${basePath}dms/moduleSearch!searchModule.action").submit();
+}
+	function addItem() {
+		ldDialog.openLarge("${basePath}dms/functionInsert!prepare.action", "新增功能点",
+				function(window) {
+					var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.alert("密码：" + returnValue);
+						return true;
+					}
+				});
+	}
+
+	function itemDetail() {
+		ldDialog.openLarge("${basePath}dms/functionDetail!detailFunction.action"
+				, "功能点查看", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				loadData(curPageNum);
+				return true;
+			}
+		});
+	}
+
+	function showItem() {
+		ldDialog.openLarge("${basePath}dms/functionVersionSearch!searchFunctionVersion.action"
+				, "功能点版本", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				loadData(curPageNum);
+				return true;
+			}
+		});
+	}
+
+	function editItem() {
+		ldDialog.openLarge("${basePath}dms/functionUpdate!prepare.action"
+				, "编辑功能点", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				loadData(curPageNum);
+				return true;
+			}
+		});
+	}
+	function managePhoto(){
+		ldDialog.openLarge("${basePath}dms/pictureSearch!searchPicture.action"
+				, "图片管理", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				loadData(curPageNum);
+				return true;
+			}
+		});
+	}
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1" >
+								<div class="yhlist1L" style="width:300px">当前位置：<a href="javascript:backModules();"><font color="#deb887">用户管理模块</font></a> >> 功能点列表</div>
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><ld:check mark="userInsert">
+											<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+										</ld:check></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+			<form method="get" name="backDocumentForm" id="backDocumentForm">
+				</form>
+				<form method="get" name="backModuleForm" id="backModuleForm">
+				</form>
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+        				<th>序号</th>
+        				<th>版本</th>
+        				<th>功能点名称</th>
+       					<th>创建人</th>
+       					<th>创建时间</th>
+        				<th>状态</th>
+        				<th>操作</th>
+					</tr>
+					<tr>
+            <td>1</td>
+            <td>4</td>
+            <td>签到</td>
+            <td>jack</td>
+            <td>2015-07-31</td>
+            <td><input type='checkbox' class='ldSwitch' checked/> </td>
+            <td>
+                 <input type='button' value='编辑' class='ldBtnLink' onclick="editItem();" />
+                 <input type='button' value='查看' class='ldBtnLink' onclick="itemDetail();" />
+                 <input type='button' value='版本查看' class='ldBtnLink' onclick="showItem();" />
+                  
+            </td>
+        </tr>
+         <tr>
+            <td>2</td>
+			 <td>5</td>
+            <td>软件升级</td>
+            <td>jack</td>
+            <td>2015-07-31</td>
+            <td><input type='checkbox' class='ldSwitch' checked/> </td>
+            <td>
+                  <input type='button' value='编辑' class='ldBtnLink' onclick="editItem();" />
+                  <input type='button' value='查看' class='ldBtnLink' onclick="itemDetail();" />
+                  <input type='button' value='版本查看' class='ldBtnLink' onclick="showItem();" />
+            </td>
+        </tr>
+         <tr>
+            <td>3</td>
+			 <td>6</td>
+            <td>用户添加</td>
+            <td>jack</td>
+            <td>2015-07-31</td>
+            <td><input type='checkbox' class='ldSwitch' checked/></td>
+            <td>
+                  <input type='button' value='编辑' class='ldBtnLink' onclick="editItem();" />
+                  <input type='button' value='查看' class='ldBtnLink' onclick="itemDetail();" />
+                  <input type='button' value='版本查看' class='ldBtnLink' onclick="showItem();" />
+            </td>
+        </tr>
+        <tr>
+            <td>4</td>
+			<td>7</td>
+            <td>用户删除</td>
+            <td>jack</td>
+            <td>2015-07-31</td>
+            <td><input type='checkbox' class='ldSwitch' checked/> </td>
+            <td>
+                  <input type='button' value='编辑' class='ldBtnLink' onclick="editItem();" />
+                  <input type='button' value='查看' class='ldBtnLink' onclick="itemDetail();" />
+                  <input type='button' value='版本查看' class='ldBtnLink' onclick="showItem();" />
+            </td>
+        </tr>
+				</table>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarL">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><ld:check mark="userInsert">
+									<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+								</ld:check></td>
+						</tr>
+					</table>
+				</div>
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

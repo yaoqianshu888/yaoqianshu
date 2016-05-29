@@ -1,0 +1,121 @@
+package com.landicorp.dms.action.module;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IModuleService;
+
+public class ModuleSearchAction extends BaseActionSupport {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Module module;
+	private List<Module> moduleList;
+	private Document document;
+	private IDocumentService documentService;
+	private IModuleService moduleService;
+
+	public String searchModule() {
+		document=documentService.getById(document.getId());
+		module=null;
+		moduleList=moduleService.getAllModule(getPager(), document.getId());
+		return SUCCESS;
+	}
+	
+	public String searchModuleAllByInfo(){
+		document=documentService.getById(document.getId());
+		moduleList=moduleService.getModuleListByModule(module, document, getPager());
+		return SUCCESS;
+	}
+
+	public String detail() {
+		document=documentService.getById(document.getId());
+		module=moduleService.getById(module.getId());
+		return "detail";
+	}
+	
+	//改变模块的状态
+	public String setAvailable(){
+		Module statue=moduleService.getById(module.getId());
+		document=documentService.getById(document.getId());
+		statue.setAvailable(1 - statue.getAvailable());
+		statue.setLastModifier(getSessionUser());
+		statue.setLastModifyTime(new Date());
+		moduleService.update(statue);
+		moduleList=moduleService.getModuleListByModule(module, document, getPager());
+		return SUCCESS;
+	}
+
+	//得到所有的模块
+	public void getAllModule() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8");
+		document=documentService.getById(document.getId());
+		moduleList=moduleService.getAllByDocumentId(document.getId());
+		StringBuffer sb=new StringBuffer("[");
+		
+		for(int i=0;i<moduleList.size();i++){
+			sb.append("{\"id\":\""+moduleList.get(i).getId()+"\",\"moduleName\":\""+moduleList.get(i).getModuleName()+"\"},");
+		}
+		if(sb.length()>1){
+			sb.deleteCharAt(sb.length()-1);
+		}
+		sb.append("]");
+		//System.out.println(sb.toString());
+		response.getWriter().write(sb.toString());
+	}
+
+	public Module getModule() {
+		return module;
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+	public List<Module> getModuleList() {
+		return moduleList;
+	}
+
+	public void setModuleList(List<Module> moduleList) {
+		this.moduleList = moduleList;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+	public IModuleService getModuleService() {
+		return moduleService;
+	}
+
+	public void setModuleService(IModuleService moduleService) {
+		this.moduleService = moduleService;
+	}
+
+
+}

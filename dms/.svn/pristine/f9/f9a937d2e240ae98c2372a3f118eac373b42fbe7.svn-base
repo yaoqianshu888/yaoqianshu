@@ -1,0 +1,112 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<html>
+<head>
+<script type="text/javascript">
+$(function(){
+//	loadData();
+});
+function loadData(){
+	var url = "${basePath}coreAjax/operateLogSearch!getOperateLogById.action?id=${id}";
+	$.ajax({
+		type : "POST",
+		url : url,
+		dataType : "text",
+		success : function(result) {
+			var res = eval("(" + result + ")");
+			if (res.code == 1) {
+				//loadFormData(res.bean, "user");
+				var operateLog = res.bean;
+				if(operateLog.right==null){
+					$("#rightName").append("非法URL");
+				}else{
+					$("#rightName").append(operateLog.right.rightName);
+				}
+				$("#accessUrl").append(operateLog.accessUrl);
+				$("#status").append(operateLog.statusOptionDisplay);
+				$("#isLegal").append(operateLog.isLegalOptionDisplay);
+				$("#clientIp").append(operateLog.clientIp);
+				if(operateLog.user == null){
+					$("#userName").append("未知用户");
+				}else{
+					$("#userName").append(operateLog.user.userName);
+				}
+				var time = new Date(operateLog.time).format("yyyy-MM-dd HH:mm:ss");
+				$("#time").append(time);
+				$("#lastingTime").append(operateLog.lastingTime);
+				$("#param").append(operateLog.param);
+				$("#description").append(operateLog.description);
+			} else {
+				ldDialog.alert(res.reason);
+			}
+			ldDialog.unmask();
+		},
+		error : function() {
+			ldDialog.unmask();
+		}
+	});
+}
+</script>
+</head>
+<body>
+	<div class="dialogTop">
+		<table width="400" border="0" cellspacing="10" cellpadding="0" class="ld-detailTable">
+			<tr>
+				<td width="30%" class="right evenTrBgColor">
+					操作对象：
+				</td>
+				<td>银销通文档1</td>
+			</tr>
+			<tr>
+				<td width="30%" class="right evenTrBgColor">
+					操作用户：
+				</td>
+				<td>
+					admin
+				</td>
+			</tr>
+			<tr>
+				<td width="30%" class="right evenTrBgColor">
+					操作名称：
+				</td>
+				<td>阅读</td>
+			</tr>
+			<tr>
+				<td width="30%" class="right evenTrBgColor">
+					操作状态：
+				</td>
+				<td>
+					成功
+				</td>
+			</tr>
+			<tr>
+				<td width="30%" class="right evenTrBgColor">
+					是否合法：
+				</td>
+				<td>合法使用</td>
+			</tr>
+			<tr>
+				<td width="30%" class="right evenTrBgColor">
+					客户端ip：
+				</td>
+				<td>127.0.0.1</td>
+			</tr>
+			<tr>
+				<td width="30%" class="right evenTrBgColor">
+					操作时间：
+				</td>
+				<td>
+					2015-06-21 22:08:35
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="dialogBottom">
+		<div class="btns">
+			<input type="button" value="关闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+</body>
+</html>

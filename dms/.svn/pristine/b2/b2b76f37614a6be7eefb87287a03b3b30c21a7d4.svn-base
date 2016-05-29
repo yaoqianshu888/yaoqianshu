@@ -1,0 +1,482 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link href="${basePath}dms/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="${basePath}dms/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="${basePath}dms/css/zTreeStyle/zTreeStyle.css" type="text/css" />
+<style>
+	a.ico16 {
+	    width: 20px;
+	    height: 20px;
+	    padding: 0;
+	    margin: 0 5px 0 0;
+	    background-image: url("${basePath}dms/images/leftMove.png");
+	}
+	a.ico15 {
+	    width: 20px;
+	    height: 20px;
+	    padding: 0;
+	    margin: 0 5px 0 0;
+	    background-image: url("${basePath}dms/images/rightMove.png");
+	}
+</style>
+
+<script type="text/javascript" src="${basePath}dms/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="${basePath}dms/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="${basePath}dms/js/jquery.ztree.exedit-3.5.js"></script>
+
+<script type="text/javascript">
+	
+    function saveTemplate(){
+    	var zTree = $.fn.zTree.getZTreeObj("treeDemo")
+    	var nodes=zTree.getNodes();
+    	var nodesArry=zTree.transformToArray(nodes);
+    	var a="";
+    	for(var i=0;i<nodesArry.length;i++){
+    		a+=nodesArry[i].id+"☆"+nodesArry[i].pId+"☆"+nodesArry[i].name+"☆"+nodesArry[i].type+"★"
+    	}
+    	if(a.length>1){
+    		a=a.substring(0,a.length-1);   //删除逗号
+    	}
+    
+	    //进行配置
+	    param=
+		$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/documentTemplateInsert!setConfig.action?deleteIds="+deleteIds+"&template.id="+${template.id},
+	        dataType:"json",
+	        data:"jsonString="+a,
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+					 ldDialog.alert("创建成功！");
+    				 ldDialog.close();     
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("配置出错");
+	           }
+	        });
+    	
+    }
+    
+    function viewDocTemplate(){
+		ldDialog.openLarge("${basePath}dms/templateDetail!detailTemplate.action",
+			"文档模板查看", 
+			function(window) {
+		});
+    }
+    
+</script>
+<script type="text/javascript">
+		IDMark_A = "_a";
+		
+		var setting = {
+			view: {
+				addDiyDom: addDiyDom,
+				selectedMulti: false
+			},
+			edit: {
+				enable: true,
+				showRemoveBtn: showRemoveBtn,
+				showRenameBtn: showRenameBtn
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+				beforeRemove: beforeRemove,
+			}
+		};
+		
+		var deleteIds="";  //点击删除节点的id
+		var zNodes ="";
+		
+		$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/documentTemplateInsert!getAllNodesByTid.action?template.id="+${template.id},
+	        dataType:"json",
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+	            	zNodes=msg;
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                alert("获取节点树出错");
+	           }
+	        });
+		
+		function beforeRemove(treeId, treeNode) {
+			deleteIds=deleteIds+treeNode.id+",";
+		}
+		
+		function showRemoveBtn(treeId, treeNode) {
+			if(treeNode.id == -1 ){
+				return false;
+			}
+			if(treeNode.drop == false){
+				if(treeNode.pId==-1){
+					return true;
+				}
+				return false;
+			}
+			return true;
+		}
+		
+		function showRenameBtn(treeId, treeNode) {
+			if(treeNode.id == -1 ){
+				return false;
+			}
+			if(treeNode.drop == false){
+				return false;
+			}
+			return true;
+		}
+								
+		function addDiyDom(treeId, treeNode) {
+			var aObj = $("#" + treeNode.tId + IDMark_A);
+			var type=treeNode.type;
+			var editStr = "";
+			if(treeNode.type != "(模板名称)" && (treeNode.drop != false || treeNode.drag != false)){
+
+					editStr = editStr + "<a class='ico16' href='javascript:moveUpNode(" +
+								treeNode.id+")' ></a><a class='ico15' href='javascript:moveDowmNode(" +
+								treeNode.id+")' title='右移'></a>";
+			}
+			editStr = editStr+"<span><font color='red'>"+type+"</font></span>";
+			aObj.after(editStr);
+		}
+		
+		function moveUpNode(id){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var node = zTree.getNodeByParam("id", id, null);
+			var parentNode = node.getParentNode();
+			if(parentNode==null || parentNode.id == -1){
+				ldDialog.alert("已为顶级节点，不可左移!");	
+			}else{
+				zTree.moveNode(parentNode,node,"next",false);
+			}
+			zTree.updateNode(node);
+		}
+		
+		function moveDowmNode(id){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var node = zTree.getNodeByParam("id", id, null);
+			var preNode = node.getPreNode();
+			if(preNode==null){
+				ldDialog.alert("该节点为第一个子节点，不可以降级!");	
+			}else if(preNode.type == "(功能节点)"){
+				ldDialog.alert("不可以移入功能节点！");	
+			}else if(preNode.type == "(简介节点)"){
+				ldDialog.alert("不可以移入复合节点！");	
+			}
+			else{
+				zTree.moveNode(preNode,node,"inner",false);
+			}
+			zTree.updateNode(node);
+		}
+		
+		var newCount = 1; //数据库中最大的id值
+		//得到节点id最大值
+		$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/nodeInsert!getMaxId.action",
+	        dataType:"json",
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+					newCount=parseInt(msg[0].count);
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取最大id出错");
+	           }
+	        });
+		
+		
+		function addNode() {
+			var type=$("#nodeType").val(),
+    			name=$("#curTitie").val();
+    			
+    		if(type<=7){
+    			newCount++;
+    			addBaseNode(type,name);
+    		}else{
+    		
+    			var isConfig="0"; //0为未添加  1为已添加
+    			//查询是否已经添加节点树
+				var zTree = $.fn.zTree.getZTreeObj("treeDemo")
+    			var nodes=zTree.getNodes();
+    			var nodesArry=zTree.transformToArray(nodes);
+    			for(var i=0;i<nodesArry.length;i++){
+    				if(nodesArry[i].id==type){
+    					isConfig="1";	
+    					break;		
+    				}
+    			}
+    		
+    		  if(isConfig=="1"){//已经配置一次
+	 				//查询是否循环一次
+	    			$.ajax({
+						async: false,
+				        type:"POST",
+				        url:"${basePath}dms/nodeSearch!getCircleTypeById.action?Cid="+type,
+				        dataType:"json",
+				        success:function(msg)
+				            {
+				          	    ldDialog.unmask();
+								if(msg[0].circleType=="0"){  //可循环多次
+									//复制节点树
+									$.ajax({
+										async: false,
+								        type:"POST",
+								        url:"${basePath}dms/documentTemplateInsert!copyTree.action?CopyId="+type+"&newCount="+newCount,
+								        dataType:"json",
+								        success:function(msg)
+								            {
+								            	newCount++;
+								            	newCount+=msg.length;
+								            	ldDialog.unmask();
+												addTreeNodes(msg);
+								            },
+								        error:function()
+								           {
+								                ldDialog.alert("复制节点树出错");
+								           }
+								       });
+								}else{  //只能循环一次
+									ldDialog.alert("该节点只能创建一次");
+								}
+							
+				            },
+				        error:function()
+				           {
+				                ldDialog.alert("获取循环类型出错");
+				           }
+			        });
+    		  }else{  //未配置
+    		  		
+    		  		$.ajax({
+						async: false,
+				        type:"POST",
+				        url:"${basePath}dms/documentTemplateInsert!getAllNodesByPid.action?BPd="+type,
+				        dataType:"json",
+				        success:function(msg)
+				            {
+				            	ldDialog.unmask();
+								addTreeNodes(msg);
+				            },
+				        error:function()
+				           {
+				                ldDialog.alert("添加节点出错");
+				           }
+				    });
+    		  }
+    			
+    			
+    		}
+    			
+    		
+		}
+		function addBaseNode(type,name){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+			isParent = false,
+			drop = true, //可拖曳进来
+			drag = true, //可拖曳
+			nodes = zTree.getSelectedNodes(),
+			treeNode = nodes[0];
+			name = "请输入标题名";
+			if(treeNode==null){
+				treeNode = zTree.getNodeByParam("id", -1, null);
+			}
+			
+			var typeName="";
+			
+			if(type==1){
+				typeName="(标题节点)";
+			}else if(type==2){
+				typeName="(文本节点)";
+			}else if(type==3){
+				typeName="(图文节点)";
+			}else if(type==4){
+				typeName="(请求参数节点)";
+			}else if(type==5){
+				typeName="(返回参数节点)";
+			}else if(type==6){
+				typeName="(请求报文节点)";
+			}else if(type==7){
+				typeName="(返回报文节点)";
+			}
+			
+			if((treeNode!=null && treeNode.drop == false) && treeNode.id != -1){
+				ldDialog.alert("复合节点下内不可创建节点，请到节点管理进行操作!");	
+			}
+			else{
+			//创建节点
+				if (treeNode) {
+					treeNode = zTree.addNodes(treeNode, {id:newCount, pId:treeNode.id, isParent:isParent, name:name, drop:drop, drag:drag,type:typeName});
+				} else {
+					treeNode = {name:name};
+					treeNode = zTree.getNodeByParam("id", -1, null);
+					treeNode = zTree.addNodes(treeNode, {id:newCount, pId:0, isParent:isParent, name:name, drop:drop, drag:drag,type:typeName});
+				}
+				if (treeNode) {
+					zTree.editName(treeNode[0]);
+				}
+			}
+			
+		}
+		
+		function addTreeNodes(arry){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+				nodes = zTree.getSelectedNodes(),
+				treeNode = nodes[0],
+				isParent = true;	
+			if(treeNode==null){
+				treeNode = zTree.getNodeByParam("id", -1, null);
+			}		
+			for(var z=0;z<arry.length;z++){
+				if(z>0){
+				 	var treeNodeId = arry[z].pId;
+					treeNode = zTree.getNodeByParam("id", treeNodeId, null);
+					isParent=false;
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:arry[z].drop, drag:arry[z].drag,type:arry[z].type,open:isParent});
+				}else{
+					treeNode = zTree.getNodeByParam("id", -1, null);
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:arry[z].drop, drag:arry[z].drag,type:arry[z].type,open:isParent});
+				}
+			}
+		}
+		
+		
+								
+		$(document).ready(function(){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			zTree.setting.edit.drag.isCopy = true;
+			zTree.setting.edit.drag.isMove = true;
+			zTree.setting.edit.drag.prev = false;
+			zTree.setting.edit.drag.inner = false;
+			zTree.setting.edit.drag.next = false;
+			zTree.setting.edit.removeTitle = "remove";
+			zTree.setting.edit.renameTitle = "rename";
+		});
+	</script>
+</head>
+<body>
+		<div class="yhlist1">
+			<div class="yhlist1L">您当前位置：配置文档模板</div>
+		</div>
+<form id="submitForm" name="submitForm" method="post">
+		<div class="yhbox" style="margin-bottom:50px; ">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="height: 420px">
+				<tr>
+					<td width="280" class="yhbox2" valign="top">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="2" class="treetitle">节点选择</td>
+							</tr>
+							<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+							<tr>
+								<td align="right">内容格式：</td>
+								<td>
+									<ld:select groupName="contentFormat" name="nodeType" id="nodeType"
+						                       value="${nodeType}" className="ldSelect select144" />
+								</td>
+							</tr>
+							<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td>
+									<input type="button" class="ldBtnGreen" value="创建节点" onclick="addNode();" />
+									<input type="button" class="ldBtnBlue" value="预览" onclick="viewDocTemplate();" />
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td valign="top" class="yhbox3">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="treetitle" id="userName">模板内容：</td>
+							</tr>
+							<tr><td align="center"><br/>
+								<ul id="treeDemo" class="ztree"></ul>
+							 </td></tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="dialogBottom">
+		<div class="btns">
+			<ld:check mark="roleUpdateRightCommit">
+				<input type="button" value="创建" class="ldBtnGreen"
+					onclick="saveTemplate();" />
+			</ld:check>
+			&nbsp;
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+	</form>
+	
+</body>
+<script type="text/javascript">
+    //得到所有所属模板复合节点 
+	$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/nodeSearch!getTemplateByTid.action?Tid="+${template.id},
+	        dataType:"json",
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+					for(var i=0;i<msg.length;i++){
+						var str="<option value="+msg[i].id+">"+msg[i].nodeName+"</option>";
+						
+						$("#nodeType").append(str);
+					} 
+				
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取节点名称出错");
+	           }
+	        });
+</script>
+</html>
+

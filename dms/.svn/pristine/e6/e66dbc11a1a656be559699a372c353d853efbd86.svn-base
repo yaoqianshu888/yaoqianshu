@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<groups>
+	<constants>
+		<!-- 配置需要映射的类,在下面的group中被引用,也可以在jsp的el表达式中被引用，如下面的类在el中为${options.common} -->
+
+	</constants>
+
+
+</groups>

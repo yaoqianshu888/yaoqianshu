@@ -1,0 +1,57 @@
+package com.landicorp.dms.entities;
+
+import com.landicorp.core.entities.base.BaseEntity;
+
+public class DmsPhoto extends BaseEntity {
+	private Integer id;
+	private String photoName;
+	private Document document;
+	private Module module;
+	private Function function;
+	private String photoPath;
+	private String memo;
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getPhotoName() {
+		return photoName;
+	}
+	public void setPhotoName(String photoName) {
+		this.photoName = photoName;
+	}
+	public Document getDocument() {
+		return document;
+	}
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+	public Module getModule() {
+		return module;
+	}
+	public void setModule(Module module) {
+		this.module = module;
+	}
+	public Function getFunction() {
+		return function;
+	}
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+	public String getPhotoPath() {
+		return photoPath;
+	}
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
+	}
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+	
+	
+}

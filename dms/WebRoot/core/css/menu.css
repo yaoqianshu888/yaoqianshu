@@ -1,0 +1,85 @@
+body {
+	font-size: 12px;
+	font-family: Microsoft YaHei;
+	margin: 0px;
+	padding: 0px;
+	background-color: #f6fafe;
+}
+
+.menu_sidebar{
+	width: 160px;
+	text-align: left;
+	margin: 0px;
+	height: 100%;
+	float: left;
+	overflow: hidden;
+}
+
+.menubox{
+	text-indent: 20px;
+}
+
+.menutitler{
+	height: 26px;
+	font-size: 12px;
+	font-family: Microsoft YaHei;
+	margin-top: 3px;
+	margin-right: 5px;
+	line-height: 26px;
+	cursor: pointer;
+}
+.menutitler:hover{
+	background-color: #D9E7F2;
+}
+
+.menutitlerUp{
+	background-image: url(../images/im01.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+.menutitlerDown{
+	background-image: url(../images/im01on.png);
+	background-repeat: no-repeat;
+	background-position: left center;	
+}
+
+.menuchild {
+	text-indent: 25px;
+	display: none;
+}
+
+.menuselected {
+	font-size: 12px;
+	padding: 5px;
+	white-space: nowrap;
+	width: auto;
+	font-weight: bold;
+	background-color: #D9E7F2;
+	background-image: url(../images/im03.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+.menuchild .menuitem{
+	padding: 5px;
+	font-size: 12px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.menuchild .menuitem:hover{
+	background-color: #D9E7F2;
+}
+
+.onemenuitem{
+	text-indent: 25px;
+	padding: 5px;
+	font-size: 12px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.onemenuitem:hover{
+	background-color: #D9E7F2;
+}

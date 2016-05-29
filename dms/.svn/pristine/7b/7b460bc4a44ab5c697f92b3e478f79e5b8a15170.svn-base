@@ -1,0 +1,8 @@
+package com.landicorp.dms.dao;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.dms.entities.Examine;
+
+public interface IExamineDao extends IMyBatisDao<Examine, Integer>{
+	public Integer getMaxId();  //得到最大的id
+}

@@ -1,0 +1,26 @@
+package com.landicorp.dms.service;
+
+import java.util.Date;
+import java.util.List;
+
+
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Document;
+
+public interface IDocumentService extends IBaseService<Document, Integer>{
+	public List<Document> getAllDocumentAila(Pager pager); //得到所有的文档
+	public List<Document> getDocumentListByDocument(Document document,Date startCreateTime,Date endCreateTime,Pager pager);//得到所有有效的文档
+	
+	public List<Document> getAllDocument(Pager pager); //得到所有的文档
+	public List<Document> getDocumentListByDocumentAll(Document document,Date startCreateTime,Date endCreateTime,Pager pager);
+	public int getMaxId();  //得到最大的文档id
+	public void saveEdit(Document document);//新增文档（包含id）
+	public List<Document> getAllDocumentByNo(Pager pager,String no); //通过文档编号得到文档
+	public List<Document> getAllDocumentByNoAndVerId(Pager pager,Document document); //通过文档编号和版本号得到文档
+	public void setDocumentByNo(Document document);  // 根据文档编号设置不是当前版本
+	public void setDocumentById(Document document);  //根据文档id设置为当前版本 
+}

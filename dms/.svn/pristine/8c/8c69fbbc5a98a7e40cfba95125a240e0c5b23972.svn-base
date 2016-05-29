@@ -1,0 +1,72 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+<script>
+</script>
+</head>
+<body>
+	<div class="dialogTop">
+		<table width="400" border="0" cellspacing="10" cellpadding="0" class="ld-detailTable">
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					版本号：
+				</td>
+				<td>1.00.00</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					文档名称：
+				</td>
+				<td>银销通接口文档</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					所属项目：
+				</td>
+				<td>
+					银销通
+				</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					修改人：
+				</td>
+				<td>123</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					审核人：
+				</td>
+				<td>admin</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					起止时间：
+				</td>
+				<td>
+					2015-08-13
+				</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					修改内容
+				</td>
+				<td>签到增加</td>
+			</tr>
+			
+		</table>
+	</div>
+	
+	<div class="dialogBottom">
+		<div class="btns">
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+</body>
+</html>
+
+

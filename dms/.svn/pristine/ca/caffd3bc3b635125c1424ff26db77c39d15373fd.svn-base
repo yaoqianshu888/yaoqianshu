@@ -1,0 +1,12 @@
+package com.landicorp.dms.action.operatorlog;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class OperatorLogSearchAction extends BaseActionSupport {
+
+	public String execute(){
+		return SUCCESS;
+	}
+
+		public String detail() {return "detail";}
+}

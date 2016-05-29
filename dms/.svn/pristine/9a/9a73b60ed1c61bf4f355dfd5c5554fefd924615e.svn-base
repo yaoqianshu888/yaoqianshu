@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.node;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class NodeDetailAction extends BaseActionSupport {
+
+	public String detailNode(){
+		return "detail";
+	}
+}

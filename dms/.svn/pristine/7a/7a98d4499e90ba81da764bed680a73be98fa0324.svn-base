@@ -1,0 +1,25 @@
+package com.landicorp.dms.dao;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Draft;
+
+public interface IDraftDao extends IMyBatisDao<Draft, Integer> {
+	public List<Draft> getAllDraft(@Param("pager") Pager pager); //得到所有的草稿
+	public Integer getAllDraftCount();     //得到所有的草稿数
+	public List<Draft> getDraftListByDraft(     //按条件得到草稿
+			@Param("draft") Draft draft,
+			@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime,
+			@Param("pager") Pager pager);
+		
+	public int getDraftCountByDraft(@Param("draft") Draft draft,  //按条件得到草稿数
+			@Param("startCreateTime") Date startCreateTime,
+			@Param("endCreateTime") Date endCreateTime);
+	public void deleteById(Integer id);
+}

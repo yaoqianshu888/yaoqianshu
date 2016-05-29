@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+	default-autowire="byName">
+
+
+	<!-- initTask -->
+
+	<!-- dao -->
+	
+	<!-- service -->
+
+
+	<!-- struts2 action -->
+	
+	<!-- 项目管理action -->
+	<bean id="dmsProjectSearchAction" class="com.landicorp.dms.action.project.DmsProjectSearchAction"
+		scope="prototype" />
+	<bean id="dmsProjectUpdateAction" class="com.landicorp.dms.action.project.DmsProjectUpdateAction"
+		scope="prototype" />
+	<bean id="dmsProjectInsertAction" class="com.landicorp.dms.action.project.DmsProjectInsertAction"
+		scope="prototype" />
+	<!-- 
+	<bean id="dmsProjectDeleteAction" class="com.landicorp.dms.action.project.DmsProjectDeleteAction"
+		scope="prototype" />
+	 -->
+	
+	<!-- 模板管理action -->
+	<bean id="templateSearchAction" class="com.landicorp.dms.action.template.TemplateSearchAction"
+		scope="prototype" />
+		<!-- 模板管理action -->
+	<bean id="templateInsertAction" class="com.landicorp.dms.action.template.TemplateInsertAction"
+		scope="prototype" />
+	<bean id="documentTemplateInsertAction" class="com.landicorp.dms.action.template.DocumentTemplateInsertAction"
+		scope="prototype" />
+		
+	<!-- 文档管理action -->
+	<bean id="documentSearchAction" class="com.landicorp.dms.action.document.DocumentSearchAction"
+		scope="prototype" />
+	<bean id="documentUpdateAction" class="com.landicorp.dms.action.document.DocumentUpdateAction"
+		scope="prototype" />
+	<bean id="documentBaseUpdateAction" class="com.landicorp.dms.action.document.DocumentBaseUpdateAction"
+		scope="prototype" />
+	<bean id="documentInsertAction" class="com.landicorp.dms.action.document.DocumentInsertAction"
+		scope="prototype" />
+	<bean id="documentUploadAction" class="com.landicorp.dms.action.document.DocumentUploadAction"
+		scope="prototype" />
+		
+	<!-- 模块管理action -->
+	<bean id="moduleSearchAction" class="com.landicorp.dms.action.module.ModuleSearchAction"
+		scope="prototype" />
+	<bean id="moduleUpdateAction" class="com.landicorp.dms.action.module.ModuleUpdateAction"
+		scope="prototype" />
+	<bean id="moduleInsertAction" class="com.landicorp.dms.action.module.ModuleInsertAction"
+		scope="prototype" />
+		
+</beans>

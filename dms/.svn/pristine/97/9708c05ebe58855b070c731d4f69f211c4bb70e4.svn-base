@@ -1,0 +1,15 @@
+package com.landicorp.dms.action.draft;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class DraftUpdateAction extends BaseActionSupport{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public String prepare() {
+		return INPUT;
+	}
+
+}

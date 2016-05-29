@@ -1,0 +1,96 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+<script>
+	function documentDetail(){
+		ldDialog.openFullScreen(
+			"${basePath}dms/documentView!viewDocument.action",
+			"文档查看", 
+			function(window) {
+			
+		});
+	}
+</script>
+</head>
+<body>
+	<div class="dialogTop">
+		<table width="400" border="0" cellspacing="10" cellpadding="0" class="ld-detailTable">
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					文档名称：
+				</td>
+				<td>${ document.documentName}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					url指向：
+				</td>
+				<td>${ document.urlPath}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					状态：
+				</td>
+				<td>
+					<c:if test="${document.available==1 }">有效</c:if>
+					<c:if test="${document.available==0 }">无效</c:if>
+				</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					所属项目：
+				</td>
+				<td>${ document.project.projectName}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					创建人：
+				</td>
+				<td>${ document.creator.userName}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					创建时间：
+				</td>
+				<td id="createTime">
+					<f:formatDate value="${ document.createTime}" pattern="yyyy-MM-dd  HH:mm:ss" />
+				</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					更新者：
+				</td>
+				<td>${ document.lastModifier.userName}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					最新更新时间：
+				</td>
+				<td id="createTime">
+					<f:formatDate value="${ document.lastModifyTime}" pattern="yyyy-MM-dd  HH:mm:ss" />
+				</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">备注：</td>
+				<td>${ document.memo}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">内容详情链接：</td>
+				<td width="100"><a href="${basePath}dms/documentView!viewDocument.action" target="_blank"><font color="blue">http://10.10.10.110/dms/docContent.jsp</font></a></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="dialogBottom">
+		<div class="btns">
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+</body>
+</html>
+
+

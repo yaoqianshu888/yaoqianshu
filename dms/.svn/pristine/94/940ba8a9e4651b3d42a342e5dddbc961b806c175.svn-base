@@ -1,0 +1,214 @@
+package com.landicorp.dms.action.node;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.service.INodeService;
+
+public class NodeInsertAction extends BaseActionSupport{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Node node;
+	private INodeService nodeService;
+	private List<Node> nodeList;
+
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+	public Node getNode() {
+		return node;
+	}
+	public void setNode(Node node) {
+		this.node = node;
+	}
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+	
+	
+	public void insertNode() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		String reason="";
+		int code=0;
+		String returnValue="";
+		
+		try {
+			Integer i=nodeService.getMaxId();
+			if(i==null){
+				i=1;
+			}
+			if(i<=7){
+				node.setId(i+7);
+				node.setCreator(getSessionUser());
+				node.setCreateTime(new Date());
+				node.setLastModifier(getSessionUser());
+				node.setLastModifyTime(new Date());
+				node.setTitle(node.getNodeName());
+				node.setNodeFormat(0);
+				nodeService.saveIncludeId(node);
+			}else {
+				node.setCreator(getSessionUser());
+				node.setCreateTime(new Date());
+				node.setLastModifier(getSessionUser());
+				node.setLastModifyTime(new Date());
+				node.setTitle(node.getNodeName());
+				node.setNodeFormat(0);
+				nodeService.add(node);
+			}
+			
+			returnValue="新增成功";
+			code=1;
+			setWindowReturnValue(returnValue);
+		} catch (Exception e) {
+			reason="新增失败";
+		}
+		
+		
+		response.getWriter().write("[{\"code\":\""+code+"\",\"reason\":\""+reason+"\",\"returnValue\":\""+returnValue+"\"}]");
+	}
+	
+	//跳转配置节点
+	public String toConfig(){
+		node=nodeService.getById(node.getId());
+		return SUCCESS;
+	}
+	
+	//初始化得到节点树
+	public void getAllNodesByPid() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		nodeList=nodeService.getAllNodeByPid(node.getId());
+		StringBuffer sb=new StringBuffer("[");
+		
+		for(int i=0;i<nodeList.size();i++){
+				if(nodeList.get(i).getUpNode()==null){
+					sb.append("{\"id\":\""+nodeList.get(i).getId()+"\",\"pId\":\""+""+"\",\"name\":\""+nodeList.get(i).getTitle()+"\",\"drop\":\"false\",\"drag\":\"false\",\"open\":\"true\",\"type\":\"("+nodeList.get(i).getNodeName()+")\"},");
+				}else{
+					sb.append("{\"id\":\""+nodeList.get(i).getId()+"\",\"pId\":\""+nodeList.get(i).getUpNode().getId()+"\",\"name\":\""+nodeList.get(i).getTitle()+"\",\"drop\":\"false\",\"drag\":\"false\",\"open\":\"true\",\"type\":\"("+nodeList.get(i).getNodeName()+")\"},");
+				}
+			
+		}
+		if(sb.length()>1){
+			sb.deleteCharAt(sb.length()-1);
+		}
+		sb.append("]");
+		
+		response.getWriter().write(sb.toString());
+	}
+	
+	//初始化得到节点树(不可修改)
+		public void getAllNodesByPidOnlyR() throws IOException{
+			HttpServletResponse response = ServletActionContext.getResponse(); 
+			response.setCharacterEncoding("UTF-8"); 
+			nodeList=nodeService.getAllNodeByPid(node.getId());
+			StringBuffer sb=new StringBuffer("[");
+			
+			for(int i=0;i<nodeList.size();i++){
+				if(nodeList.get(i).getUpNode()==null){
+					sb.append("{\"id\":\""+nodeList.get(i).getId()+"\",\"pId\":\""+""+"\",\"name\":\""+nodeList.get(i).getTitle()+"\",\"drop\":false,\"drag\":false,\"open\":true,\"type\":\"("+nodeList.get(i).getNodeName()+")\"},");
+				}else{
+					sb.append("{\"id\":\""+nodeList.get(i).getId()+"\",\"pId\":\""+nodeList.get(i).getUpNode().getId()+"\",\"name\":\""+nodeList.get(i).getTitle()+"\",\"drop\":false,\"drag\":false,\"open\":true,\"type\":\"("+nodeList.get(i).getNodeName()+")\"},");
+				}
+				
+			}
+			if(sb.length()>1){
+				sb.deleteCharAt(sb.length()-1);
+			}
+			sb.append("]");
+			
+			response.getWriter().write(sb.toString());
+		}
+		
+	
+	public String insertNodeDetail(){
+		return INPUT;
+	}
+	
+	public void getMaxId() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		int count=nodeService.getMaxId();
+		
+		String str="[{\"count\":\""+count+"\"}]";
+		response.getWriter().write(str);
+	}
+	
+	public void setConfig() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		
+		String reStr=request.getParameter("jsonString");
+		String deleteIds=request.getParameter("deleteIds");
+		
+		String split1[]=reStr.split("★");
+		
+		for(int i=0;i<split1.length;i++){
+			String split2[]=split1[i].split("☆");
+			Node nodeCopy=new Node();
+			nodeCopy.setId(Integer.valueOf(split2[0]));
+			
+			if(!split2[1].equals("null")){
+				nodeCopy.setUpNode(nodeService.getById(Integer.valueOf(split2[1])));
+			}
+			nodeCopy.setTitle(split2[2]);
+			nodeCopy.setNodeName(split2[3].substring(1,split2[3].length()-1));
+			nodeCopy.setSort(i);
+			if(nodeService.getById(nodeCopy.getId())==null){
+				
+				if(nodeCopy.getNodeName().equals("标题节点")){
+					nodeCopy.setNodeFormat(1);
+				}else if(nodeCopy.getNodeName().equals("文本节点")){
+					nodeCopy.setNodeFormat(2);
+				}else if(nodeCopy.getNodeName().equals("图文节点")){
+					nodeCopy.setNodeFormat(3);
+				}else if(nodeCopy.getNodeName().equals("请求参数节点")){
+					nodeCopy.setNodeFormat(4);
+				}else if(nodeCopy.getNodeName().equals("返回参数节点")){
+					nodeCopy.setNodeFormat(5);
+				}else if(nodeCopy.getNodeName().equals("请求报文节点")){
+					nodeCopy.setNodeFormat(6);
+				}else if(nodeCopy.getNodeName().equals("返回报文节点")){
+					nodeCopy.setNodeFormat(7);
+				}
+				nodeService.saveIncludeId(nodeCopy);
+			}else{
+				nodeService.update(nodeCopy);
+			}
+			
+		}
+		
+		//删除节点
+		if(deleteIds.length()>1){
+			deleteIds=deleteIds.substring(0, deleteIds.length()-1);
+			String ids[]=deleteIds.split(",");
+			for(int i=0;i<ids.length;i++){
+				nodeService.deleteById(Integer.valueOf(ids[i]));
+			}
+		}
+		
+	}
+	
+	
+}

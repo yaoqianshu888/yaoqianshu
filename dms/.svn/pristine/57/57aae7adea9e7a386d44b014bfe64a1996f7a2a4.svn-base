@@ -1,0 +1,219 @@
+﻿<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+<script type="text/javascript">
+	function showFunctions(id){
+		$('#getFunctionsForm').attr("action","${basePath}dms/functionSearch!searchFunction.action?module.id="+id+"&document.id="+${document.id}).submit();
+	}
+	function showItem(id) {
+		ldDialog.openMini(
+			"${basePath}dms/moduleSearch!detail.action?module.id=" + id+"&document.id="+${document.id},
+			"模块详情", 
+			function(window) {
+		});
+	}
+	function addItem(id) {
+		ldDialog.openMini("${basePath}dms/moduleInsert!prepare.action?document.id="+id,
+			"模块新增", 
+			function(window) {
+				var returnValue = window.returnValue;
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					return true;
+				} else {//有返回值 处理一些事
+					ldDialog.tips("处理成功！");
+					document.pagerForm.submit();
+					return true;
+				}
+		});
+	}
+	function editItem(id) {
+		ldDialog.openMini(
+			"${basePath}dms/moduleUpdate!prepare.action?module.id="+ id+"&document.id="+${document.id},
+			"模块编辑",
+			function(window) {
+				var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.tips("处理成功！");
+						var curPageNum = $("input[name='pager.curPageNum']").val();
+						document.pagerForm.submit();
+						return true;
+					}
+		});
+	}
+	function deleteItems() {
+		var dms = getAllChose("delete");
+		if (dms == "") {
+			ldDialog.alert("请先选择要删除的项");
+			return;
+		}
+		var param = $("#deleteForm").serialize();
+		ldDialog.confirm("你确定要删除这些项吗？", function() {
+			var url = "${basePath}coreAjax/moduleSearch!deletemodule.action?" + param;
+			$.ajax({
+				type : "POST",
+				url : url,
+				dataType : "text",
+				success : function(result) {
+					var res = JSON.parse(result);
+					if (res.code == 1) {
+						ldDialog.tips("处理完成");
+						var curPageNum = $("input[name='pager.curPageNum']").val();
+						loadData(curPageNum);
+					} else {
+						ldDialog.alert(res.reason);
+					}
+				},
+				error : function() {
+					
+				}
+			});
+		});
+	}
+	
+	function setAvailable(id,page){
+		document.getElementById("statusForm").action = "${basePath}dms/moduleSearch!setAvailable.action?module.id="
+				+ id + '&pager.curPageNum=' + page+"&module.moduleName="+$("#module\\.moduleName").val()
+				+"&module.available="+$("#module\\.available").val()+"&document.id="+${document.id};
+		document.statusForm.submit();
+	}
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post" action="${basePath}dms/moduleSearch!searchModuleAllByInfo.action">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<table class="rightseach2">
+									<div class="conditionsrow">
+									<input type="hidden" name="document.id" value="${document.id }"/>
+										<div class="conditionsitem">
+											<div class="conditionsitemL">模块名称：</div>
+											<div class="conditionsitemR">
+												<input name="module.moduleName" class="ldText" style="width:144px"
+													id="module.moduleName" value="${module.moduleName}" />
+											</div>
+										</div>
+										<div class="conditionsitem">
+						                  <div class="conditionsitemL">状态：</div>
+						                  <div class="conditionsitemR">
+						                    <ld:select groupName="availableAll" name="module.available" id="module.available"
+						                               value="${module.available}" className="ldSelect select144" />
+						                  </div>
+						                </div>
+									</div>
+								</table>
+							</div>
+							<div class="yhlist3">
+								<div class="toolbarL">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td><ld:check mark="moduleInsert">
+													<input type="button" class="ldBtnGray" value="新增"
+														onclick="addItem(${document.id});" />
+												</ld:check> 
+											</td>
+										</tr>
+									</table>
+								</div>
+								<div class="toolbarR">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td><input id="searchBtn" type="submit"
+												class="ldBtnBlue" value="查询" /></td>
+												<input type="hidden" value="0" name="pager.curPageNum" />
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+
+
+			<div class="yhlist2">
+				<form method="post" name="getFunctionsForm" id="getFunctionsForm">
+				</form>
+				<form method="post" name="backDocumentForm" id="backDocumentForm">
+				</form>
+				<form method="post" name="statusForm" id="statusForm">
+					<table id="contentTable" width="100%" border="0" cellspacing="1"
+						cellpadding="0" class="ld-datagrid">
+						<tr>
+							<th>模块编号</th>
+							<th>模块名称</th>
+							<th>状态</th>
+							<th>所属项目</th>
+							<th>所属文档</th>
+							<th>操作</th>
+						</tr>
+
+						<c:forEach items="${moduleList }" var="item">
+							<tr>
+								<td onclick="showFunctions(${item.id});">${ item.no}</td>
+								<td onclick="showFunctions(${item.id});"><span style="font-weight:bold;">${ item.moduleName}</span></td>
+								<td><a href="javascript:void(0);"
+									onclick="setAvailable(${ item.id},${pager.curPageNum});"> <c:if
+											test="${item.available==1 }">
+											<input type="checkbox" class="ldSwitch" checked />
+										</c:if> <c:if test="${item.available==0 }">
+											<input type="checkbox" class="ldSwitch"/>
+										</c:if> </a> 
+								</td>
+								<td onclick="showFunctions(${item.id});">${ document.project.projectName}</td>
+								<td onclick="showFunctions(${item.id});">${ document.documentName}</td>
+								<td><ld:check mark="moduleDetail">
+										<input type="button" value="详情" class="ldBtnLink"
+											onclick="showItem(${item.id});" />&nbsp;
+								</ld:check> <ld:check mark="moduleUpdate">
+										<input type="button" value="编辑" class="ldBtnLink"
+											onclick="editItem(${item.id});" />&nbsp;
+								</ld:check></td>
+							</tr>
+
+						</c:forEach>
+					</table>
+				</form>
+			</div>
+
+
+			<div class="yhlist3">
+				<div class="toolbarL">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><ld:check mark="moduleInsert">
+									<input type="button" class="ldBtnGray" value="新增"
+										onclick="addItem(${document.id});" />
+								</ld:check> 
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="toolbarR">
+					<div class="ldPager">
+						<form action="${basePath}dms/moduleSearch!searchModuleAllByInfo.action"
+							  method="post" name="pagerForm">
+							    <input name="module.moduleName" type="hidden"
+								value="${module.moduleName}" /> <input name="module.available"
+								type="hidden" id="module.available" value="${module.available}" />
+								<input type="hidden" name="document.id" value="${document.id }"/> 
+							<ld:pager type="form" action="pagerForm" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

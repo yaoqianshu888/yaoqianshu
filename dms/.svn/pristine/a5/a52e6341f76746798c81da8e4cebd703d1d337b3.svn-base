@@ -1,0 +1,51 @@
+package com.landicorp.dms.action.node;
+
+import java.util.List;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.service.INodeService;
+
+public class NodeViewAction extends BaseActionSupport{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Node node;
+	private INodeService nodeService;
+	private List<Node> nodeList;
+	
+	public Node getNode() {
+		return node;
+	}
+
+	public void setNode(Node node) {
+		this.node = node;
+	}
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	
+	
+	public String viewNode(){
+		node=nodeService.getById(node.getId());
+		return SUCCESS;
+	}
+
+
+}

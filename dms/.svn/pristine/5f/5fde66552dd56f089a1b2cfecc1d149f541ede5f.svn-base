@@ -1,0 +1,32 @@
+package com.landicorp.dms.action.draft;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.service.IDraftService;
+
+public class DraftDeleteAction extends BaseActionSupport {
+	private Integer[] delete;
+	private IDraftService draftService;
+	public Integer[] getDelete() {
+		return delete;
+	}
+	public void setDelete(Integer[] delete) {
+		this.delete = delete;
+	}
+	public IDraftService getDraftService() {
+		return draftService;
+	}
+	public void setDraftService(IDraftService draftService) {
+		this.draftService = draftService;
+	}
+	
+	public String deleteDraft(){
+		try{			
+			draftService.delete(delete); 
+		}catch (Exception e) {
+			e.printStackTrace();
+			return SUCCESS;
+		}
+		return SUCCESS;
+	}
+	
+}

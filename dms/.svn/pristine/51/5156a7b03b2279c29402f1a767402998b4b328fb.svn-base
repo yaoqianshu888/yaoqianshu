@@ -1,0 +1,85 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IProjectDocDao;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IProjectDocService;
+
+public class ProjectDocServiceImpl extends
+		AbstractBaseServiceImpl<ProjectDoc, Integer> implements IProjectDocService {
+	private IProjectDocDao projectDocDao;
+	
+	public IProjectDocDao getprojectDocDao() {
+		return projectDocDao;
+	}
+
+	public void setprojectDocDao(IProjectDocDao projectDocDao) {
+		this.projectDocDao = projectDocDao;
+	}
+
+	@Override
+	public int add(ProjectDoc arg0) {
+		return projectDocDao.save(arg0);
+	}
+
+	@Override
+	public void delete(Integer[] arg0) {
+		projectDocDao.delete(arg0);
+	}
+	@Override
+	public List<ProjectDoc> getAll(){
+		return projectDocDao.getAll();
+	}
+
+	
+	@Override
+	public ProjectDoc getById(Integer arg0) {
+		return projectDocDao.getById(arg0);
+	}
+
+	
+	@Override
+	public int update(ProjectDoc arg0) {
+		return projectDocDao.update(arg0);
+	}
+
+	@Override
+	public List<ProjectDoc> getAllProject(Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(projectDocDao.getAllProjectCount());
+		}
+		return projectDocDao.getAllProject(pager);
+	}
+
+	@Override
+	public List<ProjectDoc> getProjectListByProject(ProjectDoc projectDoc,
+			Date startCreateTime, Date endCreateTime, Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(projectDocDao.getProjectCountByProject(projectDoc, startCreateTime, endCreateTime));
+		}
+		
+		return projectDocDao.getProjectListByProject(projectDoc, startCreateTime, endCreateTime, pager);
+	}
+
+	@Override
+	public IMyBatisDao<ProjectDoc, Integer> getMyBatisDao() {
+		return projectDocDao;
+	}
+
+	@Override
+	public int getMaxId() {
+		return projectDocDao.getMaxId();
+	}
+
+	@Override
+	public List<ProjectDoc> getAllAlia() {
+		return projectDocDao.getAllAlia();
+	}
+
+}

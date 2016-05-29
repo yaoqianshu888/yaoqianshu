@@ -1,0 +1,151 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+/* $(function(){
+	loadData();
+}); */
+function loadData(){
+	var url = "${basePath}coreAjax/userSearch!detailUser.action?user.id=${user.id}";
+	$.ajax({
+		type : "POST",
+		url : url,
+		dataType : "text",
+		success : function(result) {
+			var res = JSON.parse(result);
+			if (res.code == 1) {
+				var user = res.bean;
+				$("#userAlias").append(user.userAlias);
+				$("#userNum").append(user.userNum);
+				$("#userName").append(user.userName);
+				$("#available").append(user.availableOptionDisplay);
+				$("#belongAreaName").append(user.belongArea.areaName);
+				$("#memo").append(user.memo);
+			} else {
+				ldDialog.alert(res.reason);
+			}
+			ldDialog.unmask();
+		},
+		error : function() {
+			ldDialog.unmask();
+		}
+	});
+}
+function showResult(){
+	$("#result").show();
+}
+</script>
+<style type="text/css">
+#result{display:none}
+</style>
+</head>
+<body>
+	<div class="dialogTop">
+		<table width="100%" align="center" cellspacing="10"
+			cellpadding="0" class="ld-detailTable">
+			<tr><td colspan="2">使用说明：</td></tr>
+			<tr><td colspan="2">（1）系统会生成该接口的参数表，您可以直接在文本框内填入对应的参数值。（红色星号表示该字段必填）</td></tr>
+			<tr><td colspan="2">（2）点击检查问题按钮，即可得到相应的调试信息。</td></tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					请求url：
+				</td>
+				<td id="userAlias">
+				http:127.0.0.1:8080/ids
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					请求码：
+				</td>
+				<td id="userNum">
+				010101
+				</td>
+			</tr>
+			<tr>
+			<td width="100" class="right evenTrBgColor"><span class="red">*</span>请求报文</td>
+        <td><textarea id="code_area1" placeholder="" rows="1" name="content_2" autocomplete="off" style="border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:96%" onfocus="resizeTextarea(this,5);" onclick="resizeTextarea(this, 5);" onkeyup="resizeTextarea(this,5);" onkeydown="resizeTextarea(this,5);" onpaste="textareaRightMenu(this);" oncut="textareaRightMenu(this);"> &lt;request&gt;
+  &lt;requestParam&gt;
+&lt;requestCode&gt;1001&lt;/requestCode&gt;
+&lt;terminalType&gt;1&lt;/terminalType&gt;
+&lt;sessionId&gt;dskjwejrljelkfjadsljfladskj;dflj &lt;/sessionId&gt;
+&lt;merchantNo&gt; ffffffff &lt;/merchantNo&gt;
+&lt;subBranchNo&gt; aaaaaaaa &lt;/subBranchNo&gt;
+&lt;terminalNo&gt;11111111&lt;/terminalNo&gt;
+&lt; projectType &gt;1&lt;/ projectType &gt;
+  &lt;/requestParam&gt;
+  &lt;data&gt;
+    &lt;merch_no&gt;000000000000012&lt;/merch_no&gt;
+    &lt;subbranch_no&gt;00000002234&lt;/subbranch_no&gt;
+    &lt;optiontype&gt;1&lt;/optiontype_no&gt;
+    &lt;companyid&gt;&lt;/companyid&gt;        
+    &lt;companyname&gt;&lt;/companyname&gt;        
+    &lt;pinyin&gt;&lt;/pinyin&gt;  
+    &lt;address&gt;&lt;/address&gt;        
+    &lt;linkman&gt;&lt;/linkman&gt;        
+    &lt;phone&gt;&lt;/phone&gt;        
+    &lt;mail&gt;&lt;/mail&gt;      
+    &lt;debt&gt;&lt;/debt&gt;      
+    &lt;other&gt;&lt;/other&gt;    
+  &lt;/data&gt;
+&lt;/request&gt;&hellip;</textarea>
+        <span class="tips">调用接口的数据xml包</span></td>
+			</tr>
+			<tr>
+				<td  width="100" class="right evenTrBgColor">
+				</td>
+				<td>
+				 <input type="button" name="Submit2" class="ldBtnGreen" value="测试请求" onclick="showResult()" />
+				</td>
+			</tr>
+		</table>
+		<div id="result">
+		<table width="100%" align="center" cellspacing="10"
+			cellpadding="0" class="ld-detailTable">
+			<tr><td colspan="2">请求调试</td></tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					请求地址：
+				</td>
+				<td id="userAlias">
+				http:127.0.0.1:8080/ids
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					返回结果：
+				</td>
+				<td>
+				</td>
+			</tr>
+			<tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					提示：
+				</td>
+				<td>
+				请求失败
+				</td>
+			</tr>
+			<tr>
+		</table>
+		</div>
+	</div>
+	<div class="dialogBottom">
+		<div class="btns">
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+</body>
+<style>
+.red{color: red;}
+.tips{  display: block;
+  color: #a3a3a3;
+  }
+ .tableleft{text-align:right;}
+
+</style>
+</html>
+

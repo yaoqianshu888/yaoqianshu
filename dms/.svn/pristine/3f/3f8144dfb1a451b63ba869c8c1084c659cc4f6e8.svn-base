@@ -1,0 +1,140 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	background-color: #e0f9fe;
+	vertical-align: middle;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+
+img {
+	border: 0px;
+}
+
+botton {
+	cursor: pointer;
+}
+
+#loginbox {
+	width: 1000px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+}
+
+#loginbody {
+	width: 1004px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.tab4 {
+	height: 24px;
+	width: 90%;
+	font-size: 12px;
+	line-height: 24px;
+	color: #F00;
+	text-align: center;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+	position: absolute;
+	top: 440px;
+	float: none;
+}
+
+.infoxx {
+	font-size: 12px;
+	line-height: 24px;
+	color: #F00;
+	text-align: center;
+}
+
+.lobg1 {
+	background-image: url(../images/login-bg01.png);
+	background-repeat: repeat-x;
+	background-position: center top;
+}
+
+.lobg2 {
+	background-image: url(../images/login-bg02.png);
+	background-repeat: repeat-x;
+	background-position: center bottom;
+}
+
+.lobg3 {
+	background-color: #000;
+}
+
+.lobg4 {
+	opacity: 0.65;
+	-moz-opacity: 0.65;
+	filter: alpha(opacity = 65);
+	background-image: url(../images/bg50.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	height: 380px;
+}
+
+.loginput {
+	background-color: #FFF;
+	border: 1px solid #CCC;
+	font-size: 18px;
+	line-height: 40px;
+	color: #333;
+	height: 40px;
+	width: 200px;
+	font-family: "Microsoft YaHei";
+	padding-left: 38px;
+}
+
+.loginxc {
+	background-color: #FFF;
+	border: 1px solid #CCC;
+	font-size: 18px;
+	line-height: 40px;
+	color: #999;
+	height: 40px;
+	width: 130px;
+	font-family: "Microsoft YaHei";
+}
+
+.inputt {
+	font-size: 24px;
+	line-height: 60px;
+	color: #FFF;
+	font-family: "Microsoft YaHei";
+}
+
+.inputxx {
+	font-size: 14px;
+	line-height: 24px;
+	color: #FFF;
+	font-family: "Microsoft YaHei";
+}
+
+.image1 {
+	background-image: url(../images/user.png);
+	background-position: 10px center;
+	background-repeat: no-repeat;
+}
+
+.image2 {
+	background-image: url(../images/lock.png);
+	background-position: 10px center;
+	background-repeat: no-repeat;
+}
+
+.image3 {
+	background-image: url(../images/key.png);
+	background-position: 10px center;
+	background-repeat: no-repeat;
+}

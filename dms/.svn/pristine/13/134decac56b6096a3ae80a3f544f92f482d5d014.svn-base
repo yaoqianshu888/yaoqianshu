@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+		<setting name="cacheEnabled" value="false" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="aggressiveLazyLoading" value="false" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="defaultStatementTimeout" value="25" />
+		<setting name="safeRowBoundsEnabled" value="false" />
+		<setting name="mapUnderscoreToCamelCase" value="false" />
+		<setting name="localCacheScope" value="SESSION" />
+		<setting name="jdbcTypeForNull" value="OTHER" />
+		<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />
+		<setting name="callSettersOnNulls" value="false" />
+		<setting name="proxyFactory" value="CGLIB" />
+	</settings>
+	<typeAliases>
+		<!--core -->
+		<typeAlias alias="user" type="com.landicorp.core.entities.User" />
+		<typeAlias alias="right" type="com.landicorp.core.entities.Right" />
+		<typeAlias alias="role" type="com.landicorp.core.entities.Role" />
+		<typeAlias alias="roleUser" type="com.landicorp.core.entities.RoleUser" />
+		<typeAlias alias="area" type="com.landicorp.core.entities.Area" />
+		<typeAlias alias="operateLog" type="com.landicorp.core.entities.OperateLog" />
+		<typeAlias alias="roleRight" type="com.landicorp.core.entities.RoleRight" />
+		<!-- 软件升级 -->
+		<typeAlias alias="checkstandVersion" type="com.landicorp.core.entities.CheckstandVersion" />
+		<typeAlias alias="project" type="com.landicorp.core.entities.Project" />
+		<typeAlias alias="platform" type="com.landicorp.core.entities.Platform" />
+		<typeAlias alias="posType" type="com.landicorp.core.entities.PosType" />
+		<typeAlias alias="option" type="com.landicorp.core.entities.Option" />
+
+		<!-- dms -->
+		<typeAlias alias="basicNodeCont" type="com.landicorp.dms.entities.BasicNodeCont" />
+		<typeAlias alias="document" type="com.landicorp.dms.entities.Document" />
+		<typeAlias alias="function" type="com.landicorp.dms.entities.Function" />
+		<typeAlias alias="module" type="com.landicorp.dms.entities.Module" />
+		<typeAlias alias="node" type="com.landicorp.dms.entities.Node" />
+		<typeAlias alias="projectDoc" type="com.landicorp.dms.entities.ProjectDoc" />
+		<typeAlias alias="template" type="com.landicorp.dms.entities.Template" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/landicorp/core/dao/sql.xml" />
+	</mappers>
+</configuration>	

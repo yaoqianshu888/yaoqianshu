@@ -1,0 +1,85 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+	<div class="dialogTop">
+		<table width="100%" align="center" cellspacing="10"
+			cellpadding="0" class="ld-detailTable">
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					节点名称：
+				</td>
+				<td>简介
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					节点类型：
+				</td>
+				<td>复合节点
+				</td>
+			</tr>
+			<%--<tr>
+				<td width="100" class="right evenTrBgColor">
+					循环类型：
+				</td>
+				<td>1
+				</td>
+			</tr>--%>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					所属模板：
+				</td>
+				<td>接口说明模板
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					创建人：
+				</td>
+				<td>admin
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					创建时间：
+				</td>
+				<td>2015-08-13
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					最后修改人：
+				</td>
+				<td>admin
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					最后修改时间：
+				</td>
+				<td>2015-08-13
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">备注：</td>
+				<td id="memo">
+				</td>
+			</tr>
+			
+		</table>
+	</div>
+	<div class="dialogBottom">
+		<div class="btns">
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+</body>
+</html>
+

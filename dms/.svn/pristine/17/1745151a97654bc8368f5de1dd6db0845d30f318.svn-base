@@ -1,0 +1,80 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IBasicNodeContDao;
+import com.landicorp.dms.entities.BasicNodeCont;
+import com.landicorp.dms.service.IBasicNodeContService;
+
+public class BasicNodeContServiceImpl extends AbstractBaseServiceImpl<BasicNodeCont, Integer>
+		implements IBasicNodeContService {
+	private IBasicNodeContDao basicNodeContDao;
+	
+
+	public IBasicNodeContDao getBasicNodeContDao() {
+		return basicNodeContDao;
+	}
+
+	public void setBasicNodeContDao(IBasicNodeContDao basicNodeContDao) {
+		this.basicNodeContDao = basicNodeContDao;
+	}
+
+	@Override
+	public int add(BasicNodeCont arg0) {
+		return basicNodeContDao.save(arg0);
+	}
+
+	@Override
+	public BasicNodeCont getById(Integer arg0) {
+		return basicNodeContDao.getById(arg0);
+	}
+
+	
+	@Override
+	public int update(BasicNodeCont arg0) {
+		return basicNodeContDao.update(arg0);
+	}
+
+	@Override
+	public IMyBatisDao<BasicNodeCont, Integer> getMyBatisDao() {
+		return basicNodeContDao;
+	}
+
+	@Override
+	public List<BasicNodeCont> getByDocumentId(Integer id) {
+		return basicNodeContDao.getByDocumentId(id);
+	}
+
+	@Override
+	public void updateContent(BasicNodeCont basicNodeCont) {
+		basicNodeContDao.updateContent(basicNodeCont);
+	}
+
+	@Override
+	public List<BasicNodeCont> getByDocumentIdAndFunctionId(Integer DocumentId,
+			Integer FunctionId) {
+		return basicNodeContDao.getByDocumentIdAndFunctionId(DocumentId, FunctionId);
+	}
+
+	@Override
+	public void updateContentFunction(BasicNodeCont basicNodeCont) {
+		basicNodeContDao.updateContentFunction(basicNodeCont);
+	}
+
+	@Override
+	public List<BasicNodeCont> getByNodeIdAndFunctionId(Integer NodeId,
+			Integer FunctionId) {
+		
+		return basicNodeContDao.getByNodeIdAndFunctionId(NodeId, FunctionId);
+	}
+
+	@Override
+	public List<BasicNodeCont> getByFunctionId(Integer id) {
+		return basicNodeContDao.getByFunctionId(id);
+	}
+
+}

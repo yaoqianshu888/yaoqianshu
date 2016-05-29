@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	
+	<package name="moneyJinliang" extends="myDefault" namespace="/moneyJinliang">
+		<!--下家管理 -->
+		<action name="apprenticeSearch" class="apprenticeSearchAction">
+			<result name="detail">/WEB-INF/moneyTree/apprentice/apprenticeDetail.jsp</result>
+			<result name="success">/WEB-INF/moneyTree/apprentice/apprenticeSearch.jsp</result>
+		</action>
+		<action name="apprenticeInsert" class="apprenticeInsertAction">
+			<result name="input">/WEB-INF/moneyTree/apprentice/apprenticeInsert.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="apprenticeUpdate" class="apprenticeUpdateAction">
+			<result name="input">/WEB-INF/moneyTree/apprentice/apprenticeUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+	</package>
+</struts>
+

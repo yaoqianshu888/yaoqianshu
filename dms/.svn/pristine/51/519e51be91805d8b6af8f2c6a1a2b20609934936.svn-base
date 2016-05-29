@@ -1,0 +1,138 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+	
+	function showDetail() {
+		ldDialog.openFullScreen(
+						"${basePath}dms/documentVersionView!viewDocumentVersion.action", "版本查看", function(window) {
+		});
+	}
+	function detail() {
+		ldDialog.openMini(
+						"${basePath}dms/documentVersionDetail!detailDocumentVersion.action", "版本详情", function(window) {
+		});
+	}
+
+	function setItem() {
+		ldDialog.confirm("确定将该版本置为当前版本？", function () {
+			ldDialog.tips("设置成功！");
+		})
+	}
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+						<div class="yhlist1">
+								<div class="yhlist1L">文档名称：银销通 >银销通接口说明</div>
+							</div>
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<div class="conditionsrow">
+								<div class="conditionsitem">
+										<div class="conditionsitemL">版本号：</div>
+										<div class="conditionsitemR">
+											<input name="functionVersion.versionNum" class="ldText input138" id="functionVersion.versionNum" value="${functionVersion.versionNum}" />
+										</div>
+									</div>
+							</div>	
+								
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarR">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input id="searchBtn" type="button" class="ldBtnBlue" value="查询"/></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+						<%--<th>选择</th>--%>
+						<th>序号</th>
+						<th>版本号</th>
+						<th>修改人</th>
+						<th>审核人</th>
+						<th>起止日期</th>
+						<th>修改内容</th>
+						<th>操作</th>
+					</tr>
+					<tr>
+						<%--<td><input type="checkbox" name="compare" id="compare" class="ldCheckbox" value="1" /></td>--%>
+						<td>1</td>
+						<td>1.00.00</td>
+						<td>123</td>
+						<td>admin</td>
+						<td>2015-08-13</td>
+						<td>增加签到功能点</td>
+						<td>
+							<input type="button" value="详情" class="ldBtnLink" onclick="detail();">
+							<a href="${basePath}dms/documentVersionView!viewDocumentVersion.action" target="_blank"><input type="button" value="查看" class="ldBtnLink" onclick=""></a>
+							<input type="button" value="置为当前版本" class="ldBtnLink" onclick="setItem('1')">
+						</td>
+					</tr>
+					<tr>
+					<%--<td><input type="checkbox" name="compare" id="compare" class="ldCheckbox" value="2" /></td>--%>
+						<td>2</td>
+						<td>1.00.01</td>
+						<td>123</td>
+						<td>admin</td>
+						<td>2015-08-13</td>
+						<td>签到功能点修改</td>
+						<td>
+						<input type="button" value="详情" class="ldBtnLink" onclick="detail();">
+							<a href="${basePath}dms/documentVersionView!viewDocumentVersion.action" target="_blank"><input type="button" value="查看" class="ldBtnLink" onclick=""></a>
+							<input type="button" value="置为当前版本" class="ldBtnLink" onclick="setItem('1')">
+						</td>
+					</tr>
+					<tr>
+					<%--<td><input type="checkbox" name="compare" id="compare" class="ldCheckbox" value="3" /></td>--%>
+						<td>3</td>
+						<td>1.01.00</td>
+						<td>123</td>
+						<td>admin</td>
+						<td>2015-08-13</td>
+						<td>签到功能点无效</td>
+						<td>
+						<input type="button" value="详情" class="ldBtnLink" onclick="detail();">
+							<a href="${basePath}dms/documentVersionView!viewDocumentVersion.action" target="_blank"><input type="button" value="查看" class="ldBtnLink" onclick=""></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="dialogBottom">
+				<div class="btns">
+					<input type="button" value="关 闭" class="ldBtnGray"
+						   onclick="ldDialog.close();" />
+				</div>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

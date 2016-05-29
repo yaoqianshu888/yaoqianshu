@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.document;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class DocumentMenuAction extends BaseActionSupport {
+
+	public String getMenus(){
+		return "menu";
+	}
+}

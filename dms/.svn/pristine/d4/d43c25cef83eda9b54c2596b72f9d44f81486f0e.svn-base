@@ -1,0 +1,132 @@
+package com.landicorp.dms.entities;
+
+import java.util.Date;
+
+import com.landicorp.core.entities.User;
+import com.landicorp.core.entities.base.BaseEntity;
+
+public class Document extends BaseEntity{
+	private Integer id;
+	private Integer no;  //文档编号
+	private String versionId;//版本号
+	private String documentName; //文档名称
+	private Integer docType;  //类型（在线编辑、外部上传）
+	private Integer available;  //状态（是否有效）
+	private ProjectDoc project;  //所属项目
+	private User creator;  //创建人
+	private Date createTime;// 创建时间
+	private String urlPath;  //Url指向
+	private String memo;  //备注
+	private Template template;  //所属模板
+	private Date lastModifyTime;// 最后修改时间
+	private User lastModifier;// 最后修改人
+	private String modifyContent;//修改内容
+	
+	public Integer getNo() {
+		return no;
+	}
+	public void setNo(Integer no) {
+		this.no = no;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getVersionId() {
+		return versionId;
+	}
+	public void setVersionId(String versionId) {
+		this.versionId = versionId;
+	}
+	public String getDocumentName() {
+		return documentName;
+	}
+	public void setDocumentName(String documentName) {
+		this.documentName = documentName;
+	}
+	
+	
+	public Integer getDocType() {
+		return docType;
+	}
+	public void setDocType(Integer docType) {
+		this.docType = docType;
+	}
+	public Integer getAvailable() {
+		return available;
+	}
+	public void setAvailable(Integer available) {
+		this.available = available;
+	}
+	public ProjectDoc getProject() {
+		return project;
+	}
+	public void setProject(ProjectDoc project) {
+		this.project = project;
+	}
+	
+	
+	public User getCreator() {
+		return creator;
+	}
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public String getUrlPath() {
+		return urlPath;
+	}
+	public void setUrlPath(String urlPath) {
+		this.urlPath = urlPath;
+	}
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+	public Template getTemplate() {
+		return template;
+	}
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+	public Date getLastModifyTime() {
+		return lastModifyTime;
+	}
+	public void setLastModifyTime(Date lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+	public User getLastModifier() {
+		return lastModifier;
+	}
+	public void setLastModifier(User lastModifier) {
+		this.lastModifier = lastModifier;
+	}
+	public String getModifyContent() {
+		return modifyContent;
+	}
+	public void setModifyContent(String modifyContent) {
+		this.modifyContent = modifyContent;
+	}
+	@Override
+	public String toString() {
+		return "Document [no=" + no + ", versionId=" + versionId
+				+ ", documentName=" + documentName + ", docType=" + docType
+				+ ", available=" + available + ", project=" + project
+				+ ", creator=" + creator + ", createTime=" + createTime
+				+ ", urlPath=" + urlPath + ", memo=" + memo + ", template="
+				+ template + ", lastModifyTime=" + lastModifyTime
+				+ ", lastModifier=" + lastModifier + ", modifyContent="
+				+ modifyContent + "]";
+	}
+	
+	
+}

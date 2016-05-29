@@ -1,0 +1,645 @@
+package com.landicorp.dms.action.function;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import sun.tools.jar.resources.jar;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.BasicNodeCont;
+import com.landicorp.dms.entities.DmsPhoto;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.DocumentModule;
+import com.landicorp.dms.entities.Draft;
+import com.landicorp.dms.entities.Examine;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.entities.ModuleFunction;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.service.IBasicNodeContService;
+import com.landicorp.dms.service.IDmsPhotoService;
+import com.landicorp.dms.service.IDocumentModuleService;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IDraftService;
+import com.landicorp.dms.service.IExamineService;
+import com.landicorp.dms.service.IFunctionService;
+import com.landicorp.dms.service.IModuleFunctionService;
+import com.landicorp.dms.service.INodeService;
+import com.landicorp.dms.util.LCSrting;
+
+public class FunctionCheckAction extends BaseActionSupport {
+
+	private static final long serialVersionUID = 1L;
+	private Function function;
+	private IFunctionService functionService;
+	private Integer count;
+	private Document document;
+	private IDocumentService documentService;
+	private List<Node> nodeList;
+	private List<List<Node>> nodeLists;
+	private INodeService nodeService;
+	private Map<Integer, String> map;
+	private IBasicNodeContService basicNodeContService;
+	private Function functionA;
+	private Function functionB;
+	private Map<Integer, String> mapA;
+	private Map<Integer, String> mapB;
+	private IDocumentModuleService documentModuleService;
+	private IModuleFunctionService moduleFunctionService;
+	private IDraftService draftService;
+	private Draft draft;
+	private Examine examine;
+	private IExamineService examineService;
+	private IDmsPhotoService dmsPhotoService;
+	
+	
+
+	public IDmsPhotoService getDmsPhotoService() {
+		return dmsPhotoService;
+	}
+
+	public void setDmsPhotoService(IDmsPhotoService dmsPhotoService) {
+		this.dmsPhotoService = dmsPhotoService;
+	}
+
+	public Examine getExamine() {
+		return examine;
+	}
+
+	public void setExamine(Examine examine) {
+		this.examine = examine;
+	}
+
+	public IExamineService getExamineService() {
+		return examineService;
+	}
+
+	public void setExamineService(IExamineService examineService) {
+		this.examineService = examineService;
+	}
+
+	public IDraftService getDraftService() {
+		return draftService;
+	}
+
+	public void setDraftService(IDraftService draftService) {
+		this.draftService = draftService;
+	}
+
+	public Draft getDraft() {
+		return draft;
+	}
+
+	public void setDraft(Draft draft) {
+		this.draft = draft;
+	}
+
+	public IModuleFunctionService getModuleFunctionService() {
+		return moduleFunctionService;
+	}
+
+	public void setModuleFunctionService(
+			IModuleFunctionService moduleFunctionService) {
+		this.moduleFunctionService = moduleFunctionService;
+	}
+
+	public IDocumentModuleService getDocumentModuleService() {
+		return documentModuleService;
+	}
+
+	public void setDocumentModuleService(
+			IDocumentModuleService documentModuleService) {
+		this.documentModuleService = documentModuleService;
+	}
+
+	public Function getFunctionA() {
+		return functionA;
+	}
+
+	public void setFunctionA(Function functionA) {
+		this.functionA = functionA;
+	}
+
+	public Function getFunctionB() {
+		return functionB;
+	}
+
+	public void setFunctionB(Function functionB) {
+		this.functionB = functionB;
+	}
+
+	public Map<Integer, String> getMapA() {
+		return mapA;
+	}
+
+	public void setMapA(Map<Integer, String> mapA) {
+		this.mapA = mapA;
+	}
+
+	public Map<Integer, String> getMapB() {
+		return mapB;
+	}
+
+	public void setMapB(Map<Integer, String> mapB) {
+		this.mapB = mapB;
+	}
+
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	public List<List<Node>> getNodeLists() {
+		return nodeLists;
+	}
+
+	public void setNodeLists(List<List<Node>> nodeLists) {
+		this.nodeLists = nodeLists;
+	}
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+	public Map<Integer, String> getMap() {
+		return map;
+	}
+
+	public void setMap(Map<Integer, String> map) {
+		this.map = map;
+	}
+
+	public IBasicNodeContService getBasicNodeContService() {
+		return basicNodeContService;
+	}
+
+	public void setBasicNodeContService(IBasicNodeContService basicNodeContService) {
+		this.basicNodeContService = basicNodeContService;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
+	public Function getFunction() {
+		return function;
+	}
+
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+
+	public IFunctionService getFunctionService() {
+		return functionService;
+	}
+
+	public void setFunctionService(IFunctionService functionService) {
+		this.functionService = functionService;
+	}
+
+	public String prepare() {
+		function=functionService.getById(function.getId());
+		document=documentService.getById(function.getDocument().getId());
+		count=functionService.getAllFunctionPageCount(function);
+		if(count<1){   //只有一个版本
+			if(document!=null && document.getTemplate()!=null){
+				List<Node> rootNodes=nodeService.getAllNodesByTidAndType1(document.getTemplate().getId());
+				Node firstNode=new Node();
+				if(rootNodes.size()>0){
+					firstNode=rootNodes.get(0);
+					nodeList=nodeService.getAllFirstNodeByPid(firstNode.getId());
+					nodeLists=new ArrayList<List<Node>>();
+					for(int i=0;i<nodeList.size();i++){
+						List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+						nodes.get(0).setTitleNo((i+1)+"");
+						for(int j=0;j<nodes.size();j++){
+							int c=1;
+							for(int k=1;k<nodes.size();k++){
+								if(nodes.get(k).getUpNode().getId().equals(nodes.get(j).getId())){
+									nodes.get(k).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+									c++;
+								}
+							}
+						}
+						
+						nodeLists.add(nodes);
+					}
+				}
+				
+				//内容传值
+				map=new HashMap<Integer, String>();
+				List<BasicNodeCont> basicNodeContList=basicNodeContService.getByDocumentIdAndFunctionId(function.getDocument().getId(),function.getId());
+				for(int i=0;i<basicNodeContList.size();i++){
+					if(basicNodeContList.get(i).getNode().getNodeFormat()==3){//对字符串进行反转义
+						basicNodeContList.get(i).setContent(basicNodeContList.get(i).getContent().replaceAll("&lt;", "<"));
+						basicNodeContList.get(i).setContent(basicNodeContList.get(i).getContent().replaceAll("&quot;", "\""));
+						basicNodeContList.get(i).setContent(basicNodeContList.get(i).getContent().replaceAll("&gt;", ">"));
+					}
+					map.put(basicNodeContList.get(i).getNode().getId(), basicNodeContList.get(i).getContent());
+				}
+			}
+		}else {
+			functionA=function;
+			functionB=functionService.getNowVerByNo(function).get(0);
+			document=documentService.getById(document.getId());
+			if(document!=null && document.getTemplate()!=null){
+				List<Node> rootNodes=nodeService.getAllNodesByTidAndType1(document.getTemplate().getId());
+				Node firstNode=new Node();
+				if(rootNodes.size()>0){
+					firstNode=rootNodes.get(0);
+					nodeList=nodeService.getAllFirstNodeByPid(firstNode.getId());
+					nodeLists=new ArrayList<List<Node>>();
+					for(int i=0;i<nodeList.size();i++){
+						List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+						nodes.get(0).setTitleNo((i+1)+"");
+						for(int j=0;j<nodes.size();j++){
+							int c=1;
+							for(int k=1;k<nodes.size();k++){
+								if(nodes.get(k).getUpNode().getId().equals(nodes.get(j).getId())){
+									nodes.get(k).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+									c++;
+								}
+							}
+						}
+						
+						nodeLists.add(nodes);
+					}
+				}
+				//内容传值
+				mapA=new HashMap<Integer, String>();
+				mapB=new HashMap<Integer, String>();
+				List<BasicNodeCont> basicNodeContListA=basicNodeContService.getByDocumentIdAndFunctionId(document.getId(),functionA.getId());
+				List<BasicNodeCont> basicNodeContListB=basicNodeContService.getByDocumentIdAndFunctionId(document.getId(),functionB.getId());
+				
+				for(int a=0;a<basicNodeContListA.size();a++){
+					if(basicNodeContListA.get(a).getNode().getNodeFormat()==3){//对图片添加框
+						basicNodeContListA.get(a).setContent(basicNodeContListA.get(a).getContent().replaceAll("&lt;img", "&lt;img style='border:2px solid red' "));
+					}
+					if(basicNodeContListB.get(a).getNode().getNodeFormat()==3){//对图片添加框
+						basicNodeContListB.get(a).setContent(basicNodeContListB.get(a).getContent().replaceAll("&lt;img", "&lt;img style='border:2px solid red' "));
+					}
+				}
+				
+				for(int i=0;i<basicNodeContListA.size();i++){
+					for(int j=0;j<basicNodeContListB.size();j++){
+						if(basicNodeContListB.get(j).getNode().getId()==basicNodeContListA.get(i).getNode().getId()&&(basicNodeContListB.get(j).getNode().getNodeFormat()==3 ||basicNodeContListB.get(j).getNode().getNodeFormat()==2)){
+							List<String> allLCstr=new ArrayList<String>();
+							String temp=basicNodeContListA.get(i).getContent();
+							int length=10000;   //初始化长度
+							while(true){
+								String LCstr[]=LCSrting.getLCString(temp.toCharArray(),basicNodeContListB.get(j).getContent().toCharArray());
+								if(LCstr.length==0){
+									break;
+								}
+								length=LCstr[0].length();
+								if(length<5){    //当匹配长度小于5时退出匹配
+									break;
+								}
+								for(int b=0;b<LCstr.length;b++){
+									allLCstr.add(LCstr[b]);
+									temp=temp.replace(LCstr[b], " ");
+								}
+								
+							}
+							
+							for(int k=0;k<allLCstr.size();k++){
+								
+								if(LCSrting.countStr(allLCstr.get(k),"&lt;img")==LCSrting.countStr(allLCstr.get(k),"/&gt")){
+									String str1=allLCstr.get(k).replaceAll("style='border:2px solid red'", "style=''");
+									basicNodeContListA.get(i).setContent(basicNodeContListA.get(i).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+									
+								}else if(LCSrting.countStr(allLCstr.get(k),"&lt;img")>LCSrting.countStr(allLCstr.get(k),"/&gt")){  //图片被修改
+									//System.out.println(allLCstr.get(k));
+									String tempCon=allLCstr.get(k).substring(0,allLCstr.get(k).lastIndexOf("&lt;img"));
+									String str2=tempCon.replaceAll("style='border:2px solid red'", "style=''");
+									//System.out.println(str2);
+									//System.out.println(tempCon);
+									basicNodeContListA.get(i).setContent(basicNodeContListA.get(i).getContent().replace(tempCon,"<font color='black'>"+str2+"</font>" ));
+									
+								}
+								
+							}
+							for(int k=0;k<allLCstr.size();k++){
+								if(LCSrting.countStr(allLCstr.get(k),"&lt;img")==LCSrting.countStr(allLCstr.get(k),"/&gt")){
+									String str1=allLCstr.get(k).replaceAll("style='border:2px solid red'", "style=''");
+									basicNodeContListB.get(j).setContent(basicNodeContListB.get(j).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+								}else if(LCSrting.countStr(allLCstr.get(k),"&lt;img")>LCSrting.countStr(allLCstr.get(k),"/&gt")){
+									String tempCon=allLCstr.get(k).substring(0,allLCstr.get(k).lastIndexOf("&lt;img"));
+									String str2=tempCon.replaceAll("style='border:2px solid red'", "style=''");
+									basicNodeContListB.get(j).setContent(basicNodeContListB.get(j).getContent().replace(tempCon,"<font color='black'>"+str2+"</font>" ));
+									
+								}	
+							}
+						}else if(basicNodeContListB.get(j).getNode().getId()==basicNodeContListA.get(i).getNode().getId()&& (basicNodeContListB.get(j).getNode().getNodeFormat()==4 || basicNodeContListB.get(j).getNode().getNodeFormat()==5)){  //请求参数节点时
+							List<String> allLCstr=new ArrayList<String>();
+							String temp=basicNodeContListA.get(i).getContent();
+							int length=10000;   //初始化长度
+							while(true){
+								String LCstr[]=LCSrting.getLCString(temp.toCharArray(),basicNodeContListB.get(j).getContent().toCharArray());
+								if(LCstr.length==0){
+									break;
+								}
+								length=LCstr[0].length();
+								if(length<8){    //当匹配长度小于8时退出匹配
+									break;
+								}
+								for(int b=0;b<LCstr.length;b++){
+									allLCstr.add(LCstr[b]);
+									temp=temp.replace(LCstr[b], " ");
+								}
+								
+							}
+							
+							for(int k=0;k<allLCstr.size();k++){
+								String str1=allLCstr.get(k);
+								str1=str1.replaceAll("★", "</font>★<font color='black'>");
+								str1=str1.replaceAll("☆", "</font>☆<font color='black'>");
+								basicNodeContListA.get(i).setContent(basicNodeContListA.get(i).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+							}
+							
+							for(int k=0;k<allLCstr.size();k++){
+								String str1=allLCstr.get(k);
+								str1=str1.replaceAll("★", "</font>★<font color='black'>");
+								str1=str1.replaceAll("☆", "</font>☆<font color='black'>");
+								basicNodeContListB.get(j).setContent(basicNodeContListB.get(j).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+							}
+							
+						}else if(basicNodeContListB.get(j).getNode().getId()==basicNodeContListA.get(i).getNode().getId()&& (basicNodeContListB.get(j).getNode().getNodeFormat()==6 || basicNodeContListB.get(j).getNode().getNodeFormat()==7)){//请求报文节点时
+							List<String> allLCstr=new ArrayList<String>();
+							String temp=basicNodeContListA.get(i).getContent();
+							int length=10000;   //初始化长度
+							while(true){
+								String LCstr[]=LCSrting.getLCString(temp.toCharArray(),basicNodeContListB.get(j).getContent().toCharArray());
+								if(LCstr.length==0){
+									break;
+								}
+								length=LCstr[0].length();
+								if(length<4){    //当匹配长度小于4时退出匹配
+									break;
+								}
+								for(int b=0;b<LCstr.length;b++){
+									allLCstr.add(LCstr[b]);
+									temp=temp.replace(LCstr[b], " ");
+								}
+								
+							}
+							
+							for(int k=0;k<allLCstr.size();k++){
+								String str1=allLCstr.get(k);
+								str1=str1.replaceAll("★", "</font>★<font color='black'>");
+								basicNodeContListA.get(i).setContent(basicNodeContListA.get(i).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+							}
+							for(int k=0;k<allLCstr.size();k++){
+								String str1=allLCstr.get(k);
+								str1=str1.replaceAll("★", "</font>★<font color='black'>");
+								basicNodeContListB.get(j).setContent(basicNodeContListB.get(j).getContent().replace(allLCstr.get(k),"<font color='black'>"+str1+"</font>" ));
+							}
+						}
+					}
+					
+				}
+				
+				for(int a=0;a<basicNodeContListA.size();a++){
+					if(basicNodeContListA.get(a).getNode().getNodeFormat()==3){//对字符串进行反转义
+						basicNodeContListA.get(a).setContent(basicNodeContListA.get(a).getContent().replaceAll("&lt;", "<"));
+						basicNodeContListA.get(a).setContent(basicNodeContListA.get(a).getContent().replaceAll("&quot;", "\""));
+						basicNodeContListA.get(a).setContent(basicNodeContListA.get(a).getContent().replaceAll("&gt;", ">"));
+					}
+					if(basicNodeContListB.get(a).getNode().getNodeFormat()==3){//对字符串进行反转义
+						basicNodeContListB.get(a).setContent(basicNodeContListB.get(a).getContent().replaceAll("&lt;", "<"));
+						basicNodeContListB.get(a).setContent(basicNodeContListB.get(a).getContent().replaceAll("&quot;", "\""));
+						basicNodeContListB.get(a).setContent(basicNodeContListB.get(a).getContent().replaceAll("&gt;", ">"));
+					}
+					mapA.put(basicNodeContListA.get(a).getNode().getId(), basicNodeContListA.get(a).getContent());
+					mapB.put(basicNodeContListB.get(a).getNode().getId(), basicNodeContListB.get(a).getContent());
+				}
+			}
+		}
+		return INPUT;
+	}
+	
+	
+	//通过审核
+	public String pass() {
+		function=functionService.getById(function.getId());
+		document=documentService.getById(function.getDocument().getId());
+		Document documentNow=documentService.getNowVerByNo(document);   //得到当前版本
+		Document documentTemp=new Document();
+		documentTemp.setId(documentNow.getId());
+		documentTemp.setIsNowVer(0);
+		documentService.update(documentTemp);   //将当前版本置为不是当前版本
+		int nowId=documentNow.getId();
+		List<DocumentModule> documentModules=documentModuleService.getByDocumentId(nowId);
+		/*Examine examine1=new Examine();
+		examine1.setId(examineService.getMaxId()+1);
+		documentNow.setExamine(examine1);*/
+		
+		documentService.add(documentNow);   //新增版本
+		int nowDocumentId=documentService.getMaxId()-1;   //新增版本id
+		Document document1=documentService.getById(nowDocumentId);
+		function.setDocument(document1);
+		int isCon=0;  //判断关系表中是否有新增功能点的编号  0为没有
+		for(int i=0;i<documentModules.size();i++){
+			documentModules.get(i).setDocument(document1);
+			
+			/*
+			 * 添加对应的模块与功能点关系
+			 */
+			List<ModuleFunction> moduleFunctions=moduleFunctionService.getAllByDocumentIdAndModuleId(documentModules.get(i).getModule().getId(), nowId);
+			//System.out.println(moduleFunctions.size());
+			
+			for(int j=0;j<moduleFunctions.size();j++){
+				if(moduleFunctions.get(j).getFunction().getNo()==function.getNo()){   //新增要添加的功能点关系
+					ModuleFunction moduleFunction=new ModuleFunction(); 
+					moduleFunction.setModule(function.getModule());
+					moduleFunction.setFunction(function);
+					moduleFunction.setDocument(document1);
+					moduleFunctionService.add(moduleFunction);
+					isCon=1;  //存在编号
+				}else {
+					moduleFunctions.get(j).setDocument(document1);
+					moduleFunctionService.add(moduleFunctions.get(j));
+				}
+			}
+			documentModuleService.add(documentModules.get(i));   //添加对应的文档模块关系
+		}
+		
+		if(isCon==0){//不存在时  往关系表中新增
+			ModuleFunction moduleFunction=new ModuleFunction();
+			moduleFunction.setModule(function.getModule());
+			moduleFunction.setFunction(function);
+			moduleFunction.setDocument(document1);
+			moduleFunctionService.add(moduleFunction);
+		}
+		
+		function.setOperationType(1);  //审核通过
+		//添加功能点版本号
+		Function nowFunction=new Function();
+		if(functionService.getNowVerByNo(function).size()>0){
+			nowFunction=functionService.getNowVerByNo(function).get(0);
+			nowFunction.setIsNowVer(0);
+			if(nowFunction.getVersionId()==null){
+				nowFunction.setVersionId("0");
+			}
+			function.setVersionId((Integer.valueOf(nowFunction.getVersionId())+1)+"");
+			functionService.update(nowFunction);//将当前版本置为不是当前版本
+		}else {
+			function.setVersionId("1");
+		}
+		
+		function.setIsNowVer(1);
+		functionService.update(function);
+		
+		/*
+		 * 更新内容节点的文档id
+		 */
+		List<BasicNodeCont> basicNodeConts=basicNodeContService.getByFunctionId(function.getId());
+		for(int i=0;i<basicNodeConts.size();i++){
+			basicNodeConts.get(i).setDocument(document1);
+			basicNodeContService.update(basicNodeConts.get(i));
+		}
+		
+		List<BasicNodeCont> basicNodeConts2=basicNodeContService.getByDocumentId(documentTemp.getId());  //复合节点时
+		for(int b=0;b<basicNodeConts2.size();b++){
+			basicNodeConts2.get(b).setDocument(document1);
+			basicNodeContService.add(basicNodeConts2.get(b));
+		}
+		
+		/*
+		 * 设置文档版本号
+		 */
+		String nowVersionId="";  //设置版本
+		String maxVersionId=documentService.getMaxVersionIdById(document);
+		System.out.println(maxVersionId);
+		if(maxVersionId.equals("0")){
+			nowVersionId="1.00.00";
+		}else {
+			String[] temps=maxVersionId.split("\\.");
+			System.out.println(temps[0]);
+			if(isCon==0){  //新增
+				if(temps[1].equals("99")){
+					temps[2]="00";
+					temps[1]="00";
+					temps[0]=(Integer.valueOf(temps[0])+1)+"";
+				}else {
+					temps[1]=(Integer.valueOf(temps[1])+1)+"";
+					temps[2]="00";
+				}
+			}else {//修改
+				if(temps[2].equals("99")){
+					temps[2]="00";
+					temps[1]=(Integer.valueOf(temps[1])+1)+"";
+				}else {
+					temps[2]=(Integer.valueOf(temps[2])+1)+"";
+				}
+			}
+			nowVersionId=temps[0]+"."+temps[1]+"."+temps[2];
+		}
+		document1.setVersionId(nowVersionId);
+		documentService.update(document1);
+		
+		/*
+		 * 新增图片表
+		 */
+		List<DmsPhoto> dmsPhotos=dmsPhotoService.getAllByDocumentId(documentTemp.getId());
+		for(int c=0;c<dmsPhotos.size();c++){
+			dmsPhotos.get(c).setDocument(document1);
+			if(dmsPhotos.get(c).getFunction()!=null && dmsPhotos.get(c).getFunction().getNo()==function.getNo()){
+				dmsPhotos.get(c).setFunction(function);
+			}
+			dmsPhotoService.add(dmsPhotos.get(c));
+		}
+		
+		
+		/*
+		 * 新增审核记录表
+		 */
+		examine=new Examine();
+		examine.setDocument(document1);
+		examine.setFunction(function);
+		examine.setExaminer(getSessionUser());
+		examine.setExamineTime(new Date());
+		examine.setResult(1);
+		if(isCon==0){  //新增
+			examine.setContent("新增"+function.getFunctionName());
+		}else {  //修改
+			examine.setContent("修改"+function.getFunctionName());
+		}
+		examineService.add(examine);
+		Examine examine1=new Examine();
+		examine1.setId(examineService.getMaxId());
+		document1.setExamine(examine1);
+		documentService.update(document1);
+		setWindowReturnValue("ok");
+		return SUCCESS;
+	}
+	
+	//驳回
+	public String unPass() {
+		
+		 Examine examine1=new Examine();
+		 examine1.setId(examineService.getMaxId()+1);
+		
+		 function=functionService.getById(function.getId());
+		 //Document document1=new Document();
+		// document1=function.getDocument();
+		 //document1.setExamine(examine1);
+		 //documentService.update(document1);
+		 function.setExamine(examine1);   //功能点被驳回记录
+		 function.setOperationType(3);   //审核驳回状态
+		 
+		 draft=new Draft();
+		 draft.setDraftName(function.getFunctionName());
+		 draft.setDocument(function.getDocument());
+		 draft.setModule(function.getModule());
+		 draft.setProjectDoc(function.getDocument().getProject());
+		 draft.setCreateTime(new Date());
+		 draft.setCreator(getSessionUser());
+		 draft.setStatus(1);
+		 draft.setFunction(function);
+		 draftService.add(draft);
+		 functionService.update(function);
+		 
+		 /*
+			 * 新增审核记录表
+			 */
+		//examine.setDocument(function.getDocument());
+		examine.setFunction(function);
+		examine.setExaminer(getSessionUser());
+		examine.setExamineTime(new Date());
+		examine.setResult(0);
+		
+		examineService.add(examine);
+		return SUCCESS;
+	}
+	
+}

@@ -1,0 +1,190 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+function backModules(){
+	$('#backModuleForm').attr("action","${basePath}dms/moduleSearch!searchModule.action?document.id="+${document.id}).submit();
+}
+	function addItem() {
+		ldDialog.openLarge("${basePath}dms/functionInsert!prepare.action?document.id="+${document.id}+"&module.id="+${module.id}, "新增功能点",
+				function(window) {
+					var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.tips("处理成功！");
+						document.pagerForm.submit();
+						return true;
+					}
+				});
+	}
+
+	function itemDetail(id) {
+		ldDialog.openLarge("${basePath}dms/functionDetail!detailFunction.action?function.id="+id+"&document.id="+${document.id}
+				, "功能点查看", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				loadData(curPageNum);
+				return true;
+			}
+		});
+	}
+
+	function showItem(id) {
+		ldDialog.openLarge("${basePath}dms/functionVersionSearch!searchFunctionVersion.action?function.id="+id+"&module.id="+${module.id}+"&document.id="+${document.id}
+				, "功能点版本", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				document.pagerForm.submit();
+				return true;
+			}
+		});
+	}
+
+	function editItem(id) {
+		ldDialog.openLarge("${basePath}dms/functionUpdate!prepare.action?function.id="+id+"&document.id="+${document.id}
+				, "编辑功能点", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				document.pagerForm.submit();
+				return true;
+			}
+		});
+	}
+	function managePhoto(){
+		ldDialog.openLarge("${basePath}dms/pictureSearch!searchPicture.action"
+				, "图片管理", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				loadData(curPageNum);
+				return true;
+			}
+		});
+	}
+	
+	function setAvailable(id,page){
+		document.getElementById("statusForm").action = "${basePath}dms/functionSearch!setAvailable.action?function.id="
+				+ id + '&pager.curPageNum=' + page+'&module.id='+${module.id}+'&document.id='+${document.id};
+		document.statusForm.submit();
+	}
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1" >
+								<div class="yhlist1L" style="width:300px">当前位置：<a href="javascript:backModules();"><font color="#deb887">${module.moduleName }</font></a> >> 功能点列表</div>
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td>
+										<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+			<form method="post" name="backDocumentForm" id="backDocumentForm">
+			</form>
+			<form method="post" name="backModuleForm" id="backModuleForm">
+			</form>
+			<form method="post" name="statusForm" id="statusForm">
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+        				<th>序号</th>
+        				<th>版本</th>
+        				<th>功能点名称</th>
+       					<th>创建人</th>
+       					<th>创建时间</th>
+        				<th>状态</th>
+        				<th>操作</th>
+					</tr>
+				
+					<c:forEach items="${functionList }" var="item" varStatus="status">
+					<tr>
+						<td>${status.count}</td>
+						<td>${item.versionId }</td>
+						<td>${item.functionName }</td>
+						<td>${item.creator.userName }</td>
+						<td><f:formatDate value="${ item.createTime}" pattern="yyyy-MM-dd  HH:mm:ss" /></td>
+						<td>
+							<a href="javascript:void(0);" onclick="setAvailable(${item.id},${pager.curPageNum});" >
+								<c:if test="${item.available==1 }">
+								 	<input type="checkbox" class="ldSwitch" checked />
+								 </c:if>
+								 <c:if test="${item.available==0 }">
+								 	<input type="checkbox" class="ldSwitch"  />
+								</c:if>
+							</a>
+						</td>
+						<td>
+			                 <input type='button' value='编辑' class='ldBtnLink' onclick="editItem(${item.id});" />
+			                 <input type='button' value='查看' class='ldBtnLink' onclick="itemDetail(${item.id});" />
+			                 <input type='button' value='版本查看' class='ldBtnLink' onclick="showItem(${item.id});" />
+			                  
+			            </td>
+			          </tr>
+					</c:forEach>
+				</table>
+			</form>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarL">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><ld:check mark="userInsert">
+									<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+								</ld:check></td>
+						</tr>
+					</table>
+				</div>
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								<form
+									action="${basePath}dms/functionSearch!searchFunction.action"
+									method="post" name="pagerForm">
+									 <input type="hidden" name="module.id" value="${module.id }"/>
+									 <input type="hidden" name="document.id" value="${document.id}"/>
+									<ld:pager type="form" action="pagerForm" />
+								</form>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

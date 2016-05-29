@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.draft;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class DraftDetailAction extends BaseActionSupport {
+
+	public String detailDraft(){
+		return "detail";
+	}
+}

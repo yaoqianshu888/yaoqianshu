@@ -1,0 +1,18 @@
+package com.landicorp.dms.dao;
+
+import java.util.List;
+
+
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.dms.entities.BasicNodeCont;
+
+public interface IBasicNodeContDao extends IMyBatisDao<BasicNodeCont, Integer>{
+	public List<BasicNodeCont> getByDocumentId(Integer id); //通过文档id得到内容节点
+	public void updateContent(BasicNodeCont basicNodeCont);   //根据文档id和节点id更新数据
+	public List<BasicNodeCont> getByDocumentIdAndFunctionId(@Param("DocumentId") Integer DocumentId,@Param("FunctionId") Integer FunctionId);  //通过文档id和功能点id得到内容
+	public void updateContentFunction(BasicNodeCont basicNodeCont);   //根据文档id和节点id和功能点id更新数据
+	public List<BasicNodeCont> getByNodeIdAndFunctionId(@Param("NodeId") Integer NodeId,@Param("FunctionId") Integer FunctionId);
+}

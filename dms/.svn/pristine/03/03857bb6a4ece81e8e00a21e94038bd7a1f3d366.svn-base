@@ -1,0 +1,120 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script>
+	function checkSubmit() {
+		if (!checkData(true, 'picture.name', "图片名称", 1, 20)) {
+			return false;
+		}
+		if (!checkData(false, 'picture.memo', "备注", 1, 255)) {
+			return false;
+		}
+		var checkFile = document.getElementById('pictureUpload');
+		if (checkFile != null && checkFile.value != null
+				&& checkFile.value != "") {
+			return true;
+		} else {
+			alert("请上传图片.");
+			return false;
+		}
+		submitForm();
+	}
+	function submitForm(){
+		var url = "";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			data : $("#submitForm").serialize(),
+			success : function(result) {
+				var res = JSON.parse(result);
+				if (res.code == 1) {
+					//ldDialog.tips("新增成功");
+					ldDialog.close(res.password);
+				} else {
+					ldDialog.alert(res.reason);
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+
+			}
+		});
+	}
+</script>
+</head>
+
+<body style="overflow: auto">
+	<form id="submitForm" method="post">
+		<div class="dialogTop">
+			<table width="100%" border="0" align="center" cellspacing="10"
+				cellpadding="0">
+				<tr>
+					<td width="100" class="right yhItem1">
+						<span class="font12">*</span>
+						图片名称：
+					</td>
+					<td>
+						<input name="picture.name" type="text" class="ldText input138"
+							id="picture.name" value="${picture.name}" maxlength="8" />
+					</td>
+				</tr>
+				<tr>
+					<td width="100" class="right yhItem1">
+						所属项目：
+					</td>
+					<td>
+						银销通
+					</td>
+				</tr>
+				<tr>
+					<td width="100" class="right yhItem1">
+						所属文档：
+					</td>
+					<td>
+						银销通接口说明
+					</td>
+				</tr>
+				<tr>
+					<td width="100" class="right yhItem1">
+						所属模块：
+					</td>
+					<td>
+						<select class="ldSelect select144">
+							<option>用户管理</option>
+							<option>数据管理</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td width="100" class="right yhItem1">
+						<span class="font12">*</span>
+						选择图片：
+					</td>
+					<td>
+						<input type="file" id="pictureUpload"/>
+					</td>
+				</tr>
+				<tr>
+					<td width="100" class="right yhItem1">备注：</td>
+					<td>
+						<textarea name="picture.memo" cols="45" id="user.memo"
+							class="ldTextArea" style="width:220px; height:100px">${picture.memo}</textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="dialogBottom">
+			<div class="btns">
+				<ld:check mark="userInsertCommit">
+					<input type="button" value="确 定" class="ldBtnGreen"
+						onclick="return checkSubmit();" />
+				</ld:check>
+				<input type="button" value="关 闭" class="ldBtnGray"
+					onclick="ldDialog.close();" />
+			</div>
+		</div>
+	</form>
+</body>
+</html>

@@ -1,0 +1,58 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.List;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IModuleDao;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.service.IModuleService;
+
+public class ModuleServiceImpl extends
+AbstractBaseServiceImpl<Module, Integer> implements IModuleService{
+
+	private IModuleDao moduleDao;
+	
+	
+	public IModuleDao getModuleDao() {
+		return moduleDao;
+	}
+
+	public void setModuleDao(IModuleDao moduleDao) {
+		this.moduleDao = moduleDao;
+	}
+
+	@Override
+	public List<Module> getAllModule(Pager pager,Integer id) {
+		if(pager!=null){
+			pager.setTotalCount(moduleDao.getAllModuleCount(id));
+		}
+		return moduleDao.getAllModule(pager,id);
+	}
+
+	@Override
+	public List<Module> getModuleListByModule(Module module, Document document,Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(moduleDao.getModuleCountByModule(module,document));
+		}
+		return moduleDao.getModuleListByModule(module,document, pager);
+	}
+
+	@Override
+	public Integer getMaxId() {
+		return moduleDao.getMaxId();
+	}
+
+	@Override
+	public IMyBatisDao<Module, Integer> getMyBatisDao() {
+		return moduleDao;
+	}
+
+	@Override
+	public List<Module> getAllByDocumentId(Integer id) {
+		return moduleDao.getAllByDocumentId(id);
+	}
+
+}

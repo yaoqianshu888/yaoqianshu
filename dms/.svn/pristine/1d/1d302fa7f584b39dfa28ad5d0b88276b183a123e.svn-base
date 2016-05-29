@@ -1,0 +1,69 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+	<div class="dialogTop">
+		<table width="100%" align="center" cellspacing="10"
+			cellpadding="0" class="ld-detailTable">
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					图片名称：
+				</td>
+				<td>${dmsPhoto.photoName }
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					所属项目：
+				</td>
+				<td >${dmsPhoto.document.project.projectName }
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					所属文档：
+				</td>
+				<td>${dmsPhoto.document.documentName }
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					所属模块：
+				</td>
+				<td>${dmsPhoto.module.moduleName }
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">
+					所属功能点：
+				</td>
+				<td>${dmsPhoto.function.functionName }
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">备注：</td>
+				<td id="memo">
+				${dmsPhoto.memo }
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="right evenTrBgColor">预览：</td>
+				<td><img alt="" src="${basePath}${dmsPhoto.photoPath}" width="300" height="200">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="dialogBottom">
+		<div class="btns">
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+</body>
+</html>
+

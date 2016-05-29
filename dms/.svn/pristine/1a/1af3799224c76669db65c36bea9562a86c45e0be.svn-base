@@ -1,0 +1,140 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script>
+	function checkSubmit() {
+		if (!checkData(true, 'dmsPhoto.photoName', "图片名称", 1, 20)) {
+			return false;
+		}
+		if (!checkData(false, 'dmsPhoto.memo', "备注", 1, 255)) {
+			return false;
+		}
+		var checkFile = document.getElementById('uploadFile');
+		if (checkFile != null && checkFile.value != null
+				&& checkFile.value != "") {
+			var fileName = checkFile.value.substring(checkFile.value.lastIndexOf(".")+1).toLowerCase();
+			if(fileName !="bmp" && fileName !="jpg"  && fileName !="gif"){
+	          ldDialog.alert("请选择图片格式文件上传！");
+	          checkFile.value="";
+	          return false;
+           }
+			return true;
+		} else {
+			alert("请上传图片.");
+			return false;
+		}
+		
+	}
+	
+</script>
+</head>
+
+<body style="overflow: auto">
+	<form id="submitForm" method="post" name="submitForm" enctype="multipart/form-data" action="${basePath}dms/pictureUpload!uploadPhoto.action">
+		<div class="dialogTop">
+			<table width="100%" border="0" align="center" cellspacing="10"
+				cellpadding="0">
+				<tr>
+					<td width="100" class="right yhItem1">
+						<span class="font12">*</span>
+						图片名称：
+					</td>
+					<td>
+						<input name="dmsPhoto.photoName" type="text" class="ldText input138"
+							id="dmsPhoto.photoName" value="${dmsPhoto.photoName}" maxlength="8" />
+					</td>
+				</tr>
+				<c:if test="${document!=null }">
+				<tr>
+					<td width="100" class="right yhItem1">
+						所属项目：
+					</td>
+					<td>
+						${document.project.projectName}
+					</td>
+				</tr>
+				<tr>
+					<td width="100" class="right yhItem1">
+						所属文档：
+					</td>
+					<td><input type="hidden" name="dmsPhoto.document.id" value="${document.id }"/>
+						${document.documentName }
+					</td>
+				</tr>
+				</c:if>
+				<tr>
+					<td width="100" class="right yhItem1">
+						所属模块：
+					</td>
+					<td>
+						<select name="dmsPhoto.module.id" id="dmsPhoto.module.id" class="ldSelect select144" style="width:144px">
+							<option value="">请选择 </option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td width="100" class="right yhItem1">
+						<span class="font12">*</span>
+						选择图片：
+					</td>
+					<td>
+						<input type="file" id="uploadFile" name="uploadFile"/>
+					</td>
+				</tr>
+				<tr>
+					<td width="100" class="right yhItem1">备注：</td>
+					<td>
+						<textarea name="dmsPhoto.memo" cols="45" id="dmsPhoto.memo"
+							class="ldTextArea" style="width:220px; height:100px">${dmsPhoto.memo}</textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="dialogBottom">
+			<div class="btns">
+				<ld:check mark="userInsertCommit">
+					<input type="submit" value="确 定" class="ldBtnGreen"
+						onclick="return checkSubmit();" />
+				</ld:check>
+				<input type="button" value="关 闭" class="ldBtnGray"
+					onclick="ldDialog.close();" />
+			</div>
+		</div>
+	</form>
+</body>
+<script type="text/javascript">
+ //得到所有模块
+	$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/moduleSearch!getAllModule.action?document.id="+${document.id},
+	        dataType:"json",
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+					for(var i=0;i<msg.length;i++){
+						var str="<option value="+msg[i].id+">"+msg[i].moduleName+"</option>";
+						
+						$("#dmsPhoto\\.module\\.id").append(str);
+					} 
+					
+					if("${dmsPhoto.module.id}"==""){
+						$("select").get(0).selectedIndex =0;
+					}else{
+						$("#dmsPhoto\\.module\\.id").find("option[value="+"${dmsPhoto.module.id}"+"]").attr("selected", true);
+					}        
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取模板名称出错");
+	           }
+	        });
+</script>
+</html>

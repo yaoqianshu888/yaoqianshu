@@ -1,0 +1,18 @@
+package com.landicorp.dms.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.ModuleFunction;
+
+public interface IModuleFunctionDao extends
+		IMyBatisDao<ModuleFunction, Integer> {
+	public List<ModuleFunction> getByModuleId(@Param("pager") Pager pager,@Param("id") Integer id,@Param("documentId") Integer documentId);//根据模块id得到所有的关系
+	public Integer getByModuleIdCount(@Param("id") Integer id ,@Param("documentId") Integer documentId);
+	public List<ModuleFunction> getAllByModuleId(@Param("id") Integer id,@Param("documentId") Integer documentId);   //得到所有
+	public List<ModuleFunction> getAllByDocumentIdAndModuleId(@Param("moduleId") Integer moduleId,@Param("documentId") Integer documentId);//根据文档id和模块id得到所有的关系
+	public void deleteByFunctionAndDocument(@Param("functionId") Integer functionId ,@Param("documentId") Integer documentId);
+}

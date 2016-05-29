@@ -1,0 +1,28 @@
+package com.landicorp.dms.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Module;
+
+public interface IModuleDao extends IMyBatisDao<Module, Integer>{
+	public List<Module> getAllModule(@Param("pager") Pager pager,@Param("id")Integer id); //得到所有的模块
+	public Integer getAllModuleCount(Integer id);     //得到所有的模块数
+	
+	public List<Module> getModuleListByModule(     //按条件得到模块
+			@Param("module") Module module,
+			@Param("document") Document document,
+			@Param("pager") Pager pager);
+		
+	public int getModuleCountByModule(@Param("module") Module module,  //按条件得到模块目数
+			@Param("document") Document document
+			);
+	
+	
+	public Integer getMaxId();   //得到最大的模块编号
+	public List<Module> getAllByDocumentId(Integer id);  //通过文档id得到所有的模块
+}

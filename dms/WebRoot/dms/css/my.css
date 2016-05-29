@@ -1,0 +1,193 @@
+pre {
+		border: 1pt dashed black;
+		white-space: pre;
+		font-size: 8pt;
+		overflow: auto;
+		padding: 1em 0;
+		background: white;
+		color: black;
+		white-space: pre-wrap;
+		white-space: -moz-pre-wrap;
+		white-space: -pre-wrap;
+		white-space: -o-pre-wrap;
+		word-wrap: break-word
+	}
+	pre {
+		font: 12px "MicroSoft YaHei", "Courier New", "Andale Mono", monospace;
+		padding: 5px 10px;
+		border: 1px solid #ccc;
+		color: #333;
+		background-color: #F8F8F8;
+		line-height: 20px;
+		white-space: pre-wrap;
+		white-space: -moz-pre-wrap;
+		white-space: -pre-wrap;
+		white-space: -o-pre-wrap;
+		word-wrap: break-word;
+		border-radius: 3px;
+		margin-left: 10px
+	}
+	.content_title {
+		border-bottom: 1px solid #d3d3d3;
+		font-size: 15px;
+		color: #545454;
+		box-shadow: inset 0 1px 0 0 #fcfcfc;
+		-moz-box-shadow: inset 0 1px 0 0 #fcfcfc;
+		-webkit-box-shadow: inset 0 1px 0 0 #fcfcfc;
+		background-color: #e9e9e9;
+		background-image: -moz-linear-gradient(top, #f3f3f3 0, #e3e3e3 100%);
+		background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f3f3f3), to(#e3e3e3));
+		background-image: -webkit-linear-gradient(top, #f3f3f3 0, #e3e3e3 100%);
+		background-image: -o-linear-gradient(top, #f3f3f3 0, #e3e3e3 100%);
+		background-image: linear-gradient(to bottom, #f3f3f3 0, #e3e3e3 100%);
+		line-height: 36px;
+		height: 36px
+	}
+	.bodyContent {
+		margin: 0 35px;
+		font-size: 14px;
+		color: #333;
+		line-height: 1.75;
+	}
+	.bodyContent p {
+		margin-left: 10px;
+		margin-right: 10px;
+		font:14px "MicroSoft YaHei";
+		line-height: 1.75;
+		margin-bottom:10px; 
+	}
+	.bodyContent h1 {
+		margin-top: 0;
+		padding: 5px 10px;
+		font-size: 16px;
+		font-weight: normal;
+		text-shadow: 0 0 1px #999;
+		color: #333;
+		border-bottom: 1px solid #D9D9D9;
+		font-weight: bold\9
+	}
+	.bodyContent h2 {
+		margin-top: 0;
+		padding: 5px 10px;
+		font-size: 15px;
+		font-weight: normal;
+		text-shadow: 0 0 1px #999;
+		color: #333;
+		font-weight: bold\9
+	}
+	.bodyContent h3,h4,h5 {
+		margin-top: 0;
+		padding: 5px 10px;
+		font-size: 14px;
+		font-weight: normal;
+		text-shadow: 0 0 1px #999;
+		color: #333;
+		font-weight: bold\9
+	}
+	.bodyContent img {
+		max-width: 100%;
+	}
+	.dataTable {
+		border-collapse:collapse;
+		border-spacing:0;
+		font:14px "MicroSoft YaHei";
+		text-align:center;
+		margin-left:10px;
+		max-width:100%
+	}
+	.dataTable td{
+		width:180px;
+		valign:top;
+	}
+.tree {
+	font:14px "MicroSoft YaHei";
+    min-height:20px;
+    padding:0px;
+    margin-bottom:20px;
+    border:0px solid #999;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05)
+}
+.tree li {
+    list-style-type:none;
+    margin:0;
+    padding:2px 5px 0 0px;
+    position:relative;
+}
+.tree li::before, .tree li::after {
+    content:'';
+    left:-20px;
+    position:absolute;
+    right:auto
+}
+.tree li::before {
+    border-left:0px solid #999;
+    bottom:50px;
+    height:100%;
+    top:0;
+    width:1px
+}
+.tree li::after {
+    border-top:0px solid #999;
+    height:20px;
+    top:25px;
+    width:25px
+}
+.tree li span {
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border:1px solid #999;
+    border-radius:5px;
+    display:inline-block;
+    padding:3px 8px;
+    text-decoration:none;
+}
+.tree li.parent_li>span {
+    cursor:pointer
+}
+.tree>ul>li::before, .tree>ul>li::after {
+    border:0
+}
+.tree li:last-child::before {
+    height:30px
+}
+.tree li>span:hover{
+    background:#eee;
+    border:1px solid #94a0b4;
+    color:#000
+}
+[class^="icon-"], [class*=" icon-"] {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-top: 1px;
+	*margin-right: .3em;
+	line-height: 14px;
+	vertical-align: text-top;
+	background-image: url("../images/glyphicons-halflings.png");
+	background-position: 14px 14px;
+	background-repeat: no-repeat
+}
+.icon-leaf {
+	background-position: -48px -120px
+}
+.icon-plus-sign {
+	background-position: 0 -96px
+}
+.icon-minus-sign {
+	background-position: -24px -96px
+}
+ul, ol {
+	padding: 0;
+	margin: 0 0 10px 20px
+}
+ul ul, ul ol, ol ol, ol ul {
+	margin-bottom: 0
+}
+li {
+	line-height: 20px
+}

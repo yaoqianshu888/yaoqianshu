@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.function;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class FunctionDetailAction extends BaseActionSupport {
+
+	public String detailFunction(){
+		return "detail";
+	}
+}

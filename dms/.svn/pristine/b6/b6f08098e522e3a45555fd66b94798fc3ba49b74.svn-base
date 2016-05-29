@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IModuleFunctionDao">
+	<resultMap type="moduleFunction" id="moduleFunction">
+		<result property="id" column="ID"/>
+		<result property="function.id" column="function_id" />
+		<result property="module.id" column="module_id" />
+		<result property="document.id" column="document_id" />
+		<result property="isNowVer" column="IS_NOW_VER" />
+		<association property="function" column="function_id"
+			javaType="com.landicorp.dms.entities.Function" select="com.landicorp.dms.dao.IFunctionDao.getById" />
+		<association property="module" column="module_id"
+			javaType="com.landicorp.dms.entities.Module" select="com.landicorp.dms.dao.IModuleDao.getById" />
+	</resultMap>
+
+	<sql id="keyColumns">function_id,module_id,IS_NOW_VER,document_id
+	</sql>
+	<sql id="valueColumns">#{function.id,jdbcType=NUMERIC},#{module.id,jdbcType=NUMERIC},#{isNowVer,jdbcType=NUMERIC},#{document.id,jdbcType=NUMERIC}
+	
+	</sql>
+	
+	<insert id="save" parameterType="moduleFunction">
+
+		insert into t_dms_module_function(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	<update id="update" parameterType="moduleFunction">
+		update t_dms_module_function
+		<set>
+			<if test="function!=null and function.id!=null">function_id=#{function.id},</if>
+			<if test="module!=null and module.id!=null">module_id=#{module.id},</if>
+			<if test="document!=null and document.id!=null">document_id=#{document.id},</if>
+			<if test="isNowVer!=null">IS_NOW_VER=#{isNowVer}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	
+	<select id="getById" parameterType="int" resultMap="moduleFunction">
+		select *
+		from
+		t_dms_module_function
+		where id=#{id}
+	</select>
+	<select id="getByModuleId" parameterType="map" resultMap="moduleFunction">
+		select *
+		from
+		t_dms_module_function
+		where module_id=#{id} and document_id=#{documentId}
+		ORDER BY ID desc
+		<include refid="Sql.pager" />
+	</select>
+	
+	<select id="getAllByModuleId" parameterType="map" resultMap="moduleFunction">
+		select *
+		from
+		t_dms_module_function
+		where module_id=#{id} and document_id=#{documentId}
+		ORDER BY ID desc
+	</select>
+	
+	<select id="getByModuleIdCount" resultType="int" parameterType="map">
+		select count(*) from t_dms_module_function where module_id=#{id} and document_id=#{documentId}
+	</select>
+	
+	<!-- 根据文档id和模块id得到所有的关系 -->
+	<select id="getAllByDocumentIdAndModuleId" parameterType="map" resultMap="moduleFunction">
+		select *
+		from
+		t_dms_module_function
+		where module_id=#{moduleId} and document_id=#{documentId}
+	</select>
+	<delete id="deleteByFunctionAndDocument" parameterType="map">
+		delete from t_dms_module_function where
+		function_id=#{functionId} and document_id=#{documentId}
+	</delete>
+	
+</mapper>

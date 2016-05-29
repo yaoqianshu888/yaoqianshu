@@ -1,0 +1,199 @@
+package com.landicorp.dms.action.node;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.entities.NodeView;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.INodeService;
+import com.landicorp.dms.service.ITemplateService;
+
+public class NodeSearchAction extends BaseActionSupport {
+
+	private Node node;
+	private INodeService nodeService;
+	private Date startCreateTime;
+	private Date endCreateTime;
+	private List<Node> nodeList;
+	private List<NodeView> nodeViewList;
+	private Template template;
+	private ITemplateService templateService;
+	
+	
+	public Node getNode() {
+		return node;
+	}
+
+
+	public void setNode(Node node) {
+		this.node = node;
+	}
+
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+
+	public Date getStartCreateTime() {
+		return startCreateTime;
+	}
+
+
+	public void setStartCreateTime(Date startCreateTime) {
+		this.startCreateTime = startCreateTime;
+	}
+
+
+	public Date getEndCreateTime() {
+		return endCreateTime;
+	}
+
+
+	public void setEndCreateTime(Date endCreateTime) {
+		this.endCreateTime = endCreateTime;
+	}
+
+
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+
+	public List<NodeView> getNodeViewList() {
+		return nodeViewList;
+	}
+
+
+	public void setNodeViewList(List<NodeView> nodeViewList) {
+		this.nodeViewList = nodeViewList;
+	}
+
+
+	public Template getTemplate() {
+		return template;
+	}
+
+
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+
+
+	public ITemplateService getTemplateService() {
+		return templateService;
+	}
+
+
+	public void setTemplateService(ITemplateService templateService) {
+		this.templateService = templateService;
+	}
+
+	//得到所有的节点列表
+	public String  getAllNode(){
+		//清空之前的查询信息
+		nodeViewList=new ArrayList<NodeView>();
+		node=null;
+		startCreateTime=null;
+		endCreateTime=null;
+		nodeList=nodeService.getAllNode(getPager());
+		for(int i=0;i<nodeList.size();i++){
+			NodeView nodeView=new NodeView();
+			template=templateService.getById(nodeList.get(i).getTemplate().getId());
+			nodeView.setId(nodeList.get(i).getId());
+			nodeView.setNodeName(nodeList.get(i).getNodeName());
+			nodeView.setTemplateName(template.getTempletName());
+			nodeView.setCreator(nodeList.get(i).getCreator().getUserName());
+			nodeView.setCreateTime(nodeList.get(i).getCreateTime());
+			nodeView.setNodeType(nodeList.get(i).getNodeType());
+			nodeView.setCircleType(nodeList.get(i).getCircleType());
+			nodeView.setUpNode(nodeList.get(i).getUpNode());
+			nodeView.setSort(nodeList.get(i).getSort());
+			nodeView.setMemo(nodeList.get(i).getMemo());
+			nodeView.setLastModifyTime(nodeList.get(i).getLastModifyTime());
+			nodeView.setLastModifier(nodeList.get(i).getLastModifier().getUserName());
+			
+			nodeViewList.add(nodeView);
+		}
+		
+		return "node";
+	}
+	
+	//按条件查询
+	public String searchNodesByInfo() throws ParseException{
+		nodeViewList=new ArrayList<NodeView>();
+		nodeList=nodeService.getNodeListByNode(node, startCreateTime, endCreateTime, getPager());
+		
+		for(int i=0;i<nodeList.size();i++){
+			NodeView nodeView=new NodeView();
+			template=templateService.getById(nodeList.get(i).getTemplate().getId());
+			nodeView.setId(nodeList.get(i).getId());
+			nodeView.setNodeName(nodeList.get(i).getNodeName());
+			nodeView.setTemplateName(template.getTempletName());
+			nodeView.setCreator(nodeList.get(i).getCreator().getUserName());
+			nodeView.setCreateTime(nodeList.get(i).getCreateTime());
+			nodeView.setNodeType(nodeList.get(i).getNodeType());
+			nodeView.setCircleType(nodeList.get(i).getCircleType());
+			nodeView.setUpNode(nodeList.get(i).getUpNode());
+			nodeView.setSort(nodeList.get(i).getSort());
+			nodeView.setMemo(nodeList.get(i).getMemo());
+			nodeView.setLastModifyTime(nodeList.get(i).getLastModifyTime());
+			nodeView.setLastModifier(nodeList.get(i).getLastModifier().getUserName());
+			
+			nodeViewList.add(nodeView);
+		}
+		
+		return "node";
+	}
+	
+	public void getTemplateByTid() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String Tid=request.getParameter("Tid");
+		nodeList=nodeService.getTemplateByTid(Integer.valueOf(Tid));
+		StringBuffer sb=new StringBuffer("[");
+		for(int i=0;i<nodeList.size();i++){
+			sb.append("{\"id\":\""+nodeList.get(i).getId()+"\",\"nodeName\":\""+nodeList.get(i).getNodeName()+"\"},");
+		}
+		if(sb.length()>1){
+			sb.deleteCharAt(sb.length()-1);
+		}
+		sb.append("]");
+		//System.out.println(sb.toString());
+		response.getWriter().write(sb.toString());
+	}
+	
+	public void getCircleTypeById() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String Cid=request.getParameter("Cid");
+		Integer circleType=nodeService.getCircleTypeById(Integer.valueOf(Cid));
+		String str="[{\"circleType\":\""+circleType+"\"}]";
+		response.getWriter().write(str);
+	}
+	
+	
+	
+}

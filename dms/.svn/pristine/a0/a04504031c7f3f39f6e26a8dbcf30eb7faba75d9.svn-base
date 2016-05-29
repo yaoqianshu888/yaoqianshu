@@ -1,0 +1,75 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<%@include file="/headDeclare.jsp"%>
+<link rel="stylesheet" href="${basePath}core/plugins/ztree/skin/zTree.css"
+	type="text/css">
+<link rel="stylesheet"
+	href="${basePath}core/plugins/ztree/skin/zTreeStyle/zTreeStyle.css"
+	type="text/css">
+<script type="text/javascript"
+	src="${basePath}core/plugins/ztree/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript">
+	var setting = {
+		view : {
+			dblClickExpand : dblClickExpand
+		},
+		data : {
+			simpleData : {
+				enable : true,
+				pIdKey : "upId"
+			}
+		}
+	};
+
+	function dblClickExpand(treeId, treeNode) {
+		return treeNode.level > 0;
+	}
+
+	$(document).ready(function() {
+		/*var url = "${basePath}coreAjax/roleSearch!roleTree.action";
+		$.ajax({
+			type : "GET",
+			url : url,
+			dataType : "text",
+			async:false,
+			success : function(result) {
+				var res = JSON.parse(result);
+				if (res.code == 1) {
+					var zNodes = JSON.parse(res.treeJson);
+					$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+					ldDialog.unmask();
+				} else {
+					ldDialog.alert(res.reason);
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+			}
+		});*/
+		var treeJson = "[{\"checked\":false,\"id\":1000,\"name\":\"我的项目\",\"open\":true,\"target\":\"rightList\",\"upId\":-1,\"url\":\"\"},{\"checked\":false,\"id\":100,\"name\":\"银销通\",\"open\":true,\"target\":\"rightList\",\"upId\":1000,\"url\":\"\"},{\"checked\":false,\"id\":1,\"name\":\"银销通文档1\",\"open\":true,\"target\":\"rightList\",\"upId\":100,\"url\":\"\"},{\"checked\":false,\"id\":200,\"name\":\"银销通文档2\",\"open\":true,\"target\":\"rightList\",\"upId\":100,\"url\":\"\"},{\"checked\":false,\"id\":2,\"name\":\"厂商信息管理\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":3,\"name\":\"商品信息管理\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":4,\"name\":\"商品分类管理\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":5,\"name\":\"添加\",\"open\":true,\"target\":\"rightList\",\"upId\":2,\"url\":\"\"},{\"checked\":false,\"id\":6,\"name\":\"修改\",\"open\":true,\"target\":\"rightList\",\"upId\":2,\"url\":\"\"},{\"checked\":false,\"id\":7,\"name\":\"删除\",\"open\":true,\"target\":\"rightList\",\"upId\":2,\"url\":\"\"},{\"checked\":false,\"id\":7000,\"name\":\"银医\",\"open\":true,\"target\":\"rightList\",\"upId\":1000,\"url\":\"\"},{\"checked\":false,\"id\":1111,\"name\":\"银医文档1\",\"open\":true,\"target\":\"rightList\",\"upId\":7000,\"url\":\"\"}]";
+//		var readTreeJson = "[{\"checked\":false,\"id\":1000,\"name\":\"阅读权限配置\",\"open\":true,\"target\":\"rightList\",\"upId\":-1,\"url\":\"\"},{\"checked\":false,\"id\":100,\"name\":\"银销通\",\"open\":true,\"target\":\"rightList\",\"upId\":1000,\"url\":\"\"},{\"checked\":false,\"id\":1,\"name\":\"银销通文档1\",\"open\":true,\"target\":\"rightList\",\"upId\":100,\"url\":\"\"},{\"checked\":false,\"id\":200,\"name\":\"银销通文档2\",\"open\":true,\"target\":\"rightList\",\"upId\":100,\"url\":\"\"},{\"checked\":false,\"id\":2,\"name\":\"厂商信息管理\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":3,\"name\":\"商品信息管理\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":4,\"name\":\"商品分类管理\",\"open\":true,\"target\":\"rightList\",\"upId\":1,\"url\":\"\"},{\"checked\":false,\"id\":5,\"name\":\"添加\",\"open\":true,\"target\":\"rightList\",\"upId\":2,\"url\":\"\"},{\"checked\":false,\"id\":6,\"name\":\"修改\",\"open\":true,\"target\":\"rightList\",\"upId\":2,\"url\":\"\"},{\"checked\":false,\"id\":7,\"name\":\"删除\",\"open\":true,\"target\":\"rightList\",\"upId\":2,\"url\":\"\"},{\"checked\":false,\"id\":7000,\"name\":\"银医\",\"open\":true,\"target\":\"rightList\",\"upId\":1000,\"url\":\"\"},{\"checked\":false,\"id\":1111,\"name\":\"银医文档1\",\"open\":true,\"target\":\"rightList\",\"upId\":7000,\"url\":\"\"}]";
+		var zNodes = JSON.parse(treeJson);
+		$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+		/*zNodes = JSON.parse(readTreeJson);
+		$.fn.zTree.init($("#treeDemo2"), setting, zNodes);*/
+//		ldDialog.unmask();
+	});
+</script>
+</head>
+<body style="width:100%;overflow-y:hidden;background-color: #fff;">
+	<div>
+		<%--<ul id="">
+			<li id="treeDemo3" class="ztree" style="border:1px solid #ccc;background-color: rgb(250, 250, 250);padding-bottom:50px;min-height:0px;"></li>
+			<li id="treeDemo4" class="ztree" style="border:1px solid #ccc;background-color: rgb(250, 250, 250);padding-bottom:0px;min-height:0px;"></li>
+		</ul>--%>
+		<ul id="treeDemo" class="ztree"
+			style="border:1px solid #ccc;background-color: rgb(250, 250, 250);padding-bottom:50px;"></ul>
+		<%--<ul id="treeDemo2" class="ztree"
+			style="border:1px solid #ccc;background-color: rgb(250, 250, 250);padding-bottom:30px;min-height:100px;"></ul>--%>
+	</div>
+</body>
+</html>
+

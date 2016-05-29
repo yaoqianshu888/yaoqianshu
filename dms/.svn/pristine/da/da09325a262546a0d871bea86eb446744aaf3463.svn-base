@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- 配置系统启动常量 -->
+	<settings>
+		<!-- 是否开发模式 -->
+		<setting name="debugMode" value="true" />
+		<!-- 是否开启权限过滤 -->
+		<setting name="requireUrlRightFilte" value="false" />
+		<!-- 是否开启部门过滤 -->
+		<setting name="requireAreaFilte" value="false" />
+	</settings>
+	<!--根据命名空间 ，设置权限过滤失败时候的跳转路径 -->
+	<enters>
+		<enter namespace="/core" rightFailureUrl="core/index.action" />
+	</enters>
+	<!-- 根据用户类型设置密码重置策略，type>=100 表示非后台管理员 -->
+	<userTypes>
+		<userType type="1" des="后台管理员" resetPasswordBean="standardResetPassword" />
+		<userType type="100" des="非后台管理员" resetPasswordBean="standardResetPassword" />
+		 <userType type="101" des="连锁收银员工" resetPasswordBean="standardResetPassword" /> 
+	</userTypes>
+	<!-- 集群服务器设置 -->
+	<cluster> 
+        <!-- type=self 必须有且仅能有一个 -->
+        <server type="self" baseUrl="http://127.0.0.1:8183/easypay/" standbyUrl="http://127.0.0.1:8901/easypay/"/>
+        <!-- type=resource 必须有且仅能有一个 -->
+        <server type="resource" baseUrl="http://127.0.0.1:8183/easypayupload/" standbyUrl="http://127.0.0.1:8901/easypayupload/" />
+        <!-- <server type="resource" baseUrl="http://127.0.0.1/Upload/" /> -->
+        <!-- type=file 必须有且仅能有一个 -->
+        <server type="file" baseUrl="http://127.0.0.1:8183/easypayupload/" />
+        <!-- type=other 可以没有或不限多个 -->
+        <!-- <server type="other" baseUrl="http://127.0.0.2:8080/core/" />
+        <server type="other" baseUrl="http://127.0.0.3:8080/core/" /> 58.56.23.89-->
+    </cluster>
+</configuration>

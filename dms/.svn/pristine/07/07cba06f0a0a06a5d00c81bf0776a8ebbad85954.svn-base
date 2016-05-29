@@ -1,0 +1,179 @@
+package com.landicorp.dms.action.document;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.BasicNodeCont;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.IBasicNodeContService;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.INodeService;
+
+public class DocumentUpdateAction extends BaseActionSupport
+{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Document document;
+	private IDocumentService documentService;
+	private List<Node> nodeList;
+	private List<List<Node>> nodeLists;
+	private INodeService nodeService;
+	private Map<Integer, String> map;
+	private IBasicNodeContService basicNodeContService;
+	
+
+	public IBasicNodeContService getBasicNodeContService() {
+		return basicNodeContService;
+	}
+
+	public void setBasicNodeContService(IBasicNodeContService basicNodeContService) {
+		this.basicNodeContService = basicNodeContService;
+	}
+
+	
+
+	public Map<Integer, String> getMap() {
+		return map;
+	}
+
+	public void setMap(Map<Integer, String> map) {
+		this.map = map;
+	}
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	public List<List<Node>> getNodeLists() {
+		return nodeLists;
+	}
+
+	public void setNodeLists(List<List<Node>> nodeLists) {
+		this.nodeLists = nodeLists;
+	}
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+	public String prepare() throws IOException
+	{
+		document=documentService.getById(document.getId());
+		nodeList=nodeService.getAllNodesByTidAndType(document.getTemplate().getId());
+		nodeLists=new ArrayList<List<Node>>();
+		for(int i=0;i<nodeList.size();i++){
+			List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+			nodes.get(0).setTitleNo((i+1)+"");
+			for(int j=0;j<nodes.size();j++){
+				int c=1;
+				for(int k=1;k<nodes.size();k++){
+					if(nodes.get(k).getUpNode().getId().equals(nodes.get(j).getId())){
+						nodes.get(k).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+						c++;
+					}
+				}
+			}
+			
+			nodeLists.add(nodes);
+		}
+		
+		//内容传值
+		map=new HashMap<Integer, String>();
+		List<BasicNodeCont> basicNodeContList=basicNodeContService.getByDocumentId(document.getId());
+		for(int i=0;i<basicNodeContList.size();i++){
+			map.put(basicNodeContList.get(i).getNode().getId(), basicNodeContList.get(i).getContent());
+		}
+		
+		return INPUT;
+	}
+	
+	
+	public String updateDocument() throws IOException{
+		HttpServletRequest request=ServletActionContext.getRequest();
+		request.setCharacterEncoding("UTF-8"); 
+		
+		document.setLastModifier(getSessionUser());
+		document.setLastModifyTime(new Date());
+		//修改基本节点内容
+		 Map<String,String[]> map = request.getParameterMap();
+	     for(Entry<String, String[]> me : map.entrySet()){
+	       String name = me.getKey();
+	       String [] v = me.getValue();
+	       if(name.equals("document.id")){
+	    	   document.setId(Integer.valueOf(v[0]));
+	       }else if(name.equals("document.documentName")){
+	    	   document.setDocumentName(v[0]);
+	       }else if(name.equals("document.urlPath")){
+	    	   document.setUrlPath(v[0]);
+	       }else if(name.equals("document.memo")){
+	    	   document.setMemo(v[0]);
+	       }else
+	       {
+	    	   BasicNodeCont basicNodeCont=new BasicNodeCont();
+		       basicNodeCont.setDocument(document);
+		       String[] id=name.split("_");
+		       Node node1=new Node();
+		       node1.setId(Integer.valueOf(id[1]));
+		       basicNodeCont.setNode(node1);
+		       StringBuffer sb=new StringBuffer("");
+	    	   for(int i=0;i<v.length;i++){
+	    		   if((i+1)%4==0){
+	    			   sb.append(v[i]+"☆");
+	    		   }else {
+	    			   sb.append(v[i]+"★");
+	    		   }
+		       }
+	    	   if(sb.length()>0){
+					sb.deleteCharAt(sb.length()-1);
+			   }
+	    	   basicNodeCont.setContent(sb.toString());
+	    	   basicNodeContService.updateContent(basicNodeCont);   //修改内容节点
+	       }
+	       
+	     }
+	    documentService.update(document);   //修改文档
+	    setWindowReturnValue("ok");
+		return SUCCESS;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+}

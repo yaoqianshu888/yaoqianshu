@@ -1,0 +1,151 @@
+package com.landicorp.dms.action.function;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.entities.ModuleFunction;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IFunctionService;
+import com.landicorp.dms.service.IModuleFunctionService;
+import com.landicorp.dms.service.IModuleService;
+
+public class FunctionSearchAction extends BaseActionSupport{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Function function;
+	private IFunctionService functionService;
+	private Document document;
+	private IDocumentService documentService;
+	private List<Function> functionList;
+	private Module module;
+	private IModuleService moduleService;
+	private IModuleFunctionService moduleFunctionService;
+	private List<ModuleFunction> moduleFunctionList;
+	
+
+	public List<ModuleFunction> getModuleFunctionList() {
+		return moduleFunctionList;
+	}
+
+
+	public void setModuleFunctionList(List<ModuleFunction> moduleFunctionList) {
+		this.moduleFunctionList = moduleFunctionList;
+	}
+
+
+	public IModuleFunctionService getModuleFunctionService() {
+		return moduleFunctionService;
+	}
+
+
+	public void setModuleFunctionService(
+			IModuleFunctionService moduleFunctionService) {
+		this.moduleFunctionService = moduleFunctionService;
+	}
+
+
+	public Module getModule() {
+		return module;
+	}
+
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+
+	public IModuleService getModuleService() {
+		return moduleService;
+	}
+
+
+	public void setModuleService(IModuleService moduleService) {
+		this.moduleService = moduleService;
+	}
+
+
+	public Function getFunction() {
+		return function;
+	}
+
+
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+
+
+	public IFunctionService getFunctionService() {
+		return functionService;
+	}
+
+
+	public void setFunctionService(IFunctionService functionService) {
+		this.functionService = functionService;
+	}
+
+
+	public Document getDocument() {
+		return document;
+	}
+
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+
+	public List<Function> getFunctionList() {
+		return functionList;
+	}
+
+
+	public void setFunctionList(List<Function> functionList) {
+		this.functionList = functionList;
+	}
+
+
+	public String searchFunction() {
+		module=moduleService.getById(module.getId());
+		document=documentService.getById(document.getId());
+		moduleFunctionList=moduleFunctionService.getByModuleId(getPager(), module.getId(),document.getId());
+		functionList=new ArrayList<Function>();
+		for(int i=0;i<moduleFunctionList.size();i++){
+			functionList.add(moduleFunctionList.get(i).getFunction());
+		}
+		//functionList=functionService.getAllFunction(getPager(), module.getId());
+		return INPUT;
+	}
+	
+	//改变模块的状态
+	public String setAvailable(){
+		Function statue=functionService.getById(function.getId());
+		document=documentService.getById(document.getId());
+		module=moduleService.getById(module.getId());
+		statue.setAvailable(1 - statue.getAvailable());
+		functionService.update(statue);
+		//functionList=functionService.getAllFunction(getPager(), module.getId());
+		moduleFunctionList=moduleFunctionService.getByModuleId(getPager(), module.getId(),document.getId());
+		functionList=new ArrayList<Function>();
+		for(int i=0;i<moduleFunctionList.size();i++){
+			functionList.add(moduleFunctionList.get(i).getFunction());
+		}
+		return INPUT;
+	}
+}

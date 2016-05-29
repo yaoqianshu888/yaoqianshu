@@ -1,0 +1,134 @@
+package com.landicorp.dms.action.template;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.ITemplateService;
+
+public class TemplateSearchAction extends BaseActionSupport {
+	private List<Template> templateList;
+	private ITemplateService templateService;
+	private Template template;
+	private Date startCreateTime;
+	private Date endCreateTime;
+	private Date startModifyTime;
+	private Date endModifyTime;
+	
+	
+	
+	public Date getStartCreateTime() {
+		return startCreateTime;
+	}
+
+	public void setStartCreateTime(Date startCreateTime) {
+		this.startCreateTime = startCreateTime;
+	}
+
+	public Date getEndCreateTime() {
+		return endCreateTime;
+	}
+
+	public void setEndCreateTime(Date endCreateTime) {
+		this.endCreateTime = endCreateTime;
+	}
+
+	public Date getStartModifyTime() {
+		return startModifyTime;
+	}
+
+	public void setStartModifyTime(Date startModifyTime) {
+		this.startModifyTime = startModifyTime;
+	}
+
+	public Date getEndModifyTime() {
+		return endModifyTime;
+	}
+
+	public void setEndModifyTime(Date endModifyTime) {
+		this.endModifyTime = endModifyTime;
+	}
+
+	public Template getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+
+	public List<Template> getTemplateList() {
+		return templateList;
+	}
+
+	public void setTemplateList(List<Template> templateList) {
+		this.templateList = templateList;
+	}
+
+	public ITemplateService getTemplateService() {
+		return templateService;
+	}
+
+	public void setTemplateService(ITemplateService templateService) {
+		this.templateService = templateService;
+	}
+
+	public String execute(){
+		template=null;
+		startCreateTime=null;
+		endCreateTime=null;
+		startModifyTime=null;
+		endModifyTime=null;
+        templateList=templateService.getAllTemplate(getPager());
+        
+		return SUCCESS;
+	}
+	
+	public String searchTemplatesByInfo(){
+		templateList=templateService.getTemplateListByTemplate(template, startCreateTime, endCreateTime, startModifyTime, endModifyTime, getPager());
+		
+		return SUCCESS;
+	}
+	
+	public String setAvailable(){
+		Template statue=templateService.getById(template.getId());
+		statue.setAvailable(1 - statue.getAvailable());
+		statue.setLastModifier(getSessionUser());
+		statue.setLastModifyTime(new Date());
+		templateService.update(statue);
+		templateList=templateService.getTemplateListByTemplate(template, startCreateTime, endCreateTime, startModifyTime, endModifyTime, getPager());
+		return SUCCESS;
+	}
+	
+	
+	public void getAllTemplate() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		templateList=templateService.getAll();
+		StringBuffer sb=new StringBuffer("[");
+		
+		for(int i=0;i<templateList.size();i++){
+			sb.append("{\"id\":\""+templateList.get(i).getId()+"\",\"templetName\":\""+templateList.get(i).getTempletName()+"\"},");
+		}
+		if(sb.length()>1){
+			sb.deleteCharAt(sb.length()-1);
+		}
+		sb.append("]");
+		//System.out.println(sb.toString());
+		response.getWriter().write(sb.toString());
+		
+	}
+	
+	public void getTemplateName() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		String templateName=templateService.getTemplateName(template);
+		response.getWriter().write(templateName);
+	}
+}

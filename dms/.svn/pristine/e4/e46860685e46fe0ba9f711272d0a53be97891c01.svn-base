@@ -1,0 +1,71 @@
+package com.landicorp.dms.action.document;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IDocumentService;
+
+public class DocumentBaseUpdateAction extends BaseActionSupport
+{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Document document;
+	private IDocumentService documentService;
+	
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+	public String prepare()
+	{
+		document=documentService.getById(document.getId());
+		return INPUT;
+	}
+
+	public void updateDocument() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		String reason="";
+		int code=0;
+		String returnValue="";
+		try {
+			Document insertDocument=documentService.getById(document.getId());
+			insertDocument.setDocumentName(document.getDocumentName());
+			insertDocument.setMemo(document.getMemo());
+			insertDocument.setLastModifier(getSessionUser());
+			insertDocument.setLastModifyTime(new Date());
+			documentService.update(insertDocument);
+			returnValue="修改成功";
+			code=1;
+			//setWindowReturnValue(returnValue);
+		} catch (Exception e) {
+			reason="修改失败";
+		}
+		
+		
+		response.getWriter().write("[{\"code\":\""+code+"\",\"reason\":\""+reason+"\",\"returnValue\":\""+returnValue+"\"}]");
+	}
+	
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+}

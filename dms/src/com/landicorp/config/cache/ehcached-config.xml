@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- cache -->
+	<!-- ehcache,在此作为本地缓存 -->
+	<bean id="systemCache" class="com.landicorp.core.cache.EhcacheClient"
+		init-method="init" scope="singleton">
+		<property name="maxElementsInMemory" value="10240" />
+		<property name="eternal" value="false" />
+		<property name="overflowToDisk" value="false" />
+		<property name="diskPersistent" value="false" />
+		<property name="timeToIdleSeconds" value="0" />
+		<property name="cacheName" value="systemCache" />
+	</bean>
+	<!-- cache -->
+
+	<bean id="mybatisCache" class="com.landicorp.core.cache.EhcacheClient"
+		init-method="init" scope="singleton">
+		<property name="maxElementsInMemory" value="102400" />
+		<property name="eternal" value="false" />
+		<property name="overflowToDisk" value="false" />
+		<property name="diskPersistent" value="false" />
+		<property name="timeToIdleSeconds" value="36000" />
+		<property name="cacheName" value="mybatisCache" />
+	</bean>
+	<!-- mybatis cache -->
+
+	<bean class="com.landicorp.core.cache.mybatis.CustomCache">
+		<constructor-arg index="0" ref="mybatisCache"></constructor-arg>
+	</bean>
+
+
+</beans>

@@ -1,0 +1,44 @@
+package com.landicorp.dms.entities;
+
+import com.landicorp.core.entities.base.BaseEntity;
+
+public class TextNode extends BaseEntity{
+
+	private int upId;          //所属上级
+	private String titleName ; //标题名
+	private String outHtml;
+	private String value;
+	
+	
+	public TextNode() {
+		super();
+		this.outHtml = "<input style='border-left: 4px solid #ccc;' id='header1' class='form-control' placeholder='文本节点'></input>";
+	}
+	
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+	public int getUpId() {
+		return upId;
+	}
+	public void setUpId(int upId) {
+		this.upId = upId;
+	}
+	public String getTitleName() {
+		return titleName;
+	}
+	public void setTitleName(String titleName) {
+		this.titleName = titleName;
+	}
+	public String getOutHtml() {
+		return outHtml;
+	}
+	public void setOutHtml(String outHtml) {
+		this.outHtml = outHtml;
+	}
+	
+	
+}

@@ -1,0 +1,136 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+	
+	function showDetail() {
+		ldDialog.openFullScreen(
+						"${basePath}dms/documentVersionView!viewDocumentVersion.action", "版本查看", function(window) {
+		});
+	}
+	function detail(id) {
+		ldDialog.openMini(
+						"${basePath}dms/documentVersionDetail!detailDocumentVersion.action?document.id="+id, "版本详情", function(window) {
+		});
+	}
+
+	function setItem(id) {
+		ldDialog.confirm("确定将该版本置为当前版本？", function () {
+			var url = "${basePath}dms/documentVersionSearch!setDocument.action?document.id="+id;
+			$.ajax({
+				type : "POST",
+				url : url,
+				dataType : "json",
+				success : function(result) {
+					ldDialog.tips("设置成功！");
+					document.pagerForm.submit();
+				},
+				error : function() {
+					ldDialog.alert("设置出错！");
+				}
+			});
+		});
+	}
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post" action="${basePath}dms/documentVersionSearch!searchDocumentAllByInfo.action">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div style="font-weight:bold;">文档名称：${document.project.projectName} >${document.documentName}</div>
+							</div>
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<div class="conditionsrow">
+								<div class="conditionsitem">
+										<div class="conditionsitemL">版本号：</div>
+										<div class="conditionsitemR">
+											<input type="hidden" name="document.no" value="${document.no }"/>
+											<input name="document.versionId" class="ldText input138" id="document.versionId" value="${document.versionId}" />
+										</div>
+									</div>
+							</div>	
+								
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarR">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input id="searchBtn" type="submit" class="ldBtnBlue" value="查询"/>
+										<input type="hidden" value="0" name="pager.curPageNum" />
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+						<%--<th>选择</th>--%>
+						<th>序号</th>
+						<th>版本号</th>
+						<th>修改人</th>
+						<th>审核人</th>
+						<th>修改日期</th>
+						<th>修改内容</th>
+						<th>操作</th>
+					</tr>
+					<c:forEach items="${documentList }" var="item" varStatus="status">
+					    <tr>
+						<td>${status.count}</td>
+						<td>${ item.versionId} </td>
+						<td>${ item.lastModifier.userName} </td>
+						<td>${ item.examine.examiner.userName} </td>
+						<td><f:formatDate value="${item.lastModifyTime}" pattern="yyyy-MM-dd" /></td>
+						<td>${ item.examine.content} </td>
+						<td>
+							<input type="button" value="详情" class="ldBtnLink" onclick="detail(${ item.id});">
+							<a href="${basePath}dms/documentMenu!showDocument.action?document.id=${item.id}" target="_blank"><input type="button" value="查看" class="ldBtnLink" onclick=""></a>
+							<c:if test="${ item.isNowVer!=1}">
+							<input type="button" value="置为当前版本" class="ldBtnLink" onclick="setItem(${ item.id})">
+							</c:if>
+						</td>
+					    </tr>
+					</c:forEach>
+				</table>
+			</div>
+			<div class="dialogBottom">
+				<div class="btns">
+					<input type="button" value="关 闭" class="ldBtnGray"
+						   onclick="ldDialog.close();" />
+				</div>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								<form action="${basePath}dms/documentVersionSearch!searchDocumentAllByInfo.action"
+							    method="post" name="pagerForm">
+								<input name="document.versionId" type="hidden"
+								value="${document.versionId}" />
+								<input type="hidden" name="document.no" value="${document.no }"/>
+							<ld:pager type="form" action="pagerForm" />
+						</form>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

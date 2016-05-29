@@ -1,0 +1,50 @@
+package com.landicorp.dms.action.picture;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.service.IDmsPhotoService;
+import com.landicorp.dms.service.IDocumentService;
+
+public class PictureDeleteAction extends BaseActionSupport {
+	private Integer[] delete;
+	private IDmsPhotoService dmsPhotoService;
+	private Document document;
+	private IDocumentService documentService;
+	
+	
+	public Document getDocument() {
+		return document;
+	}
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+	public Integer[] getDelete() {
+		return delete;
+	}
+	public void setDelete(Integer[] delete) {
+		this.delete = delete;
+	}
+	public IDmsPhotoService getDmsPhotoService() {
+		return dmsPhotoService;
+	}
+	public void setDmsPhotoService(IDmsPhotoService dmsPhotoService) {
+		this.dmsPhotoService = dmsPhotoService;
+	}
+	
+	public String deletePictures(){
+		try{			
+			document=documentService.getById(document.getId());
+			dmsPhotoService.delete(delete); 
+		}catch (Exception e) {
+			e.printStackTrace();
+			return SUCCESS;
+		}
+		return SUCCESS;
+	}
+}

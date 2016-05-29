@@ -1,0 +1,13 @@
+package com.landicorp.dms.action.function;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class FunctionCheckSearchAction extends BaseActionSupport{
+
+	private static final long serialVersionUID = -3059600828982672923L;
+
+	public String execute() {
+		return SUCCESS;
+	}
+	
+}

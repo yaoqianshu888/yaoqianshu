@@ -1,0 +1,37 @@
+package com.landicorp.dms.tx;
+
+import com.landicorp.core.entities.User;
+import com.landicorp.core.web.pager.Pager;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import java.text.ParseException;
+
+
+public class TestBean {
+
+	/**
+	 * @param args
+	 * @throws ParseException
+	 */
+	public static void main(String[] args) throws ParseException {
+		ApplicationContext ctx = new FileSystemXmlApplicationContext(new String[] {
+				"classpath:com/landicorp/config/applicationContext.xml",
+				"classpath:com/landicorp/config/models/applicationContext-core.xml",
+				"classpath:com/landicorp/config/models/applicationContext-upms.xml",
+				"classpath:com/landicorp/config/models/applicationContext-dms.xml" });
+
+
+	}
+
+	public static Pager getPager() {
+		Pager pager = new Pager();
+		pager.setCurPageNum(1);
+		pager.setPageSize(5);
+		return pager;
+	}
+
+	public static User getUser() {
+		return new User(1);
+	}
+}

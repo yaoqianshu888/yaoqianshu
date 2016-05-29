@@ -1,0 +1,14 @@
+package com.landicorp.dms.service;
+
+import java.util.Date;
+import java.util.List;
+
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Document;
+
+public interface IDocumentService extends IBaseService<Document, Integer>{
+	public List<Document> getAllDocumentAila(Pager pager); //得到所有的文档
+	public List<Document> getDocumentListByDocument(Document document,Date startCreateTime,Date endCreateTime,Pager pager);
+}

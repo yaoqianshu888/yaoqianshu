@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<groups>
+	<constants>
+		<!-- 配置需要映射的类,在下面的group中被引用,也可以在jsp的el表达式中被引用，如下面的类在el中为${options.common} -->
+		<constant name="common" class="com.landicorp.core.web.option.Constants">
+			<field name="ALL" />
+			<field name="ALL_EMPTY" />
+
+			<field name="YES" />
+			<field name="NO" />
+
+			<field name="AVAILABLE" />
+			<field name="UNAVAILABLE" />
+
+			<field name="UNAUDIT" />
+			<field name="AUDIT" />
+			<field name="SUSPEND" />
+
+			<field name="SUCCESS" />
+			<field name="FAIL" />
+			
+			<field name="BOY" />
+			<field name="GIRL" />
+			
+			<field name="SYSTEM_CODE_MARKET" />
+			<field name="SYSTEM_CODE_MMS" />
+
+		</constant>
+
+		<constant name="authorization"
+			class="com.landicorp.core.entities.Right$Authorization">
+			<field name="INDEPENDENT" />
+			<field name="INHERIT" />
+		</constant>
+	</constants>
+	
+	<group name="yesOrNoInt">
+		<option display="全部" constant="common.ALL_EMPTY" />
+		<option display="是" constant="common.YES" />
+		<option display="否" constant="common.NO" />
+	</group>
+	<group name="available">
+		<option display="有效" constant="common.AVAILABLE" />
+		<option display="无效" constant="common.UNAVAILABLE" />
+	</group>
+	<group name="sucOrFailInt">
+		<option display="全部" constant="common.ALL_EMPTY" />
+		<option display="成功" constant="common.SUCCESS" />
+		<option display="失败" constant="common.FAIL" />
+	</group>
+	<group name="availableAll">
+		<option display="全部" constant="common.ALL_EMPTY" />
+		<option display="有效" constant="common.AVAILABLE" />
+		<option display="无效" constant="common.UNAVAILABLE" />
+	</group>
+	<group name="audit">
+		<option display="全部" constant="common.ALL_EMPTY" />
+		<option display="未审核" constant="common.UNAUDIT" />
+		<option display="已审核" constant="common.AUDIT" />
+		<option display="已终止" constant="common.SUSPEND" />
+	</group>
+	<group name="authorization">
+		<option display="独立" constant="authorization.INDEPENDENT" />
+		<option display="继承" constant="authorization.INHERIT" />
+	</group>
+	
+	<group name="sex">
+		<option display="男" constant="common.BOY" />
+		<option display="女" constant="common.GIRL" />
+	</group>
+	
+	<group name="sexAll">
+		<option display="全部" constant="common.ALL_EMPTY" />
+		<option display="男" constant="common.BOY" />
+		<option display="女" constant="common.GIRL" />
+	</group>
+
+</groups>

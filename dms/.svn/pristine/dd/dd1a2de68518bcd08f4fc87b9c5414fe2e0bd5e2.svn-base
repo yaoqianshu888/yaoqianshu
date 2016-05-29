@@ -1,0 +1,88 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.ITemplateDao;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.ITemplateService;
+
+public class TemplateServiceImpl extends AbstractBaseServiceImpl<Template, Integer>
+		implements ITemplateService {
+
+	private ITemplateDao templateDao;
+	
+	public ITemplateDao getTemplateDao() {
+		return templateDao;
+	}
+
+	public void setTemplateDao(ITemplateDao templateDao) {
+		this.templateDao = templateDao;
+	}
+
+	@Override
+	public int add(Template arg0) {
+		return templateDao.save(arg0);
+	}
+
+	
+	@Override
+	public void delete(Integer[] arg0) {
+		templateDao.delete(arg0);
+	}
+
+
+	@Override
+	public Template getById(Integer arg0) {
+		return templateDao.getById(arg0);
+	}
+
+	
+	@Override
+	public int update(Template arg0) {
+		return templateDao.update(arg0);
+	}
+
+	@Override
+	public List<Template> getAllTemplate(Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(templateDao.getAllTemplateCount());
+		}
+		return templateDao.getAllTemplate(pager);
+	}
+
+	@Override
+	public List<Template> getAll(){
+		return templateDao.getAll();
+	}
+	
+	@Override
+	public List<Template> getTemplateListByTemplate(Template template,
+			Date startCreateTime, Date endCreateTime, Date startModifyTime,
+			Date endModifyTime, Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(templateDao.getTemplateCountByTemplate(template, startCreateTime, endCreateTime, startModifyTime, endModifyTime));
+		}
+		return templateDao.getTemplateListByTemplate(template, startCreateTime, endCreateTime, startModifyTime, endModifyTime, pager);
+	}
+
+	@Override
+	public IMyBatisDao<Template, Integer> getMyBatisDao() {
+		return templateDao;
+	}
+
+	@Override
+	public String getTemplateName(Template template) {
+		return templateDao.getTemplateName(template);
+	}
+
+	@Override
+	public void deleteById(int id) {
+		templateDao.deleteById(id);
+	}
+
+}

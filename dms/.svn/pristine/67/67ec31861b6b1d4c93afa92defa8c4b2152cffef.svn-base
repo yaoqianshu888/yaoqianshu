@@ -1,0 +1,78 @@
+package com.landicorp.dms.action.module;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.entities.ProjectDoc;
+
+public class ModuleSearchAction extends BaseActionSupport {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Module module;
+	private List<Module> moduleList;
+
+	/*public String searchModule() {
+		Project p = new Project();
+		p.setName("银销通项目");
+		Document d = new Document();
+		d.setName("接口说明文档");
+		d.setProject(p);
+		
+		Module m = new Module();
+		m.setDocument(d);
+		m.setId(1);
+		m.setStatus(1);
+		m.setCreateTime(new Date());
+		m.setName("用户管理模块");
+		m.setNo("007");
+		m.setCreateUser("薛云腾");
+		moduleList = new ArrayList<Module>();
+		moduleList.add(m);
+		return SUCCESS;
+	}*/
+
+/*	public String detail() {
+		Project p = new Project();
+		p.setName("银销通项目");
+		Document d = new Document();
+		d.setName("接口说明文档");
+		d.setProject(p);
+		
+		module.setId(1);
+		module.setStatus(1);
+		module.setCreateTime(new Date());
+		module.setMemo("这个是测试模块");
+		module.setName("银销通模块");
+		module.setUpdateUser("你猜");
+		module.setCreateUser("薛云腾");
+		module.setUpdateTime(new Date());
+		module.setNo("007");
+		module.setDocument(d);
+		return "detail";
+	}
+*/
+
+	public Module getModule() {
+		return module;
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+	public List<Module> getModuleList() {
+		return moduleList;
+	}
+
+	public void setModuleList(List<Module> moduleList) {
+		this.moduleList = moduleList;
+	}
+
+
+}

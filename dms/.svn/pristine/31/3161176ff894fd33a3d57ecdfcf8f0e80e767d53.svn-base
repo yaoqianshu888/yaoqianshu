@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IProjectDocDao">
+	<resultMap type="projectDoc" id="projectDoc">
+		<result property="id" column="ID"/>
+		<result property="no" column="NO" />
+		<result property="projectName" column="PROJECT_NAME" />
+		<result property="available" column="AVAILABLE" />
+		<result property="creator.userName" column="CREATOR" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="memo" column="MEMO" />
+		<result property="lastModifyTime" column="LAST_MODIFY_TIME" />
+		<result property="lastModifier.userName" column="LAST_MODIFIER" />
+	</resultMap>
+
+	<sql id="keyColumns">NO,PROJECT_NAME,AVAILABLE,CREATOR,CREATE_TIME,MEMO,LAST_MODIFY_TIME,LAST_MODIFIER
+	</sql>
+	<sql id="valueColumns">#{no,jdbcType=NUMERIC},#{projectName,jdbcType=VARCHAR},
+		#{available,jdbcType=NUMERIC},
+		#{creator.userName,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
+		#{memo,jdbcType=VARCHAR},
+		#{lastModifyTime,jdbcType=TIMESTAMP},
+		#{lastModifier.userName,jdbcType=VARCHAR}
+	</sql>
+	<sql id="whereColumns">
+			<if
+				test="projectDoc!=null and projectDoc.projectName!=null and projectDoc.projectName!=''">
+				and t1.PROJECT_NAME like '%${projectDoc.projectName}%'
+			</if>
+			<if test="projectDoc!=null and projectDoc.available!=null">
+				and t1.AVAILABLE=#{projectDoc.available}
+			</if>
+			<if test="startCreateTime!=null and startCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) > DATE(#{startCreateTime})
+			 ]]>
+			</if>
+			<if test="endCreateTime!=null and endCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) < DATE(#{endCreateTime})
+			 ]]>
+			</if>
+			
+	</sql>
+	<insert id="save" parameterType="projectDoc">
+
+		insert into t_dms_project(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	<update id="update" parameterType="projectDoc">
+		update t_dms_project
+		<set>
+			<if test="no!=null">NO=#{no},</if>
+			<if test="projectName!=null">PROJECT_NAME=#{projectName},</if>
+			<if test="available!=null">AVAILABLE=#{available},</if>
+			<if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+			<if test="creator!=null and creator.userName!=null">CREATOR=#{creator.userName},</if>
+			<if test="lastModifyTime!=null">LAST_MODIFY_TIME=#{lastModifyTime},</if>
+			<if test="lastModifier!=null and lastModifier.userName!=null">LAST_MODIFIER=#{lastModifier.userName},</if>
+			<if test="memo!=null">MEMO=#{memo}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	
+	<select id="getById" parameterType="int" resultMap="projectDoc">
+		select *
+		from
+		t_dms_project
+		where id=#{id}
+	</select>
+	<delete id="delete" parameterType="int">
+		delete from t_dms_project where
+		id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="getMaxNo" resultType="int">
+		select Max(NO) from t_dms_project
+	</select>
+	
+	<select id="getProjectListByProject" parameterType="map"
+		resultMap="projectDoc">
+		select * from t_dms_project t1
+		<where>
+			<include refid="whereColumns" />
+		</where>		
+		order by t1.id asc
+		<include refid="Sql.pager" />
+	</select>
+	
+	<select id="getProjectCountByProject" parameterType="map" resultType="int">
+		select count(*) from t_dms_project t1
+		<where>
+			<include refid="whereColumns" />
+		</where>		
+	</select>
+
+	<select id="getAllProject" resultMap="projectDoc">
+		SELECT
+		*
+		FROM t_dms_project
+		ORDER BY ID ASC
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getAll" resultMap="projectDoc">
+		SELECT
+		*
+		FROM t_dms_project
+		ORDER BY ID ASC
+	</select>
+
+	<select id="getAllProjectCount" resultType="int">
+		select count(*) from t_dms_project
+	</select>
+</mapper>

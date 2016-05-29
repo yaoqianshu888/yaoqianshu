@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.IDmsPhotoDao">
+	<resultMap type="dmsPhoto" id="dmsPhoto">
+		<result property="id" column="ID"/>
+		<result property="photoName" column="PHOTO_NAME" />
+		<result property="document.id" column="DOCUMENT_ID" />
+		<result property="module.id" column="MODULE_ID" />
+		<result property="function.id" column="FUNCTION_ID" />
+		<result property="photoPath" column="PHOTO_PATH" />
+		<result property="memo" column="MEMO" />
+		<association property="document" column="DOCUMENT_ID"
+			javaType="com.landicorp.dms.entities.Document" select="com.landicorp.dms.dao.IDocumentDao.getById" />
+		<association property="module" column="MODULE_ID"
+			javaType="com.landicorp.dms.entities.Module" select="com.landicorp.dms.dao.IModuleDao.getById" />
+	</resultMap>
+
+	<sql id="keyColumns">PHOTO_NAME,DOCUMENT_ID,MODULE_ID,FUNCTION_ID,PHOTO_PATH,MEMO
+	</sql>
+	<sql id="valueColumns">#{photoName,jdbcType=VARCHAR},#{document.id,jdbcType=NUMERIC},
+		#{module.id,jdbcType=NUMERIC},
+		#{function.id,jdbcType=NUMERIC},#{photoPath,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR}
+	</sql>
+	
+	<insert id="save" parameterType="dmsPhoto">
+
+		insert into t_dms_photo(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	<update id="update" parameterType="dmsPhoto">
+		update t_dms_photo
+		<set>
+			<if test="photoName!=null">PHOTO_NAME=#{photoName},</if>
+			<if test="document!=null and document.id!=null">DOCUMENT_ID=#{document.id},</if>
+			<if test="module!=null and module.id!=null">MODULE_ID=#{module.id},</if>
+			<if test="function!=null and function.id!=null">FUNCTION_ID=#{function.id},</if>
+			<if test="photoPath!=null">PHOTO_PATH=#{photoPath},</if>
+			<if test="memo!=null">MEMO=#{memo}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<!-- 将文档id为空的图片的文档id设置 -->
+	<update id="updatePhoto" parameterType="int">
+		update t_dms_photo
+		set DOCUMENT_ID=#{id}
+		where DOCUMENT_ID is null
+	</update>
+	
+	
+	<select id="getById" parameterType="int" resultMap="dmsPhoto">
+		select *
+		from
+		t_dms_photo
+		where id=#{id}
+	</select>
+	<select id="getAllByDocumentId" parameterType="int" resultMap="dmsPhoto">
+		select *
+		from
+		t_dms_photo
+		where DOCUMENT_ID=#{id}
+	</select>
+	
+	<select id="getAllByNoDocument" resultMap="dmsPhoto">
+		select *
+		from
+		t_dms_photo
+		where DOCUMENT_ID is null
+	</select>
+	
+	<delete id="delete" parameterType="int">
+		delete from t_dms_photo where
+		id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+</mapper>

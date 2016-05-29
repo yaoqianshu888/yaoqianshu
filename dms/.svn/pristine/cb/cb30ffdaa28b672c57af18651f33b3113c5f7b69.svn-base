@@ -1,0 +1,11 @@
+package com.landicorp.dms.dao;
+
+import java.util.List;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.dms.entities.DocumentModule;
+
+public interface IDocumentModuleDao extends IMyBatisDao<DocumentModule, Integer>{
+	public List<DocumentModule> getByDocumentId(Integer id);//根据文档id得到所有的关系
+	public List<DocumentModule> getByModuleId(Integer id);//根据模块id得到所有的关系
+}

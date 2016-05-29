@@ -1,0 +1,95 @@
+package com.landicorp.dms.entities;
+
+import java.util.Date;
+
+import com.landicorp.core.entities.User;
+import com.landicorp.core.entities.base.BaseEntity;
+
+public class NodeView extends BaseEntity {
+	private Integer id;
+	private String nodeName;  //节点名
+	private String templateName;  //所属模板
+	private String creator;  //创建人
+	private Date createTime;// 创建时间
+	private Integer nodeType; //节点类型（复合、功能节点）
+	private Integer circleType;  //循环类型（单次、多次）
+	private Node upNode;  //父节点
+	private int sort;// 排列顺序
+	private String memo;  //备注
+	private Date lastModifyTime;// 最后修改时间
+	private String lastModifier;// 最后修改人
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getNodeName() {
+		return nodeName;
+	}
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+	public String getTemplateName() {
+		return templateName;
+	}
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
+	}
+	public String getCreator() {
+		return creator;
+	}
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public Integer getNodeType() {
+		return nodeType;
+	}
+	public void setNodeType(Integer nodeType) {
+		this.nodeType = nodeType;
+	}
+	public Integer getCircleType() {
+		return circleType;
+	}
+	public void setCircleType(Integer circleType) {
+		this.circleType = circleType;
+	}
+	public Node getUpNode() {
+		return upNode;
+	}
+	public void setUpNode(Node upNode) {
+		this.upNode = upNode;
+	}
+	public int getSort() {
+		return sort;
+	}
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+	public Date getLastModifyTime() {
+		return lastModifyTime;
+	}
+	public void setLastModifyTime(Date lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+	public String getLastModifier() {
+		return lastModifier;
+	}
+	public void setLastModifier(String lastModifier) {
+		this.lastModifier = lastModifier;
+	}
+	
+	
+}

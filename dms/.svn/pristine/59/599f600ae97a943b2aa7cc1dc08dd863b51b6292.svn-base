@@ -1,0 +1,214 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+<script type="text/javascript">
+	function showItem(id){
+		ldDialog.openMini(
+			"${basePath}dms/nodeDetail!detailNode.action",
+			"节点详情", 
+			function(window) {
+			
+		});
+	}
+	function deleteItems() {
+		var dms = getAllChose("delete");
+		if (dms == "") {
+			ldDialog.alert("请先选择要删除的项");
+			return;
+		}
+		
+	}
+	function addItem(){
+		 ldDialog.openMini("${basePath}dms/nodeInsert!insertNodeDetail.action",
+	              "新增节点",
+	              function(window) {
+	              });
+	}
+	function addMoreItem(id){
+		 ldDialog.openLarge("${basePath}dms/nodeInsert!insertNode.action",
+	              "配置节点",
+	              function(window) {
+	              });
+	}
+	function itemPreview(id){
+		ldDialog.openMini("${basePath}dms/nodeView!viewNode.action",
+	              "预览节点",
+	              function(window) {
+	              });
+	}
+	function editItem(id){
+		 ldDialog.openMini("${basePath}dms/nodeUpdate!updateNode.action",
+	              "编辑节点",
+	              function(window) {
+	              });
+	}
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+									<div class="conditionsrow">
+										<div class="conditionsitem">
+											<div class="conditionsitemL">节点名称：</div>
+											<div class="conditionsitemR">
+												<input name="node.nodeName" class="ldText" style="width:144px" id="node.nodeName"
+													value="${node.nodeName}" />
+											</div>
+										</div>
+										<div class="conditionsitem">
+											<div class="conditionsitemL">创建人：</div>
+											<div class="conditionsitemR">
+												<input name="user.userNum" class="ldText input138" id="user.userNum" value="${user.userNum}" />
+											</div>
+										</div>
+										<div class="conditionsitem">
+											<div class="conditionsitemL">&nbsp;&nbsp;创建时间（起）：</div>
+											<div class="conditionsitemR">
+												<input name="startDate" type="text" id="startDate"
+													   class="ldDateTime input138"
+													   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+													   value="<f:formatDate value="${startDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+											</div>
+										</div>
+										<div class="conditionsitem">
+											<div class="conditionsitemL">&nbsp;&nbsp;创建时间（止）：</div>
+											<div class="conditionsitemR">
+												<input name="endDate" type="text" id="endDate"
+													   class="ldDateTime input138"
+													   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+													   value="<f:formatDate value="${endDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+											</div>
+										</div>
+										</div>
+								<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">类型：</div>
+										<div class="conditionsitemR">
+											<select class="ldSelect select144">
+												<option>全部</option>
+												<option>复合节点</option>
+												<option>功能节点</option>
+											</select>
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL" style="padding-left: 7px">循环类型：</div>
+										<div class="conditionsitemR">
+											<select class="ldSelect select144">
+												<option>单次</option>
+												<option>多次</option>
+											</select>
+										</div>
+									</div>
+									<div class="conditionsitem">
+									<div class="conditionsitemL" style="padding-left: 21px">所属模板：</div>
+									<div class="conditionsitemR">
+										<select class="ldSelect select144">
+											<option>接口文档模板</option>
+											<option>需求分析模板</option>
+											<option>概要设计模板</option>
+										</select>
+									</div>
+								</div>
+								</div>
+							</div>
+							<div class="yhlist3">
+								<div class="toolbarL">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>
+
+												<ld:check mark="projectInsert">
+													<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+													<input type="button" class="ldBtnGray" value="删除" onclick="deleteItems();" />
+												</ld:check>
+											</td>
+										</tr>
+									</table>
+								</div>
+								<div class="toolbarR">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>
+												<input id="searchBtn" type="button" class="ldBtnBlue" value="查询" />
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			
+			
+			<div class="yhlist2">
+				<form method="post" name="deleteForm" id="deleteForm">
+					<table id="contentTable" width="100%" border="0" cellspacing="1" cellpadding="0" class="ld-datagrid">
+						<tr>
+							<th>选择</th>
+							<th>序号</th>
+							<th>节点名称</th>
+							<th>节点类型</th>
+							<th>循环类型</th>
+							<th>所属模板</th>
+							<th>创建人</th>
+							<th>创建时间</th>
+							<th>操作</th>
+						</tr>
+						<tr>
+							<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="" /></td>
+							<td>1 </td>
+							<td>简介节点</td>
+							<td>复合节点</td>
+							<td>单次</td>
+							<td>
+								接口文档模板
+							</td>
+							<td>admin</td>
+							<td>2015-08-13</td>
+							<td>
+								<ld:check mark="nodeUpdate">
+									<input type="button" value="配置" class="ldBtnLink" onclick="addMoreItem(${item.id});" />&nbsp;
+								</ld:check>
+								<ld:check mark="nodeDetail">
+									<input type="button" value="详情" class="ldBtnLink" onclick="showItem(${item.id});" />&nbsp;
+								</ld:check>
+								<ld:check mark="nodePreview">
+									<input type="button" value="预览" class="ldBtnLink" onclick="itemPreview(${item.id});" />&nbsp;
+								</ld:check>
+								<ld:check mark="nodeUpdate">
+									<input type="button" value="编辑" class="ldBtnLink" onclick="editItem(${item.id});" />&nbsp;
+								</ld:check>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			
+			
+			<div class="yhlist3">
+				
+				<div class="toolbarR">
+						<div class="ldPager">
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

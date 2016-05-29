@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+	default-autowire="byName">
+
+
+	<!-- initTask -->
+
+	<!-- dao -->
+	<bean id="documentDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IDocumentDao"></property>
+	</bean>
+	<bean id="projectDocDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IProjectDocDao"></property>
+	</bean>
+	<bean id="nodeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.INodeDao"></property>
+	</bean>
+	<bean id="templateDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.ITemplateDao"></property>
+	</bean>
+	<bean id="basicNodeContDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IBasicNodeContDao"></property>
+	</bean>
+	<bean id="examineDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IExamineDao"></property>
+	</bean>
+	<bean id="moduleDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IModuleDao"></property>
+	</bean>
+	<bean id="documentModuleDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IDocumentModuleDao"></property>
+	</bean>
+	<bean id="dmsPhotoDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IDmsPhotoDao"></property>
+	</bean>
+	<bean id="functionDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IFunctionDao"></property>
+	</bean>
+	<bean id="draftDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IDraftDao"></property>
+	</bean>
+	<bean id="moduleFunctionDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.dms.dao.IModuleFunctionDao"></property>
+	</bean>
+	
+	<!-- service -->
+	<bean id="documentService" class="com.landicorp.dms.service.impl.DocumentServiceImpl" />
+	<bean id="projectDocService" class="com.landicorp.dms.service.impl.ProjectDocServiceImpl" />
+	<bean id="nodeService" class="com.landicorp.dms.service.impl.NodeServiceImpl" />
+	<bean id="templateService" class="com.landicorp.dms.service.impl.TemplateServiceImpl" />
+	<bean id="basicNodeContService" class="com.landicorp.dms.service.impl.BasicNodeContServiceImpl" />
+	<bean id="moduleService" class="com.landicorp.dms.service.impl.ModuleServiceImpl" />
+	<bean id="documentModuleService" class="com.landicorp.dms.service.impl.DocumentModuleServiceImpl" />
+	<bean id="dmsPhotoService" class="com.landicorp.dms.service.impl.DmsPhotoServiceImpl" />
+	<bean id="functionService" class="com.landicorp.dms.service.impl.FunctionServiceImpl" />
+	<bean id="draftService" class="com.landicorp.dms.service.impl.DraftServiceImpl" />
+	<bean id="moduleFunctionService" class="com.landicorp.dms.service.impl.ModuleFunctionServiceImpl" />
+	<bean id="examineService" class="com.landicorp.dms.service.impl.ExamineServiceImpl" />
+	<!-- struts2 action -->
+	
+	<!-- 文档管理action -->
+	
+	
+</beans>

@@ -1,0 +1,57 @@
+package com.landicorp.dms.entities;
+
+import com.landicorp.core.entities.base.BaseEntity;
+
+public class BasicNodeCont extends BaseEntity{
+	private Integer id;
+	private Node node;  //节点id
+	private Function function; //功能id
+	private Document document;//所属文档
+	private String content;//内容
+	private Module module;  //所属模块
+	
+	
+	public Module getModule() {
+		return module;
+	}
+	public void setModule(Module module) {
+		this.module = module;
+	}
+	public Document getDocument() {
+		return document;
+	}
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+	public Node getNode() {
+		return node;
+	}
+	public void setNode(Node node) {
+		this.node = node;
+	}
+	public Function getFunction() {
+		return function;
+	}
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	@Override
+	public String toString() {
+		return "BasicNodeCont [node=" + node + ", function=" + function
+				+ ", content=" + content + "]";
+	}
+	
+}

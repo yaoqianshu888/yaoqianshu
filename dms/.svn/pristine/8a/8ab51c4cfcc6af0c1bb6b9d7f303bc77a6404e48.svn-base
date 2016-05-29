@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<groups>
+	<constants>
+		<!-- 配置需要映射的类,在下面的group中被引用,也可以在jsp的el表达式中被引用，如下面的类在el中为${options.common} -->
+		<constant name="dms" class="com.landicorp.dms.web.option.Dms">
+			<field name="ALL_EMPTY" />
+
+			<field name="COMPOSITE" />
+			<field name="FUNCTION" />
+
+			<field name="ONCE" />
+			<field name="REPEATE" />
+			
+			<field name="TITLE" />
+			<field name="TEXT" />
+			<field name="PHOTOTEXT" />
+			<field name="REQUESTPARA" />
+			<field name="RETURNPARA" />
+			<field name="REQUESTMESS" />
+			<field name="RETURNMESS" />
+
+		</constant>
+		
+	</constants>
+
+	<group name="nodeType">
+		<option display="全部" constant="dms.ALL_EMPTY" />
+		<option display="复合节点" constant="dms.COMPOSITE" />
+		<option display="功能节点" constant="dms.FUNCTION" />
+	</group>
+	
+	<group name="nodeTypeAdd">
+		<option display="复合节点" constant="dms.COMPOSITE" />
+		<option display="功能节点" constant="dms.FUNCTION" />
+	</group>
+
+	<group name="circleType">
+		<option display="全部" constant="dms.ALL_EMPTY" />
+		<option display="单次" constant="dms.ONCE" />
+		<option display="多次" constant="dms.REPEATE" />
+	</group>
+	
+	<group name="circleTypeAdd">
+		<option display="单次" constant="dms.ONCE" />
+		<option display="多次" constant="dms.REPEATE" />
+	</group>
+	
+	<group name="contentFormat">
+		<option display="标题节点" constant="dms.TITLE" />
+		<option display="文本节点" constant="dms.TEXT" />
+		<option display="图文节点" constant="dms.PHOTOTEXT" />
+		<option display="请求参数节点" constant="dms.REQUESTPARA" />
+		<option display="返回参数节点" constant="dms.RETURNPARA" />
+		<option display="请求报文节点" constant="dms.REQUESTMESS" />
+		<option display="返回报文节点" constant="dms.RETURNMESS" />
+	</group>
+	
+	
+</groups>

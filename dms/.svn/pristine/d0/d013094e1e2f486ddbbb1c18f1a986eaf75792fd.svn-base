@@ -1,0 +1,163 @@
+package com.landicorp.dms.action.function;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.BasicNodeCont;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.service.IBasicNodeContService;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IFunctionService;
+import com.landicorp.dms.service.INodeService;
+
+public class FunctionDetailAction extends BaseActionSupport {
+
+	private Document document;
+	private IDocumentService documentService;
+	private Function function;
+	private IFunctionService functionService;
+	private List<Node> nodeList;
+	private List<List<Node>> nodeLists;
+	private INodeService nodeService;
+	private Map<Integer, String> map;
+	private IBasicNodeContService basicNodeContService;
+	
+	
+	public Map<Integer, String> getMap() {
+		return map;
+	}
+
+
+	public void setMap(Map<Integer, String> map) {
+		this.map = map;
+	}
+
+
+	public IBasicNodeContService getBasicNodeContService() {
+		return basicNodeContService;
+	}
+
+
+	public void setBasicNodeContService(IBasicNodeContService basicNodeContService) {
+		this.basicNodeContService = basicNodeContService;
+	}
+
+
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+
+	public List<List<Node>> getNodeLists() {
+		return nodeLists;
+	}
+
+
+	public void setNodeLists(List<List<Node>> nodeLists) {
+		this.nodeLists = nodeLists;
+	}
+
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+
+	public Document getDocument() {
+		return document;
+	}
+
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+
+	public Function getFunction() {
+		return function;
+	}
+
+
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+
+
+	public IFunctionService getFunctionService() {
+		return functionService;
+	}
+
+
+	public void setFunctionService(IFunctionService functionService) {
+		this.functionService = functionService;
+	}
+
+	//跳转功能点详情
+	public String detailFunction(){
+		document=documentService.getById(document.getId());
+		function=functionService.getById(function.getId());
+		
+		if(document!=null && document.getTemplate()!=null){
+			List<Node> rootNodes=nodeService.getAllNodesByTidAndType1(document.getTemplate().getId());
+			Node firstNode=new Node();
+			if(rootNodes.size()>0){
+				firstNode=rootNodes.get(0);
+				nodeList=nodeService.getAllFirstNodeByPid(firstNode.getId());
+				nodeLists=new ArrayList<List<Node>>();
+				for(int i=0;i<nodeList.size();i++){
+					List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+					nodes.get(0).setTitleNo((i+1)+"");
+					for(int j=0;j<nodes.size();j++){
+						int c=1;
+						for(int k=1;k<nodes.size();k++){
+							if(nodes.get(k).getUpNode().getId().equals(nodes.get(j).getId())){
+								nodes.get(k).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+								c++;
+							}
+						}
+					}
+					
+					nodeLists.add(nodes);
+				}
+			}
+			
+			//内容传值
+			map=new HashMap<Integer, String>();
+			List<BasicNodeCont> basicNodeContList=basicNodeContService.getByDocumentIdAndFunctionId(document.getId(),function.getId());
+			for(int i=0;i<basicNodeContList.size();i++){
+				if(basicNodeContList.get(i).getNode().getNodeFormat()==3){//对字符串进行反转义
+					basicNodeContList.get(i).setContent(basicNodeContList.get(i).getContent().replaceAll("&lt;", "<"));
+					basicNodeContList.get(i).setContent(basicNodeContList.get(i).getContent().replaceAll("&quot;", "\""));
+					basicNodeContList.get(i).setContent(basicNodeContList.get(i).getContent().replaceAll("&gt;", ">"));
+				}
+				map.put(basicNodeContList.get(i).getNode().getId(), basicNodeContList.get(i).getContent());
+			}
+		}
+		return "detail";
+	}
+}

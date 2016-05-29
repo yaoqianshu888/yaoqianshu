@@ -1,0 +1,17 @@
+package com.landicorp.dms.service;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.ModuleFunction;
+
+public interface IModuleFunctionService extends
+		IBaseService<ModuleFunction, Integer> {
+	public List<ModuleFunction> getByModuleId(Pager pager,Integer id,Integer documentId);//根据模块id得到所有的关系
+	public List<ModuleFunction> getAllByModuleId(Integer id,Integer documentId);   //得到所有
+	public List<ModuleFunction> getAllByDocumentIdAndModuleId(Integer moduleId,Integer documentId);
+	public void deleteByFunctionAndDocument(Integer functionId ,Integer documentId);
+}

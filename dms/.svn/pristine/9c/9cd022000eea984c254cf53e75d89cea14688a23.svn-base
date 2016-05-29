@@ -1,0 +1,526 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link href="${basePath}dms/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="${basePath}dms/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="${basePath}dms/css/zTreeStyle/zTreeStyle.css" type="text/css" />
+<script type="text/javascript" src="${basePath}dms/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="${basePath}dms/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="${basePath}dms/js/jquery.ztree.exedit-3.5.js"></script>
+	<style>
+	a.ico16 {
+	    width: 20px;
+	    height: 20px;
+	    padding: 0;
+	    margin: 0 5px 0 0;
+	    background-image: url("${basePath}dms/images/leftMove.png");
+	}
+	a.ico15 {
+	    width: 20px;
+	    height: 20px;
+	    padding: 0;
+	    margin: 0 5px 0 0;
+	    background-image: url("${basePath}dms/images/rightMove.png");
+	}
+</style>
+<script type="text/javascript">
+	
+	function checkSubmit() {
+		if (!checkData(true, 'template.name', "模板名称", 2, 30)) {
+			return false;
+		}
+		if (!checkData(false, 'template.memo', "备注", 1, 255)) {
+			return false;
+		}
+		submitForm();
+	}
+	function submitForm(){
+		var url = "${basePath}coreAjax/templateInsert!insertTemplate.action";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			data : $("#submitForm").serialize(),
+			success : function(result) {
+				var res = JSON.parse(result);
+				if (res.code == 1) {
+					//ldDialog.tips("新增成功");
+					ldDialog.close(res.returnValue);
+				} else {
+					ldDialog.alert(res.reason);
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+
+			}
+		});
+	}
+	
+    function saveTemplate(){
+    	ldDialog.alert("创建成功！");
+    	ldDialog.close();
+    }
+    
+    function viewDocTemplate(){
+		ldDialog.openLarge("${basePath}dms/templateDetail!detailTemplate.action",
+			"文档模板查看", 
+			function(window) {
+		});
+    }
+    
+</script>
+<script type="text/javascript">
+		IDMark_A = "_a";
+		
+		var setting = {
+			view: {
+				addDiyDom: addDiyDom,
+				selectedMulti: false
+			},
+			edit: {
+				drag: {
+					autoExpandTrigger: true,
+					prev: dropPrev,
+					inner: dropInner,
+					next: dropNext
+				},
+				enable: true,
+				showRemoveBtn: showRemoveBtn,
+				showRenameBtn: showRenameBtn
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+				/*beforeDrag: beforeDrag, 
+				beforeDrop: beforeDrop*/
+				beforeDrag: beforeDrag1,
+				beforeDrop: beforeDrop1,
+				beforeDragOpen: beforeDragOpen,
+				onDrag: onDrag,
+				onDrop: onDrop,
+				onExpand: onExpand
+			}
+		};
+		
+		var zNodes =[
+	      					/* { id:-1, pId:-2, name:"功能节点",drop:false, drag:false,type:"(功能节点)",open:true},
+							{ id:31111, pId:-1, name:"请求格式",drop:false, drag:false,type:"(标题节点)",open:true},
+							{ id:31112, pId:31111, name:"请求说明",drop:false, drag:false,type:"(图文节点)"},
+							{ id:31113, pId:31111, name:"请求数据参数",drop:false, drag:false,type:"(表格节点)"},
+							{ id:31114, pId:31111, name:"请求报文示例",drop:false, drag:false,type:"(请求报文节点)"},
+							{ id:31115, pId:-1, name:"返回格式",drop:false, drag:false,type:"(标题节点)",open:true},
+							{ id:31116, pId:31115, name:"返回说明",drop:false, drag:false,type:"(图文节点)"},
+							{ id:31117, pId:31115, name:"返回数据参数",drop:false, drag:false,type:"(表格节点)"},
+							{ id:31118, pId:31115, name:"返回报文示例",drop:false, drag:false,type:"(返回报文节点)"} */
+							{ id:-1, pId:-2, name:"简介",drop:false, drag:false,type:"(简介节点)",open:true},
+							{ id:11112, pId:-1, name:"设计原则",drop:false, drag:false,type:"(图文节点)"},
+							{ id:11113, pId:-1, name:"使用对象",drop:false, drag:false,type:"(图文节点)"},
+							{ id:11114, pId:-1, name:"参考文档",drop:false, drag:false,type:"(文本节点)"}
+		];
+		var functionNode=[{ id:31110, pId:101, name:"功能节点",drop:false, drag:false,type:"(功能节点)"},
+							{ id:31111, pId:31110, name:"请求格式",drop:false, drag:false,type:"(标题节点)"},
+							{ id:31112, pId:31111, name:"请求说明",drop:false, drag:false,type:"(图文节点)"},
+							{ id:31113, pId:31111, name:"请求数据参数",drop:false, drag:false,type:"(表格节点)"},
+							{ id:31114, pId:31111, name:"请求报文示例",drop:false, drag:false,type:"(请求报文节点)"},
+							{ id:31115, pId:31110, name:"返回格式",drop:false, drag:false,type:"(标题节点)"},
+							{ id:31116, pId:31115, name:"返回说明",drop:false, drag:false,type:"(图文节点)"},
+							{ id:31117, pId:31115, name:"返回数据参数",drop:false, drag:false,type:"(表格节点)"},
+							{ id:31118, pId:31115, name:"返回报文示例",drop:false, drag:false,type:"(返回报文节点)"}
+							];
+		var instructionNode=[{ id:11111, pId:11110, name:"简介",drop:false, drag:false,type:"(简介节点)"},
+								{ id:11112, pId:11111, name:"设计原则",drop:false, drag:false,type:"(图文节点)"},
+								{ id:11113, pId:11111, name:"使用对象",drop:false, drag:false,type:"(图文节点)"},
+								{ id:11114, pId:11111, name:"参考文档",drop:false, drag:false,type:"(文本节点)"}]
+		
+			function addDiyDom(treeId, treeNode) {
+			var aObj = $("#" + treeNode.tId + IDMark_A);
+			var type=treeNode.type;
+			var editStr = "";
+			if(treeNode.type != "(功能节点)" && (treeNode.drop != false || treeNode.drag != false)){
+				editStr = editStr + "<a class='ico16' href='javascript:moveUpNode(" +
+							treeNode.id+")' ></a><a class='ico15' href='javascript:moveDowmNode(" +
+							treeNode.id+")' title='右移'></a>";
+			}
+			editStr = editStr+"<span><font color='red'>"+type+"</font></span>";
+			aObj.after(editStr);
+		}
+		
+		function moveUpNode(id){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var node = zTree.getNodeByParam("id", id, null);
+			var parentNode = node.getParentNode();
+			if(parentNode==null || parentNode.id == -1){
+				ldDialog.alert("不能移出简介节点外!");	
+			}else{
+				zTree.moveNode(parentNode,node,"next",false);
+			}
+			zTree.updateNode(node);
+		}
+		
+		function moveDowmNode(id){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var node = zTree.getNodeByParam("id", id, null);
+			var preNode = node.getPreNode();
+			if(preNode==null){
+				ldDialog.alert("该节点为第子一个节点，不可以降级!");	
+			}else{
+				zTree.moveNode(preNode,node,"inner",false);
+			}
+			zTree.updateNode(node);
+		}
+		
+		var curDragNodes;
+		function beforeDrag(treeId, treeNodes) {
+			for (var i=0,l=treeNodes.length; i<l; i++) {
+				if (treeNodes[i].drag === false) {
+					curDragNodes = null;
+					return false;
+				} else if (treeNodes[i].parentTId && treeNodes[i].getParentNode().childDrag === false) {
+					curDragNodes = null;
+					return false;
+				}
+			}
+			curDragNodes = treeNodes;
+			return true;
+		}
+		function dropPrev(treeId, nodes, targetNode) {
+			var pNode = targetNode.getParentNode();
+			if (pNode && pNode.dropInner === false) {
+				return false;
+			} else {
+				for (var i=0,l=curDragNodes.length; i<l; i++) {
+					var curPNode = curDragNodes[i].getParentNode();
+					if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		function dropInner(treeId, nodes, targetNode) {
+			if (targetNode && targetNode.dropInner === false) {
+				return false;
+			} else {
+				for (var i=0,l=curDragNodes.length; i<l; i++) {
+					if (!targetNode && curDragNodes[i].dropRoot === false) {
+						return false;
+					} else if (curDragNodes[i].parentTId && curDragNodes[i].getParentNode() !== targetNode && curDragNodes[i].getParentNode().childOuter === false) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		
+		function dropNext(treeId, nodes, targetNode) {
+			var pNode = targetNode.getParentNode();
+			if (pNode && pNode.dropInner === false) {
+				return false;
+			} else {
+				for (var i=0,l=curDragNodes.length; i<l; i++) {
+					var curPNode = curDragNodes[i].getParentNode();
+					if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		function beforeDrop(treeId, treeNodes, targetNode, moveType) {
+			return targetNode ? targetNode.drop !== false : true;
+		}
+		
+		function showRemoveBtn(treeId, treeNode) {
+			if(treeNode.drop && treeNode.drag){
+				return true;
+			}
+			return false;
+			
+		}
+		function showRenameBtn(treeId, treeNode) {
+			if(treeNode.drop && treeNode.drag){
+				return true;
+			}
+			return false;
+		}
+/* 		function addTreeNodes(arry){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+				nodes = zTree.getSelectedNodes(),
+				treeNode = nodes[0],
+				drop = true; //可拖曳进来
+				drag = true; //可拖曳
+				isParent = true;
+				
+			for(var z=0;z<arry.length;z++){
+				if(z>0){
+				 	var treeNodeId = arry[z].pId;
+					treeNode = zTree.getNodeByParam("id", treeNodeId, null);
+					isParent=false;
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:false, drag:true});
+				}else{
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:false, drag:true});
+				}
+			}
+		} */
+		function addTreeNodes(arry){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+				nodes = zTree.getSelectedNodes(),
+				treeNode = nodes[0],
+				isParent = true;			
+			for(var z=0;z<arry.length;z++){
+				if(z>0){
+				 	var treeNodeId = arry[z].pId;
+					treeNode = zTree.getNodeByParam("id", treeNodeId, null);
+					isParent=false;
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:arry[z].drop, drag:arry[z].drag,type:arry[z].type});
+				}else{
+					treeNode = zTree.getNodeByParam("id", 1, null);
+					zTree.addNodes(treeNode, {id:arry[z].id, pId:arry[z].pid, isParent:isParent, name:arry[z].name, drop:arry[z].drop, drag:arry[z].drag,type:arry[z].type});
+				}
+			}
+		}
+		
+		var newCount = 1;
+		function addNode() {
+			var type=$("#nodeType").val(),
+    			name=$("#curTitie").val();
+    			
+    			if(type == "(简介节点)"){
+    				addTreeNodes(instructionNode);
+    				newCount++;
+    			}else if(type == "(功能节点)"){
+    				addTreeNodes(functionNode);
+    				newCount++;
+    			}else{
+    			addBaseNode(type,name);
+    			newCount++;
+    			}
+			
+		};
+		function addBaseNode(type,name){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+			isParent = false,
+			drop = true, //可拖曳进来
+			drag = true, //可拖曳
+			dropInner = true;
+			nodes = zTree.getSelectedNodes(),
+			treeNode = nodes[0];
+			name = "请输入标题名";
+			/*
+			if((treeNode!=null && (treeNode.type == "(文本节点)" || treeNode.type == "(表格节点)"|| treeNode.type == "(图文节点)"|| treeNode.type == "(请求报文节点)"|| treeNode.type == "(返回报文节点)")) && treeNode.id != 1){
+				ldDialog.alert("基础节点下内不可创建节点，请到节点管理进行操作!");	
+				
+			}else{
+			*/
+			//创建节点	
+				if (treeNode) {
+					treeNode = zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, isParent:isParent, name:name, drop:drop, drag:drag,type:type,open:isParent});
+					var preNode= treeNode[0].getPreNode();
+					if(preNode!=null){
+						while(preNode.isFirstNode == false){
+							preNode = preNode.getPreNode();
+						}
+						zTree.moveNode(preNode, treeNode[0], "prev");
+					}
+				} else {
+					treeNode = {name:name};
+					treeNode = zTree.getNodeByParam("id", -1, null);
+					treeNode = zTree.addNodes(treeNode, {id:(100 + newCount), pId:0, isParent:isParent, name:name, drop:drop, drag:drag,type:type,open:isParent});
+					var preNode= treeNode[0].getPreNode();
+					if(preNode!=null){
+						while(preNode.isFirstNode == false){
+							preNode = preNode.getPreNode();
+						}
+						zTree.moveNode(preNode, treeNode[0], "prev");
+					}
+				}
+				if (treeNode) {
+					zTree.editName(treeNode[0]);
+				}
+		}
+		
+		function dropPrev(treeId, nodes, targetNode) {
+			var pNode = targetNode.getParentNode();
+			if (pNode && pNode.dropInner === false) {
+				return false;
+			} else {
+				for (var i=0,l=curDragNodes.length; i<l; i++) {
+					var curPNode = curDragNodes[i].getParentNode();
+					if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		function dropInner(treeId, nodes, targetNode) {
+			if (targetNode && targetNode.dropInner === false) {
+				return false;
+			} else {
+				for (var i=0,l=curDragNodes.length; i<l; i++) {
+					if (!targetNode && curDragNodes[i].dropRoot === false) {
+						return false;
+					} else if (curDragNodes[i].parentTId && curDragNodes[i].getParentNode() !== targetNode && curDragNodes[i].getParentNode().childOuter === false) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		function dropNext(treeId, nodes, targetNode) {
+			var pNode = targetNode.getParentNode();
+			if (pNode && pNode.dropInner === false) {
+				return false;
+			} else {
+				for (var i=0,l=curDragNodes.length; i<l; i++) {
+					var curPNode = curDragNodes[i].getParentNode();
+					if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		var log, className = "dark", curDragNodes, autoExpandNode;
+		function beforeDrag1(treeId, treeNodes) {
+			className = (className === "dark" ? "":"dark");
+			
+			for (var i=0,l=treeNodes.length; i<l; i++) {
+				if (treeNodes[i].drag === false) {
+					curDragNodes = null;
+					return false;
+				} else if (treeNodes[i].parentTId && treeNodes[i].getParentNode().childDrag === false) {
+					curDragNodes = null;
+					return false;
+				}
+			}
+			curDragNodes = treeNodes;
+			return true;
+		}
+		function beforeDragOpen(treeId, treeNode) {
+			autoExpandNode = treeNode;
+			return true;
+		}
+		function beforeDrop1(treeId, treeNodes, targetNode, moveType, isCopy) {
+			className = (className === "dark" ? "":"dark");
+			
+			return true;
+		}
+		function onDrag(event, treeId, treeNodes) {
+			className = (className === "dark" ? "":"dark");
+			
+		}
+		function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
+			className = (className === "dark" ? "":"dark");
+			
+		}
+		function onExpand(event, treeId, treeNode) {
+			if (treeNode === autoExpandNode) {
+				className = (className === "dark" ? "":"dark");
+				
+			}
+		}
+
+		function setTrigger() {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			zTree.setting.edit.drag.autoExpandTrigger = $("#callbackTrigger").attr("checked");
+		}
+		
+		$(document).ready(function(){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			$("#callbackTrigger").bind("change", {}, setTrigger);
+			
+		});
+		
+		
+		
+		
+		$(document).ready(function(){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			zTree.setting.edit.drag.isCopy = true;
+			zTree.setting.edit.drag.isMove = true;
+			zTree.setting.edit.drag.prev = false;
+			zTree.setting.edit.drag.inner = false;
+			zTree.setting.edit.drag.next = false;
+			zTree.setting.edit.removeTitle = "remove";
+			zTree.setting.edit.renameTitle = "rename";
+		});
+	</script>
+</head>
+<body>
+		<div class="yhlist1">
+			<div class="yhlist1L">您当前位置：编辑节点</div>
+		</div>
+<form id="submitForm" name="submitForm" method="post">
+		<div class="yhbox" style="margin-bottom:50px; ">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="height: 420px">
+				<tr>
+					<td width="280" class="yhbox2" valign="top">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="2" class="treetitle">节点选择</td>
+							</tr>
+							<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+							<tr>
+								<td align="right">内容格式：</td>
+								<td>
+									<select class="ldSelect select144" id="nodeType">
+										<option value="(标题节点)">标题节点</option>
+										<option value="(文本节点)">文本节点</option>
+										<option value="(图文节点)">图文节点</option>
+										<option value="(表格节点)">表格节点</option>
+										<option value="(请求报文节点)">请求报文节点</option>
+										<option value="(返回报文节点)">返回报文节点</option>
+									</select>
+								</td>
+							</tr>
+							<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+							
+							<tr>
+								<td>&nbsp;</td>
+								<td>
+									<input type="button" class="ldBtnGreen" value="创建节点" onclick="addNode();" />
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td valign="top" class="yhbox3">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="treetitle" id="userName">节点内容：</td>
+							</tr>
+							<tr><td align="center"><br/>
+								<ul id="treeDemo" class="ztree"></ul>
+							 </td></tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="dialogBottom">
+		<div class="btns">
+			<ld:check mark="roleUpdateRightCommit">
+				<input type="button" value="创建" class="ldBtnGreen"
+					onclick="saveTemplate();" />
+			</ld:check>
+			&nbsp;
+			<input type="button" value="关 闭" class="ldBtnGray"
+				onclick="ldDialog.close();" />
+		</div>
+	</div>
+	</form>
+	
+</body>
+</html>
+

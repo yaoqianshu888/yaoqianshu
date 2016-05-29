@@ -1,0 +1,124 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+	
+	
+	function showDocument(id) {
+		ldDialog.openFullScreen(
+						"${basePath}dms/documentView!viewDocument.action", "文档查看", function(window) {
+		});
+	}
+	
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">文档名称：</div>
+										<div class="conditionsitemR">
+											<input name="document.name" class="ldText input138" id="document.name" value="${document.name}" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属项目：</div>
+										<div class="conditionsitemR">
+											<select name="document.project.name" id="document.project.name" class="ldSelect select144" style="width:144px">
+													<option>银销通</option>
+													<option>其他项目</option>
+												</select>
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">创建人：</div>
+										<div class="conditionsitemR">
+											<input name="document.creator" class="ldText input138" id="document.creator" value="${document.creator}" />
+										</div>
+									</div>
+									</div>
+									<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">创建时间：</div>
+										<div class="conditionsitemR">
+											<input name="startDate" type="text" id="startDate"
+												class="ldDateTime input138"
+												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+												value="<f:formatDate value="${startDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+										</div>
+									</div>
+								
+									<div class="conditionsitem">
+										<div class="conditionsitemL">至</div>
+										<div class="conditionsitemR">
+											<input name="endDate" type="text" id="endDate"
+												class="ldDateTime input138"
+												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+												value="<f:formatDate value="${endDate}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+										</div>
+								</div>
+							</div>	
+								
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarR">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input id="searchBtn" type="button" class="ldBtnBlue" value="查询"/></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+						<th>序号</th>
+						<th>文档名称</th>
+						<th>所属项目</th>
+						<th>创建人</th>
+						<th>创建时间</th>
+						<th>操作</th>
+					</tr>
+					<tr>
+						<td>1</td>
+						<td>银销通接口说明</td>
+						<td>银销通</td>
+						<td>admin</td>
+						<td>2015-08-13 12:54:04</td>
+						<td><a href="${basePath}dms/documentView!viewDocument.action" target="_blank"><input type="button" value="查看" class="ldBtnLink" onclick=""></a></td>
+					</tr>
+				</table>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								<ld:pager type="form" action="pagerForm" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

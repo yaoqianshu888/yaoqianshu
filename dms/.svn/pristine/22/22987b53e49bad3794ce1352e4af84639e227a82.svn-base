@@ -1,0 +1,71 @@
+package com.landicorp.dms.action.project;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IProjectDocService;
+
+public class DmsProjectInsertAction extends BaseActionSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private ProjectDoc projectDoc;
+	private IProjectDocService projectDocService;
+	
+	public IProjectDocService getProjectDocService() {
+		return projectDocService;
+	}
+
+	public void setProjectDocService(IProjectDocService projectDocService) {
+		this.projectDocService = projectDocService;
+	}
+	//跳转新增
+	public String prepare() {
+		projectDoc=new ProjectDoc();
+		projectDoc.setNo(projectDocService.getMaxNo()+1);
+		return INPUT;
+	}
+	
+	//新增项目
+	public void insertProject() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		String reason="";
+		int code=0;
+		String returnValue="";
+		try {
+			projectDoc.setAvailable(1);
+			projectDoc.setCreator(getSessionUser());
+			projectDoc.setCreateTime(new Date());
+			projectDocService.add(projectDoc);
+			returnValue="新增成功";
+			code=1;
+			setWindowReturnValue(returnValue);
+		} catch (Exception e) {
+			reason="新增失败";
+		}
+		
+		
+		response.getWriter().write("[{\"code\":\""+code+"\",\"reason\":\""+reason+"\",\"returnValue\":\""+returnValue+"\"}]");
+	}
+
+	
+	public ProjectDoc getProjectDoc() {
+		return projectDoc;
+	}
+
+	public void setProjectDoc(ProjectDoc projectDoc) {
+		this.projectDoc = projectDoc;
+	}
+	
+	
+
+}

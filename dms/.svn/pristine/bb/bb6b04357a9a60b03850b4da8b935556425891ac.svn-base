@@ -1,0 +1,66 @@
+package com.landicorp.dms.action.project;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.core.entities.Project;
+import com.landicorp.dms.entities.ProjectDoc;
+import com.landicorp.dms.service.IProjectDocService;
+
+public class DmsProjectUpdateAction extends BaseActionSupport
+{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private ProjectDoc projectDoc;
+	private IProjectDocService projectDocService;
+	
+	public ProjectDoc getProjectDoc() {
+		return projectDoc;
+	}
+	public void setProjectDoc(ProjectDoc projectDoc) {
+		this.projectDoc = projectDoc;
+	}
+	public IProjectDocService getProjectDocService() {
+		return projectDocService;
+	}
+	public void setProjectDocService(IProjectDocService projectDocService) {
+		this.projectDocService = projectDocService;
+	}
+	public String prepare()
+	{
+		projectDoc=projectDocService.getById(projectDoc.getId());
+		return INPUT;
+	}
+	//修改项目信息
+	public void updateProject() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		String reason="";
+		int code=0;
+		String returnValue="";
+		try {
+			ProjectDoc insertPrDoc=projectDocService.getById(projectDoc.getId());
+			insertPrDoc.setProjectName(projectDoc.getProjectName());
+			insertPrDoc.setMemo(projectDoc.getMemo());
+			insertPrDoc.setLastModifier(getSessionUser());
+			insertPrDoc.setLastModifyTime(new Date());
+			projectDocService.update(insertPrDoc);
+			returnValue="修改成功";
+			code=1;
+			//setWindowReturnValue(returnValue);
+		} catch (Exception e) {
+			reason="修改失败";
+		}
+		
+		
+		response.getWriter().write("[{\"code\":\""+code+"\",\"reason\":\""+reason+"\",\"returnValue\":\""+returnValue+"\"}]");
+	}
+}

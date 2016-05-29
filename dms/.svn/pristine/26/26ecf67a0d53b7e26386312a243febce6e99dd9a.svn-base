@@ -1,0 +1,10 @@
+package com.landicorp.dms.action.functionVersion;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class FunctionVersionCompareAction extends BaseActionSupport {
+
+	public String compareFuncionVersion(){
+		return "compare";
+	}
+}

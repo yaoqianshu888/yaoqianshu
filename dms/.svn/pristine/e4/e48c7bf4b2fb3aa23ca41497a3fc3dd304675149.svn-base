@@ -1,0 +1,328 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+
+	function checkItem(id) {
+		ldDialog.openLarge("${basePath}dms/functionCheck!prepare.action?function.id="+id
+				, "审核功能点", function(window) {
+				var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.tips("处理成功！");
+						document.pagerForm.submit();
+						return true;
+					}
+		});
+	}
+	
+	function showVersion(id,moduleId,documentId){
+		ldDialog.openLarge("${basePath}dms/functionVersionSearch!searchFunctionVersion.action?function.id="+id+"&module.id="+moduleId+"&document.id="+documentId,
+			"功能点版本", 
+			function(window) {
+				var returnValue = window.returnValue;
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					return true;
+				} else {//有返回值 处理一些事
+					ldDialog.tips("处理成功！");
+					loadData(1);
+					return true;
+				}
+		});
+	}
+	
+</script>
+<style type="text/css">
+	select:hover{cursor:pointer}
+</style>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post" action="${basePath}dms/functionCheckSearch!searchFunctionExamineByInfo.action">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属项目：</div>
+										<div class="conditionsitemR">
+											<select onchange="projectChange(this)" style="height:28px;color:#444" class="select144" name="project.id" id="project.id">
+												<option value="">全部</option>
+											</select>
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属文档：</div>
+										<div class="conditionsitemR">
+											<select class="select144" onchange="documentChange(this)" style="height:28px;color:#444" name="document.id" id="document.id">
+												<option value="">全部</option>
+											</select>
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属模块：</div>
+										<div class="conditionsitemR">
+											<select class=" select144" style="height:28px;color:#444" name="module.id" id="module.id">
+												<option value="">全部</option>
+											</select>
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">功能点名称：</div>
+										<div class="conditionsitemR">
+											<input name="function.functionName" class="ldText input138" id="function.functionName" value="${function.functionName}" />
+										</div>
+									</div>
+								</div>
+								<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">创建人：</div>
+										<div class="conditionsitemR">
+											<input name="function.creator.userName" class="ldText input138" id="function.creator.userName" value="${function.creator.userName}" />
+										</div>
+									</div>
+								</div>
+								<div class="conditionsitem">
+				                  <div class="conditionsitemL">创建时间（起）：</div>
+				                  <div class="conditionsitemR">
+				                    <input name="startCreateTime" type="text" id="startDate"
+				                           class="ldDateTime input138"
+				                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+				                           value="<f:formatDate value="${startCreateTime}"
+																		pattern="yyyy-MM-dd HH:mm:ss" />" />
+				                  </div>
+				                </div>
+				                <div class="conditionsitem">
+				                  <div class="conditionsitemL">创建时间（止）：</div>
+				                  <div class="conditionsitemR">
+				                    <input name="endCreateTime" type="text" id="endDate"
+				                           class="ldDateTime input138"
+				                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+				                           value="<f:formatDate value="${endCreateTime}"
+																		pattern="yyyy-MM-dd HH:mm:ss" />" />
+				                  </div>
+								</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarR">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input id="searchBtn" type="submit" class="ldBtnBlue" value="查询"/></td>
+									<input type="hidden" value="0" name="pager.curPageNum" />
+								</tr>
+							</table>
+						</div -->
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+			<form method="post" name="backDocumentForm" id="backDocumentForm">
+				</form>
+				<form method="post" name="backModuleForm" id="backModuleForm">
+				</form>
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+        				<th>序号</th>
+        				<th>功能点名称</th>
+        				<th>所属项目</th>
+        				<th>所属文档</th>
+       					<th>所属模块</th>
+       					<th>创建人</th>
+       					<th>创建时间</th>
+        				<th>操作</th>
+					</tr>
+					<c:forEach items="${functionList}" var="item" varStatus="status">
+						<tr>
+							<td>${status.count}</td>
+							<td>${item.functionName}</td>
+							<td>${item.document.project.projectName}</td>
+							<td>${item.document.documentName}</td>
+							<td>${item.module.moduleName}</td>
+							<td>${item.creator.userName}</td>
+							<td><f:formatDate value="${item.createTime}"
+										pattern="yyyy-MM-dd" /></td>
+							<td>
+				                 <input type='button' value='审核' class='ldBtnLink' onclick="checkItem(${item.id});" />
+				                 <ld:check mark="documentVersion">
+									<input type="button" value="历史版本" class="ldBtnLink" onclick="showVersion(${item.id},${item.module.id},${item.document.id});" />&nbsp;
+								 </ld:check>
+				            </td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								<form action="${basePath}dms/functionCheckSearch!searchFunctionExamineByInfo.action" method="post" name="pagerForm">
+								<input name="project.id" type="hidden" value="${project.id}" /> 
+								<input name="document.id" type="hidden" id="document.id" value="${document.id}" /> 
+								<input name="startCreateTime" type="hidden" id="startCreateTime" value="${startCreateTime}" />
+								<input name="endCreateTime" type="hidden" id="endCreateTime" value="${endCreateTime}" />
+								<input name="module.id" type="hidden" value="${module.id}" />
+								<input name="function.functionName" type="hidden" value="${function.functionName}" />
+								<input name="function.creator.userName" type="hidden" value="${function.creator.userName}" />
+								<ld:pager type="form" action="pagerForm" />
+								</form>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+    //得到所有项目  
+	$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/dmsProjectSearch!getAllProjectDoc.action",
+	        dataType:"json",
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+					for(var i=0;i<msg.length;i++){
+						var str="<option value="+msg[i].id+">"+msg[i].projectName+"</option>";
+						
+						$("#project\\.id").append(str);
+					} 
+					
+					if("${project.id}"==""){
+						$("select").get(0).selectedIndex =0;
+					}else{
+						$("#project\\.id").find("option[value="+"${project.id}"+"]").attr("selected", true);
+						
+					}        
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取项目名称出错");
+	           }
+	        });
+	    $("#document\\.id").html(""); 
+	    $("#module\\.id").html("");   
+	 $.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/documentSearch!getAllDocument.action?projectDoc.id="+"${project.id}",
+	        dataType:"json",
+	        success:function(msg)
+	            {
+	            	$("#document\\.id").append("<option value=''>全部</option>");
+					for(var i=0;i<msg.length;i++){
+						var str="<option value="+msg[i].id+">"+msg[i].documentName+"</option>";
+						
+						$("#document\\.id").append(str);
+					} 
+					
+					if("${document.id}"==""){
+						$("select").get(0).selectedIndex =0;
+					}else{
+						$("#document\\.id").find("option[value="+"${document.id}"+"]").attr("selected", true);
+						
+					} 
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取文档出错");
+	           }
+	        });
+	        
+	    $.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/moduleSearch!getAllModule.action?document.id="+"${document.id}",
+	        dataType:"json",
+	        success:function(msg)
+	            {
+	            	$("#module\\.id").append("<option value=''>全部</option>");
+					for(var i=0;i<msg.length;i++){
+						var str="<option value="+msg[i].id+">"+msg[i].moduleName+"</option>";
+						
+						$("#module\\.id").append(str);
+					} 
+					
+					if("${module.id}"==""){
+						$("select").get(0).selectedIndex =0;
+					}else{
+						$("#module\\.id").find("option[value="+"${module.id}"+"]").attr("selected", true);
+						
+					} 
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取模块出错");
+	           }
+	        });
+	        
+	   function projectChange(target){
+	  	 $("#document\\.id").html("");
+	  	 $("#module\\.id").html("<option value=''>全部</option>");
+	   		$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/documentSearch!getAllDocument.action?projectDoc.id="+target.value,
+	        dataType:"json",
+	        success:function(msg)
+	            {
+	            	$("#document\\.id").append("<option value=''>全部</option>");
+					for(var i=0;i<msg.length;i++){
+						var str="<option value="+msg[i].id+">"+msg[i].documentName+"</option>";
+						
+						$("#document\\.id").append(str);
+					} 
+					ldDialog.unmask();
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取文档出错");
+	           }
+	        });
+	   }
+	   
+	  function documentChange(target){
+	  	 $("#module\\.id").html("");
+	   		$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/moduleSearch!getAllModule.action?document.id="+target.value,
+	        dataType:"json",
+	        success:function(msg)
+	            {
+	            	$("#module\\.id").append("<option value=''>全部</option>");
+					for(var i=0;i<msg.length;i++){
+						var str="<option value="+msg[i].id+">"+msg[i].moduleName+"</option>";
+						
+						$("#module\\.id").append(str);
+					} 
+					ldDialog.unmask();
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取模块出错");
+	           }
+	        });
+	  
+	  }
+	   
+</script>

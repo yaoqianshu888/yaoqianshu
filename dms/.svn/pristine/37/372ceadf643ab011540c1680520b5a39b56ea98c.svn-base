@@ -1,0 +1,168 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ request.getContextPath() + "/";
+	pageContext.setAttribute("basePath", basePath);
+%>
+<html>
+<head>
+<title>dms</title>
+<base href="<%=basePath%>" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link href="${basePath}core/css/index.css" rel="stylesheet" type="text/css" />
+<link href="${basePath}core/plugins/artDialog/skins/blue.css"
+	rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${basePath}core/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="${basePath}core/plugins/artDialog/artDialog.source.js"></script>
+<script type="text/javascript"
+	src="${basePath}core/plugins/artDialog/plugins/iframeTools.source.js"></script>
+<script type="text/javascript"
+	src="${basePath}core/plugins/layer/layer.min.js"></script>
+<script type="text/javascript" src="${basePath}core/js/index.js"></script>
+<script type="text/javascript" src="${basePath}core/js/ui.js"></script>
+
+<link href="${basePath}dms/css/my.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+	function logout() {
+		top.location.href = "${basePath}core/userLogin!logout.action?actionName=userLogin&nameSpace=/core&method=logoutControl";
+	}
+	function changePassword() {
+		ldDialog.open("${basePath}core/userUpdatePassword!prepare.action",
+				"修改密码", function(window) {
+				}, 300, 300);
+	}
+</script>
+<script type="text/javascript">
+$(function(){
+    $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+    $('.tree li.parent_li > span > i').on('click', function (e) {
+        var children = $(this).parent().parent('li.parent_li').find(' > ul > li');
+        if (children.is(":visible")) {
+            children.hide('fast');
+            $(this).addClass('icon-plus-sign').removeClass('icon-minus-sign');
+        } else {
+            children.show('fast');
+            $(this).addClass('icon-minus-sign').removeClass('icon-plus-sign');
+        }
+        e.stopPropagation();
+    });
+});
+function anchor(name){
+	document.getElementById("if_welcome").contentWindow.anchor(name);
+}
+
+</script>
+</head>
+<body style="overflow: hidden;">
+	<table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
+		<!-- 头部开始 -->
+		<tr style="height: 70px;">
+			<td>
+				<div>
+					<div class="headerbg">
+						<div class="header-l">
+							<div class="headerfun">
+								<span class="userinfo">${sessionUser.userName} </span>
+								|
+								<span class="loginout">
+									<a href="javascript:void(0);" onclick="changePassword();">修改密码</a>
+								</span>
+								|
+								<span class="loginout">
+									<a href="javascript:void(0);" onclick="logout();">退出</a>
+								</span>
+							</div>
+						</div>
+						<div class="header-r"></div>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<!-- 导航开始 -->
+		<tr style="height: 33px;">
+			<td>
+				<div class="nav">
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="loadingmark"></div>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0 " height="100%">
+					<tr>
+						<td valign="top" id="menuTd" style="width: 220px;">
+							<div class="tree" id="aaa" style="height:500px;width:240px;overflow:auto">
+							</div>
+						</td>
+						<td width="7" valign="middle" class="middlebut">
+							<div class="middlebutbg_l"></div>
+						</td>
+						<td valign="top" id="contentTd">
+							<iframe id="if_welcome" class="contentFrame tabIframe"
+								width="100%" height="100%"
+								src="${basePath}dms/documentContent!getContent.action?document.id=${document.id}" frameborder="0"></iframe>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<!-- 底部开始 -->
+		<tr style="height: 30px;">
+			<td>
+				<div id="footer" class="footer">
+					<div class="footertxt">版权所有联迪商用设备有限公司</div>
+				</div>
+			</td>
+		</tr>
+		<!-- 底部结束 -->
+	</table>
+</body>
+
+<script type="text/javascript">
+function treefor(mid,obj){
+	var a = '<ul>';
+	for(var i=0,j;j=obj[i++];){
+		if(j.pId==mid){
+			a += "<li style='parent_li'>"+"<span ><i class='icon-minus-sign' onclick='change(this)'></i> <a href='javascript:void(0)' onclick='anchor(\""+j.no+"\")'>"+j.no+j.name+"</a></span>"
+			+'</li>'+treefor(j.id,obj);
+		}
+	}
+	a+='</ul>';
+	return a;
+}
+
+function change(target){
+	var children =$(target).parent().parent('li').next();
+	if($(target).parent().parent('li').next().children().length!=0){
+		if (children.is(":visible")) {
+        children.hide('fast');
+        $(target).addClass('icon-plus-sign').removeClass('icon-minus-sign');
+    } else {
+        children.show('fast');
+        $(target).addClass('icon-minus-sign').removeClass('icon-plus-sign');
+    }
+	}
+    
+}
+
+	$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/documentMenu!getMenus.action?document.id="+${document.id},
+	        dataType:"json",
+	        success:function(msg)
+	            {
+					var result=treefor("-1",msg);  
+					
+					$("#aaa").append(result);
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取目录列表出错");
+	           }
+	        });
+</script>
+</html>

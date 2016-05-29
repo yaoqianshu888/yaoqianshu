@@ -1,0 +1,72 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IDmsPhotoDao;
+import com.landicorp.dms.entities.DmsPhoto;
+import com.landicorp.dms.service.IDmsPhotoService;
+
+public class DmsPhotoServiceImpl extends
+		AbstractBaseServiceImpl<DmsPhoto, Integer> implements IDmsPhotoService {
+
+	private IDmsPhotoDao dmsPhotoDao;
+	
+	public IDmsPhotoDao getDmsPhotoDao() {
+		return dmsPhotoDao;
+	}
+
+	public void setDmsPhotoDao(IDmsPhotoDao dmsPhotoDao) {
+		this.dmsPhotoDao = dmsPhotoDao;
+	}
+
+	@Override
+	public int add(DmsPhoto arg0) {
+		return dmsPhotoDao.save(arg0);
+	}
+
+	
+
+	@Override
+	public void delete(Integer[] arg0) {
+		dmsPhotoDao.delete(arg0);
+	}
+
+	
+
+	@Override
+	public DmsPhoto getById(Integer arg0) {
+		return dmsPhotoDao.getById(arg0);
+	}
+
+	
+
+	@Override
+	public int update(DmsPhoto arg0) {
+		return dmsPhotoDao.update(arg0);
+	}
+
+	@Override
+	public IMyBatisDao<DmsPhoto, Integer> getMyBatisDao() {
+		return dmsPhotoDao;
+	}
+
+	@Override
+	public List<DmsPhoto> getAllByDocumentId(Integer id) {
+		return dmsPhotoDao.getAllByDocumentId(id);
+	}
+
+	@Override
+	public List<DmsPhoto> getAllByNoDocument() {
+		return dmsPhotoDao.getAllByNoDocument();
+	}
+
+	@Override
+	public void updatePhoto(Integer id) {
+		dmsPhotoDao.updatePhoto(id);
+	}
+
+}

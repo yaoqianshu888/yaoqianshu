@@ -1,0 +1,76 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.IModuleFunctionDao;
+import com.landicorp.dms.entities.ModuleFunction;
+import com.landicorp.dms.service.IModuleFunctionService;
+
+public class ModuleFunctionServiceImpl extends
+		AbstractBaseServiceImpl<ModuleFunction, Integer> implements
+		IModuleFunctionService {
+	private IModuleFunctionDao moduleFunctionDao;
+	
+
+	public IModuleFunctionDao getModuleFunctionDao() {
+		return moduleFunctionDao;
+	}
+
+	public void setModuleFunctionDao(IModuleFunctionDao moduleFunctionDao) {
+		this.moduleFunctionDao = moduleFunctionDao;
+	}
+
+	@Override
+	public int add(ModuleFunction arg0) {
+		return moduleFunctionDao.save(arg0);
+	}
+
+
+	
+	@Override
+	public ModuleFunction getById(Integer arg0) {
+		return moduleFunctionDao.getById(arg0);
+	}
+
+	
+
+	@Override
+	public int update(ModuleFunction arg0) {
+		return moduleFunctionDao.update(arg0);
+	}
+
+	@Override
+	public List<ModuleFunction> getByModuleId(Pager pager,Integer id,Integer documentId) {
+		if(pager!=null){
+			pager.setTotalCount(moduleFunctionDao.getByModuleIdCount(id,documentId));
+		}
+		return moduleFunctionDao.getByModuleId(pager,id,documentId);
+	}
+
+	@Override
+	public IMyBatisDao<ModuleFunction, Integer> getMyBatisDao() {
+		return moduleFunctionDao;
+	}
+
+	@Override
+	public List<ModuleFunction> getAllByModuleId(Integer id,Integer documentId) {
+		return moduleFunctionDao.getAllByModuleId(id,documentId);
+	}
+
+	@Override
+	public List<ModuleFunction> getAllByDocumentIdAndModuleId(Integer moduleId,
+			Integer documentId) {
+		return moduleFunctionDao.getAllByDocumentIdAndModuleId(moduleId, documentId);
+	}
+
+	@Override
+	public void deleteByFunctionAndDocument(Integer functionId,
+			Integer documentId) {
+		moduleFunctionDao.deleteByFunctionAndDocument(functionId, documentId);
+	}
+
+}

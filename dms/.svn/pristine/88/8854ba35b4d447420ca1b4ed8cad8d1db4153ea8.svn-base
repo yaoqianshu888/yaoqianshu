@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="dms" extends="myDefault" namespace="/dms">
+
+		<!-- 文档权限管理-->
+		<action name="userDocRightSearch" class="userDocRightSearchAction">
+			<result name="success">/WEB-INF/dms/docUser/userDocRightSearch.jsp</result>
+		</action>
+		<action name="docDocRightSearch" class="docDocRightSearchAction">
+			<result name="success">/WEB-INF/dms/docUser/docDocRightSearch.jsp</result>
+		</action>
+		<action name="documentTree" class="documentTreeAction">
+			<result name="success">/WEB-INF/dms/docUser/documentTree.jsp</result>
+		</action>
+		<action name="docUserSearch" class="docUserSearchAction">
+			<result name="success">/WEB-INF/dms/docUser/docUserSearch.jsp</result>
+		</action>
+		<action name="userDocRightEditConf" class="userDocRightEditConfAction">
+			<result name="success">/WEB-INF/dms/docUser/userDocRightEditConf.jsp</result>
+		</action>
+		<action name="userDocRightReadConf" class="userDocRightReadConfAction">
+			<result name="success">/WEB-INF/dms/docUser/userDocRightReadConf.jsp</result>
+		</action>
+
+		<!--功能点管理 -->
+		<action name="functionSearch" class="functionSearchAction">
+			<result name="input">/WEB-INF/dms/function/functionSearch.jsp</result>
+		</action>
+		<action name="functionInsert" class="functionInsertAction">
+			<result name="input">/WEB-INF/dms/function/functionInsert.jsp</result>
+			<result name="success">/WEB-INF/dms/function/photoList.jsp</result>
+		</action>
+		<action name="functionUpdate" class="functionUpdateAction">
+			<result name="input">/WEB-INF/dms/function/functionUpdate.jsp</result>
+			<result name="success">/WEB-INF/dms/function/requestTest.jsp</result>
+		</action>
+		<action name="functionDetail" class="functionDetailAction">
+			<result name="detail">/WEB-INF/dms/function/functionDetail.jsp</result>
+		</action>
+		<action name="functionCheckSearch" class="functionCheckSearchAction">
+			<result name="success">/WEB-INF/dms/function/functionCheckSearch.jsp</result>
+		</action>
+		<action name="functionCheck" class="functionCheckAction">
+			<result name="input">/WEB-INF/dms/function/functionCheck.jsp</result>
+		</action>
+		
+		<!--草稿管理 -->
+		<action name="draftSearch" class="draftSearchAction">
+			<result name="input">/WEB-INF/dms/draft/draftSearch.jsp</result>
+		</action>
+		<action name="draftInsert" class="draftInsertAction">
+			<result name="input">/WEB-INF/dms/draft/draftInsert.jsp</result>
+		</action>
+		<action name="draftUpdate" class="draftUpdateAction">
+			<result name="input">/WEB-INF/dms/draft/draftUpdate.jsp</result>
+		</action>
+
+		<!--文档管理 -->
+		<action name="documentViewSearch" class="documentViewSearchAction">
+			<result name="document">/WEB-INF/dms/document/documentViewSearch.jsp</result>
+		</action>
+		<action name="documentView" class="documentViewAction">
+			<result name="view">/WEB-INF/dms/document/documentView.jsp</result>
+		</action>
+		<action name="documentMenu" class="documentMenuAction">
+			<result name="menu">/WEB-INF/dms/document/documentMenu.jsp</result>
+		</action>
+		<action name="documentContent" class="documentContentAction">
+			<result name="content">/WEB-INF/dms/document/documentContent.jsp</result>
+		</action>
+		<action name="documentSearch" class="documentSearchAction">
+			<result name="detail">/WEB-INF/dms/document/documentDetail.jsp</result>
+			<result name="success">/WEB-INF/dms/document/documentSearch.jsp</result>
+		</action>
+		<action name="documentUpdate" class="documentUpdateAction">
+			<result name="input">/WEB-INF/dms/document/documentUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+			<result name="documentSearch" type="chain">
+				<param name="actionName">documentSearch</param>
+				<param name="method">searchDocument</param>
+				<param name="pager.curPageNum">${pager.curPageNum}</param>
+			</result>
+		</action>
+		<action name="documentInsert" class="documentInsertAction">
+			<result name="input">/WEB-INF/dms/document/documentInsert.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="documentUpload" class="documentUploadAction">
+			<result name="input">/WEB-INF/dms/document/documentUpload.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="documentBaseUpdate" class="documentBaseUpdateAction">
+			<result name="input">/WEB-INF/dms/document/documentBaseUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+			<result name="documentSearch" type="chain">
+				<param name="actionName">documentSearch</param>
+				<param name="method">searchDocument</param>
+				<param name="pager.curPageNum">${pager.curPageNum}</param>
+			</result>
+		</action>
+		
+
+		<!--功能点版本管理 -->
+		<action name="functionVersionSearch" class="functionVersionSearchAction">
+			<result name="version">/WEB-INF/dms/functionVersion/functionVersionSearch.jsp</result>
+		</action>
+		<action name="functionVersionDetail" class="functionVersionDetailAction">
+			<result name="detail">/WEB-INF/dms/functionVersion/functionVersionDetail.jsp</result>
+		</action>
+		<action name="functionVersionCompare" class="functionVersionCompareAction">
+			<result name="compare">/WEB-INF/dms/functionVersion/functionVersionCompare.jsp</result>
+		</action>
+
+		<!--文档版本管理 -->
+		<action name="documentVersionSearch" class="documentVersionSearchAction">
+			<result name="version">/WEB-INF/dms/documentVersion/documentVersionSearch.jsp</result>
+		</action>
+		<action name="documentVersionView" class="documentVersionViewAction">
+			<result name="view">/WEB-INF/dms/documentVersion/documentVersionView.jsp</result>
+		</action>
+		<action name="documentVersionMenu" class="documentVersionMenuAction">
+			<result name="menu">/WEB-INF/dms/documentVersion/documentVersionMenu.jsp</result>
+		</action>
+		<action name="documentVersionContent" class="documentVersionContentAction">
+			<result name="content">/WEB-INF/dms/documentVersion/documentVersionContent.jsp</result>
+		</action>
+		<action name="documentVersionDetail" class="documentVersionDetailAction">
+			<result name="detail">/WEB-INF/dms/documentVersion/documentVersionDetail.jsp</result>
+		</action>
+
+		<!--图片管理 -->
+		<action name="pictureSearch" class="pictureSearchAction">
+			<result name="picture">/WEB-INF/dms/picture/pictureSearch.jsp</result>
+		</action>
+		<action name="pictureDetail" class="pictureDetailAction">
+			<result name="detail">/WEB-INF/dms/picture/pictureDetail.jsp</result>
+		</action>
+		<action name="pictureUpload" class="pictureUploadAction">
+			<result name="upload">/WEB-INF/dms/picture/pictureUpload.jsp</result>
+		</action>
+
+		<!-- 项目管理 -->
+		<action name="dmsProjectSearch" class="dmsProjectSearchAction">
+			<result name="detail">/WEB-INF/dms/project/projectDetail.jsp</result>
+			<result name="success">/WEB-INF/dms/project/projectSearch.jsp</result>
+		</action>
+		<action name="dmsProjectUpdate" class="dmsProjectUpdateAction">
+			<result name="input">/WEB-INF/dms/project/projectUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+			<result name="projectSearch" type="chain">
+				<param name="actionName">dmsProjectSearch</param>
+				<param name="method">searchProject</param>
+				<param name="pager.curPageNum">${pager.curPageNum}</param>
+			</result>
+		</action>
+		<action name="dmsProjectInsert" class="dmsProjectInsertAction">
+			<result name="input">/WEB-INF/dms/project/projectInsert.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<!--
+		<action name="dmsProjectDelete" class="dmsProjectDeleteAction">
+			<result type="chain">
+				<param name="actionName">dmsProjectSearch</param>
+				<param name="method">searchProject</param>
+				<param name="error">${error}</param>
+				<param name="operateSuccess">${operateSuccess}</param>
+				<param name="pager.curPageNum">${pager.curPageNum}</param>
+			</result>
+		</action>
+		 -->
+
+		<!-- 模板管理 -->
+		<action name="templateSearch" class="templateSearchAction">
+			<result name="success">/WEB-INF/dms/template/templateSearch.jsp</result>
+			<result name="detail">/WEB-INF/dms/template/templateDetail.jsp</result>
+		</action>
+		<action name="templateInsert" class="templateInsertAction">
+			<result name="input">/WEB-INF/dms/template/templateInsert.jsp</result>
+			<result name="success">/WEB-INF/dms/template/functionTemplateInsert.jsp</result>
+		</action>
+		<action name="templateDetail" class="templateDetailAction">
+			<result name="detail">/WEB-INF/dms/template/templateDetail.jsp</result>
+		</action>
+		<action name="templateUpdate" class="templateUpdateAction">
+			<result name="input">/WEB-INF/dms/template/templateUpdate.jsp</result>
+		</action>
+		<action name="documentTemplateInsert" class="documentTemplateInsertAction">
+			<result name="input">/WEB-INF/dms/template/documentTemplateInsert.jsp</result>
+			<result name="success">/WEB-INF/dms/template/functionTemplateInsert.jsp</result>
+		</action>
+		
+		<!-- 模块管理 -->
+		<action name="moduleSearch" class="moduleSearchAction">
+			<result name="detail">/WEB-INF/dms/module/moduleDetail.jsp</result>
+			<result name="success">/WEB-INF/dms/module/moduleSearch.jsp</result>
+		</action>
+		<action name="moduleUpdate" class="moduleUpdateAction">
+			<result name="input">/WEB-INF/dms/module/moduleUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+			<result name="projectSearch" type="chain">
+				<param name="actionName">moduleSearch</param>
+				<param name="method">searchModel</param>
+				<param name="pager.curPageNum">${pager.curPageNum}</param>
+			</result>
+		</action>
+		<action name="moduleInsert" class="moduleInsertAction">
+			<result name="input">/WEB-INF/dms/module/moduleInsert.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+
+		<!-- 草稿管理-->
+		<action name="draftDetail" class="draftDetailAction">
+			<result name="detail">/WEB-INF/dms/draft/draftDetail.jsp</result>
+		</action>
+		<!-- 操作记录 -->
+		<action name="operatorLogSearch" class="operatorLogSearchAction">
+			<result name="success">/WEB-INF/dms/operatorlog/operatorLogSearch.jsp</result>
+			<result name="detail">/WEB-INF/dms/operatorlog/operatorLogDetail.jsp</result>
+		</action>
+		
+		<!-- 节点管理 -->
+		<action name="nodeSearch" class="nodeSearchAction">
+			<result name="node">/WEB-INF/dms/node/nodeSearch.jsp</result>
+		</action>
+		<action name="nodeDetail" class="nodeDetailAction">
+			<result name="detail">/WEB-INF/dms/node/nodeDetail.jsp</result>
+		</action>
+		<action name="nodeUpdate" class="nodeUpdateAction">
+			<result name="success">/WEB-INF/dms/node/nodeUpdate.jsp</result>
+		</action>
+		<action name="nodeInsert" class="nodeInsertAction">
+			<result name="success">/WEB-INF/dms/node/nodeInsert.jsp</result>
+			<result name="input">/WEB-INF/dms/node/nodeInsertDetail.jsp</result>
+		</action>
+		<action name="nodeView" class="nodeViewAction">
+			<result name="success">/WEB-INF/dms/node/nodeView.jsp</result>
+		</action>
+	</package>
+</struts>
+

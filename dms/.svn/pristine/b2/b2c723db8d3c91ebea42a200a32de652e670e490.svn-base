@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.dms.dao.ITemplateDao">
+	<resultMap type="template" id="template">
+		<result property="id" column="ID"/>
+		<result property="templetName" column="TEMPLET_NAME" />
+		<result property="available" column="AVAILABLE" />
+		<result property="creator.userName" column="CREATOR" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="memo" column="MEMO" />
+		<result property="isConfigure" column="IS_CONFIGURE" />
+		<result property="lastModifyTime" column="LAST_MODIFY_TIME" />
+		<result property="lastModifier.userName" column="LAST_MODIFIER" />
+	</resultMap>
+
+	<sql id="keyColumns">TEMPLET_NAME,AVAILABLE,CREATOR,CREATE_TIME,
+	                     MEMO,IS_CONFIGURE,LAST_MODIFY_TIME,LAST_MODIFIER
+	</sql>
+	<sql id="valueColumns">#{templetName,jdbcType=VARCHAR},#{available,jdbcType=NUMERIC},
+		#{creator.userName,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
+		#{memo,jdbcType=VARCHAR},#{isConfigure,jdbcType=NUMERIC},
+		#{lastModifyTime,jdbcType=TIMESTAMP},
+		#{lastModifier.userName,jdbcType=VARCHAR}
+	</sql>
+	
+	
+	<sql id="whereColumns">
+			<if
+				test="template!=null and template.templetName!=null and template.templetName!=''">
+				and t1.TEMPLET_NAME like '%${template.templetName}%'
+			</if>
+			<if test="startCreateTime!=null and startCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) > DATE(#{startCreateTime})
+			 ]]>
+			</if>
+			<if test="endCreateTime!=null and endCreateTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) < DATE(#{endCreateTime})
+			 ]]>
+			</if>
+			<if test="template!=null and template.creator!=null and template.creator.userName!=null and template.creator.userName!=''">
+				and t1.CREATOR like '%${template.creator.userName}%'
+			</if>
+			<if test="template!=null and template.available!=null">
+				and t1.AVAILABLE=#{template.available}
+			</if>
+			<if test="template!=null and template.lastModifier!=null and template.lastModifier.userName!=null and template.lastModifier.userName!=''">
+				and t1.LAST_MODIFIER like '%${template.lastModifier.userName}%'
+			</if>
+			<if test="startModifyTime!=null and startModifyTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) > DATE(#{startModifyTime})
+			 ]]>
+			</if>
+			<if test="endModifyTime!=null and endModifyTime!=''">
+			<![CDATA[  
+				and DATE(t1.CREATE_TIME) < DATE(#{endModifyTime})
+			 ]]>
+			 </if>
+	</sql>
+	
+	<insert id="save" parameterType="template">
+
+		insert into t_dms_templet(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+	    </selectKey>
+
+	</insert>
+	<update id="update" parameterType="template">
+		update t_dms_templet
+		<set>
+			<if test="templetName!=null">TEMPLET_NAME=#{templetName},</if>
+			<if test="available!=null">AVAILABLE=#{available},</if>
+			<if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+			<if test="creator!=null and creator.userName!=null">CREATOR=#{creator.userName},</if>
+			<if test="lastModifyTime!=null">LAST_MODIFY_TIME=#{lastModifyTime},</if>
+			<if test="lastModifier!=null and lastModifier.userName!=null">LAST_MODIFIER=#{lastModifier.userName},</if>
+			<if test="isConfigure!=null">IS_CONFIGURE=#{isConfigure},</if>
+			<if test="memo!=null">MEMO=#{memo},</if>
+		</set>
+		where id=#{id}
+	</update>
+	<select id="getById" parameterType="int" resultMap="template">
+		select *
+		from
+		t_dms_templet
+		where id=#{id}
+	</select>
+	<delete id="delete" parameterType="int">
+		delete from t_dms_templet where
+		id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<delete id="deleteById" parameterType="int">
+		delete from t_dms_templet where
+		id=#{id}
+	</delete>
+	
+	<select id="getTemplateListByTemplate" parameterType="map"
+		resultMap="template">
+		select * from t_dms_templet t1
+		<where>
+			<include refid="whereColumns" />
+		</where>		
+		order by t1.id desc
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getAllTemplate" resultMap="template">
+		SELECT
+		*
+		FROM t_dms_templet
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getTemplateCountByTemplate" parameterType="map" resultType="int">
+		select count(*) from t_dms_templet t1
+		<where>
+			<include refid="whereColumns" />
+		</where>		
+	</select>
+	<select id="getAllTemplateCount" resultType="int">
+		select count(*) from t_dms_templet
+	</select>
+	<select id="getAll" resultMap="template">
+		SELECT
+		*
+		FROM t_dms_templet where AVAILABLE=1
+		ORDER BY ID DESC
+	</select>
+	
+	<select id="getTemplateName" resultType="String" parameterType="template">
+		SELECT
+		TEMPLET_NAME
+		FROM t_dms_templet
+		where id=#{id}
+	</select>
+</mapper>

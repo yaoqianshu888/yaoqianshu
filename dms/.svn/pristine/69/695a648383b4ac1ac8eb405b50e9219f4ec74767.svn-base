@@ -1,0 +1,132 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+	
+	function showDetail(id) {
+		ldDialog.open(
+						"${basePath}dms/pictureDetail!detailPicture.action?dmsPhoto.id="+id, "图片详情", function(window) {
+		},600,600);
+	}
+	function upload(){
+		ldDialog.openMini("${basePath}dms/pictureUpload!uploadPicture.action?document.id="+${document.id}, "图片上传", function(window) {
+			  var returnValue = window.returnValue;
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					return true;
+				} else {//有返回值 处理一些事
+					ldDialog.tips("处理成功！");
+					document.searchForm.submit();
+					return true;
+				}
+		});
+	}
+	function deleteItems(){
+		var ids = getAllChose("delete");
+		if (ids == "") {
+			ldDialog.alert("请先选择要删除的图片");
+			return;
+		}
+		ldDialog.confirm("确认删除吗？", function(){
+			document.deleteForm.submit();
+		});
+	}
+</script>
+<style type="text/css">
+.photoSize{width:100px;height:100px;padding:10px;cursor: pointer}
+.meno{padding:40px}
+ldCheckbox{float:left};
+</style> 
+</head>
+<body>
+				<form id="searchForm" name="searchForm" method="post" action="${basePath}dms/pictureSearch!searchPicture.action?document.id=${document.id}"></form>
+				<form method="post" name="deleteForm" id="deleteForm" action="${basePath}dms/pictureDelete!deletePictures.action">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">${document.documentName }</div>
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><ld:check mark="userInsert">
+											<input type="button" class="ldBtnGray" value="上传" onclick="upload();" />
+										</ld:check></td>
+								</tr>
+							</table>
+						</div>
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><ld:check mark="userInsert">
+											<input type="button" class="ldBtnGray" value="删除" onclick="deleteItems();" />
+										</ld:check></td>
+								</tr>
+							</table>
+						</div>
+						<input type="hidden" name="document.id" value="${document.id }"/>
+					</div>
+					<div class="yhlist3">
+						<div class="yhlist1L">
+							文档基本图片
+						</div>
+					</div>
+					<div class="yhlist2">
+					<table  border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<c:forEach items="${dmsPhotoList}" var="item1" varStatus="status">
+							<c:if test="${item1.module==null }">
+									<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="${item1.id }" /></td>	
+									<td><img alt="图片" src="${basePath}${item1.photoPath}" class="photoSize"  onclick="showDetail(${item1.id})"><br/>
+									<span class="meno">${item1.photoName}</span></td>
+							</c:if>
+						</c:forEach>
+					</tr>
+					</table>
+					</div>
+					<c:forEach items="${documentModuleList}" var="item" varStatus="status">
+					<div class="yhlist3">
+						<div class="yhlist1L">
+							${item.module.moduleName }
+						</div>
+					</div>
+					<div class="yhlist2">
+						<table  border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<c:forEach items="${dmsPhotoList}" var="item1" varStatus="status">
+								<c:if test="${item1.module.id==item.module.id }">
+										<td><input type="checkbox" name="delete" id="delete" class="ldCheckbox" value="${item1.id }" /></td>	
+										<td><img alt="图片" src="${basePath}${item1.photoPath}" class="photoSize"  onclick="showDetail(${item1.id})"><br/>
+										<span class="meno">${item1.photoName}</span></td>
+								</c:if>
+							</c:forEach>
+						</tr>
+						</table>
+					</div>
+					</c:forEach>
+			<div class="dialogBottom">
+				<div class="btns">
+					<input type="button" value="关 闭" class="ldBtnGray"
+						onclick="ldDialog.close();" />
+				</div>
+			</div>
+			
+		    </form>		
+			<div class="yhlist3">
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				
+			</div>
+</body>
+</html>

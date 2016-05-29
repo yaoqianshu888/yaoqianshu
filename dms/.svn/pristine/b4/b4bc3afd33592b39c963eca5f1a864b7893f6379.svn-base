@@ -1,0 +1,462 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<script type="text/javascript" src="${basePath}dms/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="${basePath}dms/js/jquery.smartWizard-2.0.js"></script>
+<link href="${basePath}dms/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+<style>
+.ld-datagrid td{border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #dadada;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #dadada;
+  height: 34px;
+  text-align: left;
+  padding:5px 6px;
+  color: #555555;
+  font-size: 12px;
+}
+  .ld-datagrid td table td{  text-align: center;  line-height: 34px;padding:0px;}
+  .dialogTop{padding:15px}
+  .red{color:red}
+
+</style>
+<script>
+	
+	function AddRow(table, index){
+	    var lastRow = table.rows[table.rows.length-1];
+	    var newRow = lastRow.cloneNode(true);
+	    table.tBodies[0].appendChild(newRow);
+	/*    SetRowCanEdit(newRow);*/
+	    return newRow;
+	}
+
+
+	//删除行
+	function DeleteRow(table, index){
+	    for(var i=table.rows.length - 1; i>0;i--){
+	        var chkOrder = table.rows[i].cells[0].firstChild;
+	        if(chkOrder){
+	            if(chkOrder.type = "CHECKBOX"){
+	                if(chkOrder.checked){
+	                    //执行删除
+	                    table.deleteRow(i);
+	                }
+	            }
+	        }
+	    }
+	}
+	$(document).ready(function(){
+		// Smart Wizard 	
+		$('#wizard').smartWizard({transitionEffect:'fade',onFinish:onFinishCallback});
+
+		function onFinishCallback(){
+			//$('#wizard').smartWizard('showMessage','Finish Clicked');
+			ldDialog.close();
+		}
+	  
+	});
+</script>
+<script type="text/javascript">
+    var start=0;
+    var end=0;
+    function add(obj){      
+        var textBox = $(obj).prev()[0];
+        var pre = textBox.value.substr(0, start);
+        var post = textBox.value.substr(end);
+        ldDialog.open("${basePath}dms/functionInsert!addPhoto.action", "上传图片",
+				function(window) {
+					var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						textBox.value = pre +"<photo>"+returnValue +"</photo>"+ post;
+						return true;
+					}
+				});
+    }
+    function savePos(textBox){
+        //如果是Firefox(1.5)的话，方法很简单
+        if(typeof(textBox.selectionStart) == "number"){
+            start = textBox.selectionStart;
+            end = textBox.selectionEnd;
+            end = textBox.selectionEnd;
+        }
+        //下面是IE(6.0)的方法，麻烦得很，还要计算上'/n'
+        else if(document.selection){
+            var range = document.selection.createRange();
+            if(range.parentElement().id == textBox.id){
+                var range_all = document.body.createTextRange();
+                range_all.moveToElementText(textBox);
+                for (start=0; range_all.compareEndPoints("StartToStart", range) < 0; start++)
+                    range_all.moveStart('character', 1);
+                for (var i = 0; i <= start; i ++){
+                    if (textBox.value.charAt(i) == '/n')
+                        start++;
+                }
+                 var range_all = document.body.createTextRange();
+                 range_all.moveToElementText(textBox);
+                 // calculate selection end point by moving beginning of range_all to end of range
+                 for (end = 0; range_all.compareEndPoints('StartToEnd', range) < 0; end ++)
+                     range_all.moveStart('character', 1);
+                     // get number of line breaks from textarea start to selection end and add them to end
+                     for (var i = 0; i <= end; i ++){
+                         if (textBox.value.charAt(i) == '/n')
+                             end ++;
+                     }
+                }
+            }
+        /*document.getElementById("start").value = start;
+        document.getElementById("end").value = end;*/
+    }
+</script>
+</head>
+<body style="overflow: auto">
+	<form id="submitForm" method="post">
+		<input type="hidden" name="user.id" value="${user.id}" />
+	<div id="wizard" class="swMain">
+    <ul>
+        <li><a href="#step-1"><span class="stepNumber"></span><span class="stepDesc">1 文档模板<br /></span></a></li>
+        <li><a href="#step-2"><span class="stepNumber"></span><span class="stepDesc">2 功能点模板<br /></span></a></li>
+    </ul>
+    <div id="step-1">   
+   
+   
+   <table width="100%" border="0" cellspacing="0" cellpadding="0"
+				class="ld-datagrid">
+				
+				<tr>
+					<td class="tableleft">1 简介</td>
+					<td><textarea name="memo" cols="20" rows="3"
+							style="width:700px" class="ldTextArea"></textarea></td>
+				</tr>
+				<tr>
+					<td class="tableleft">1.1 设计原则</td>
+					<td><textarea name="memo" cols="20" rows="3"
+							style="width:700px" class="ldTextArea"></textarea></td>
+				</tr>
+				<tr>
+					<td class="tableleft">1.2 适用对象</td>
+					<td><textarea name="memo" cols="20" rows="3"
+							style="width:700px" class="ldTextArea"></textarea></td>
+				</tr>
+				<tr>
+					<td class="tableleft">1.3 参考文档</td>
+					<td><textarea name="memo" cols="20" rows="3"
+							style="width:700px" class="ldTextArea"></textarea></td>
+				</tr>
+
+				<tr>
+					<td class="tableleft" colspan="2">2 指令格式说明</td>
+				</tr>
+				<tr>
+					<td class="tableleft" colspan="2">2.1 请求格式</td>
+				</tr>
+				<tr>
+					<td class="tableleft">2.1.1 请求格式说明</td>
+					<td><textarea name="remark" cols="20" rows="3"
+							style="width:700px" class="ldTextArea" onkeydown="savePos(this)"
+							onkeyup="savePos(this)" onmousedown="savePos(this)"
+							onmouseup="savePos(this)" onfocus="savePos(this)"></textarea><input
+						type="button" name="Submit2" style="float:right;"
+						class="ldBtnGreen add" value="添加图片" onclick="add(this)" /></td>
+				</tr>
+				<tr>
+					<td class="tableleft">2.1.2 请求参数</td>
+					<td>
+						<div>
+							<table width="698px" border="0" cellpadding="0" cellspacing="0"
+								id="tabProduct2">
+								<tr>
+									<td width="32" align="center" bgcolor="#EFEFEF" Name="Num"></td>
+									<td width="120" bgcolor="#EFEFEF" Name="Num" EditType="TextBox">参数名</td>
+									<td width="152" bgcolor="#EFEFEF" Name="ProductName"
+										EditType="TextBox">描述</td>
+									<td width="103" bgcolor="#EFEFEF" Name="Amount"
+										EditType="TextBox">是否必填</td>
+									<td width="153" bgcolor="#EFEFEF" Name="Price"
+										EditType="TextBox">说明</td>
+									<!--  <td bgcolor="#EFEFEF" Name="SumMoney" Expression="Amount*Price" >备注</td> -->
+								</tr>
+								<tr>
+									<td align="center"><input type="checkbox" name="checkbox2"
+										value="checkbox" /></td>
+									<td><input type="text" class="ldText input138"
+										name="grouptitle" value=""></td>
+									<td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+									<td><input type="radio" class="ldRadio" name="yes"
+										value="1" checked />是 <input type="radio" class="ldRadio"
+										name="yes" value="0" />否</td>
+									<td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+
+								</tr>
+								<tr>
+									<td align="center"><input type="checkbox"
+										name="checkbox22" value="checkbox" /></td>
+									<td><input type="text" class="ldText input138"
+										name="grouptitle" value=""></td>
+									<td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+									<td><input type="radio" class="ldRadio" name="yes1"
+										value="1" checked />是 <input type="radio" class="ldRadio"
+										name="yes1" value="0" />否</td>
+									<td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+								</tr>
+
+							</table>
+							<br /> <input type="button" name="Submit" class="ldBtnGreen"
+								value="新增"
+								onclick="AddRow(document.getElementById('tabProduct2'),1)" /> <input
+								type="button" name="Submit2" class="ldBtnGreen" value="删除"
+								onclick="DeleteRow(document.getElementById('tabProduct2'),1)" />
+
+
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="tableleft">2.1.3 请求报文</td>
+					<td>
+						<div class="d_edit_part_d"
+							style="float: left; padding: 10px 0px; width: 725px;">
+							<div>
+								<span style="float:right;"> <input type="radio"
+									name="askbao" value="1" checked /> xml <input type="radio"
+									name="askbao" value="0" /> json<input type="radio"
+									name="askbao" value="2" /> url</span>
+								<div class="clear"></div>
+							</div>
+							<textarea id="code_area1" placeholder="" rows="1"
+								name="content_2" autocomplete="off"
+								style="border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:100%"
+								onfocus="resizeTextarea(this,5);"
+								onclick="resizeTextarea(this, 5);"
+								onkeyup="resizeTextarea(this,5);"
+								onkeydown="resizeTextarea(this,5);"
+								onpaste="textareaRightMenu(this);"
+								oncut="textareaRightMenu(this);"></textarea>
+						</div>
+					</td>
+				</tr>
+				<tr>
+						<td colspan="2">2.2返回格式</td>
+					</tr>
+					<tr>
+						<td width="12%" class="tableleft">2.2.1返回格式说明</td>
+						<td><textarea name="remark" cols="20" rows="3"
+								style="width:700px" class="ldTextArea" onkeydown="savePos(this)"
+								onkeyup="savePos(this)" onmousedown="savePos(this)"
+								onmouseup="savePos(this)" onfocus="savePos(this)"></textarea>
+							<input type="button" name="Submit2" style="float:right;"
+								class="ldBtnGreen add" value="添加图片" onclick="add(this)" />
+						</td>
+					</tr>
+					<tr>
+						<td class="tableleft">2.2.2 返回成功报文</td>
+						<td>
+							<div class="d_edit_part_d"
+								style="float: left; padding: 10px 0px; width: 700px;">
+								<div>
+									<span
+										style="float:right;"> <input type="radio"
+										name="backbao" value="1" checked /> xml <input type="radio"
+										name="backbao" value="0" /> json</span>
+									<div class="clear"></div>
+								</div>
+								<textarea id="code_area1" placeholder="" rows="1"
+									name="content_2" autocomplete="off"
+									style="border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:100%"
+									onfocus="resizeTextarea(this,5);"
+									onclick="resizeTextarea(this, 5);"
+									onkeyup="resizeTextarea(this,5);"
+									onkeydown="resizeTextarea(this,5);"
+									onpaste="textareaRightMenu(this);"
+									oncut="textareaRightMenu(this);"></textarea>
+							</div></td>
+					</tr>
+					<tr>
+						<td class="tableleft">2.2.3 返回异常报文</td>
+						<td>
+							<div class="d_edit_part_d"
+								style="float: left; padding: 10px 0px; width: 700px;">
+								<div>
+									 <span
+										style="float:right;"> <input type="radio"
+										name="backbao2" value="1" checked /> xml <input type="radio"
+										name="backbao2" value="0" /> json</span>
+									<div class="clear"></div>
+								</div>
+								<textarea id="code_area1" placeholder="" rows="1"
+									name="content_2" autocomplete="off"
+									style="border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:100%"
+									onfocus="resizeTextarea(this,5);"
+									onclick="resizeTextarea(this, 5);"
+									onkeyup="resizeTextarea(this,5);"
+									onkeydown="resizeTextarea(this,5);"
+									onpaste="textareaRightMenu(this);"
+									oncut="textareaRightMenu(this);"></textarea>
+							</div></td>
+					</tr>
+					<tr>
+						<td class="tableleft">2.2.4结果类型</td>
+						<td>
+							<div>
+						        <table width="698px" border="0" cellpadding="0" cellspacing="0" id="tabProduct3"class="newtable">
+						            <tr>
+						                <td width="32" align="center" bgcolor="#EFEFEF" Name="Num"></td>
+						                <td width="40" bgcolor="#EFEFEF" Name="Num" EditType="TextBox">序号</td>
+						                <td width="120" bgcolor="#EFEFEF" Name="Num" EditType="TextBox">返回</td>
+						                <td width="152" bgcolor="#EFEFEF" Name="ProductName" EditType="TextBox" >描述</td>
+						            </tr>
+						            <tr>
+						                <td align="center"><input type="checkbox" name="checkbox2" value="checkbox" /></td>
+						                <td><input type="text" class="ldText input138" name="grouptitle" value=""></td>
+						                <td><input type="text" class="ldText input138" name="grouptitle" value=""></td>
+						                <td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+						            </tr>
+						
+						        </table>
+						        <br />
+						        <input type="button" name="Submit" class="ldBtnGreen" value="新增" onclick="AddRow(document.getElementById('tabProduct3'),1)" />
+						        <input type="button" name="Submit2" class="ldBtnGreen" value="删除" onclick="DeleteRow(document.getElementById('tabProduct3'),1)" />
+						</div></td>
+					</tr>
+		</table>
+   
+   
+    </div>
+    <div id="step-2" >
+    
+    
+    <table  width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+   
+    <tr>
+        <td class="tableleft">1 请求说明</td>
+        <td><textarea name="remark" cols="20" rows="3"style="width:700px" class="ldTextArea" onkeydown="savePos(this)"
+                              onkeyup="savePos(this)"
+                              onmousedown="savePos(this)"
+                              onmouseup="savePos(this)"
+                              onfocus="savePos(this)"></textarea><input type="button" name="Submit2" style="float:right;"  class="ldBtnGreen add" value="添加图片" onclick="add(this)" /></td>
+    </tr> 
+    <tr>
+        <td class="tableleft">1.1数据参数</td>
+        <td>
+            <div>
+        <table width="698px" border="0" cellpadding="0" cellspacing="0" id="tabProduct2">
+            <tr>
+                <td width="32" align="center"  Name="Num"></td>
+                <td width="120"  Name="Num" >参数名</td>
+                <td width="152"  Name="ProductName"  >描述</td>
+                <td width="103"  Name="Amount">是否必填</td>
+                <td width="153"  Name="Price">说明</td>
+               <!--  <td bgcolor="#EFEFEF" Name="SumMoney" Expression="Amount*Price" >备注</td> -->
+            </tr>
+            <tr>
+                <td align="center"><input type="checkbox" name="checkbox2" value="checkbox" /></td>
+                <td><input type="text" class="ldText input138" name="grouptitle" value=""></td>
+                <td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+                <td><input type="radio"  class="ldRadio" name="yes" value="1" checked/>是
+           <input type="radio" class="ldRadio" name="yes" value="0"/>否</td>
+                <td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+                
+            </tr>
+            <tr>
+                <td align="center"><input type="checkbox" name="checkbox22" value="checkbox" /></td>
+                <td><input type="text" class="ldText input138" name="grouptitle" value=""></td>
+                <td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+                <td><input type="radio" class="ldRadio" name="yes1" value="1" checked/>是
+           			<input type="radio" class="ldRadio"  name="yes1" value="0"/>否</td>
+                <td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="button" name="Submit" class="ldBtnGreen" value="新增" onclick="AddRow(document.getElementById('tabProduct2'),1)" />
+        <input type="button" name="Submit2" class="ldBtnGreen" value="删除" onclick="DeleteRow(document.getElementById('tabProduct2'),1)" />
+
+  
+</div>
+        </td>
+    </tr>
+    <tr>
+    <td class="tableleft">1.2 请求报文示例</td>
+            <td>
+            <div class="d_edit_part_d" style="float: left; padding: 10px 0px; width: 725px;">
+<div>
+<span style="float:right;"> <input type="radio" name="askbao" value="1" checked/> xml
+           <input type="radio" name="askbao" value="0"/> json<input type="radio" name="askbao" value="2"/> url</span>
+<div class="clear"></div>
+</div>
+<textarea id="code_area1" placeholder="" rows="1" name="content_2" autocomplete="off" style="border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:100%" onfocus="resizeTextarea(this,5);" onclick="resizeTextarea(this, 5);" onkeyup="resizeTextarea(this,5);" onkeydown="resizeTextarea(this,5);" onpaste="textareaRightMenu(this);" oncut="textareaRightMenu(this);">
+</textarea>
+</div>
+</td>
+    </tr>
+    <tr>
+    <td class="tableleft">测试请求</td>
+        <td ><input type="button" class="ldBtnGreen" name="backid" id="backid" onclick="requestTest()" value="模拟测试请求"/></td>
+         
+    </tr>
+    <tr>
+        <td class="tableleft">2返回格式</td>
+         <td><textarea name="remark" cols="20" rows="3"style="width:700px" class="ldTextArea" onkeydown="savePos(this)"
+                              onkeyup="savePos(this)"
+                              onmousedown="savePos(this)"
+                              onmouseup="savePos(this)"
+                              onfocus="savePos(this)"></textarea><input type="button" name="Submit2" style="float:right;"  class="ldBtnGreen add" value="添加图片" onclick="add(this)" /></td>
+    </tr> 
+     <tr>
+        <td class="tableleft">2.1返回数据</td>
+        <td>
+        <div>
+        <table width="698px" border="0" cellpadding="0" cellspacing="0" id="tabProduct3">
+            <tr>
+                <td width="32" align="center" Name="Num"></td>
+                <td width="120" Name="Num">参数名</td>
+                <td width="152" Name="ProductName" >描述</td>
+                <td width="203" Name="Amount" >说明</td>
+            </tr>
+            <tr>
+                <td align="center"><input type="checkbox" name="checkbox2" value="checkbox" /></td>
+                <td><input type="text" class="ldText input138" name="grouptitle" value=""></td>
+                <td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+                <td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+            </tr>
+            <tr>
+                <td align="center"><input type="checkbox" name="checkbox22" value="checkbox" /></td>
+                <td><input type="text" class="ldText input138" name="grouptitle" value=""></td>
+                <td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>
+                <td><textarea style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td>  
+            </tr>
+
+        </table>
+        <br />
+        <input type="button" name="Submit" class="ldBtnGreen" value="新增" onclick="AddRow(document.getElementById('tabProduct3'),1)" />
+        <input type="button" name="Submit2" class="ldBtnGreen" value="删除" onclick="DeleteRow(document.getElementById('tabProduct3'),1)" />
+
+  
+        </div>
+        </td>
+    </tr>
+    <tr>
+    <td class="tableleft">2.2 返回报文示例</td>
+            <td>
+            <div class="d_edit_part_d" style="float: left; padding: 10px 0px; width: 725px;">
+<div>
+<span style="float:right;"> <input type="radio" name="backbao" value="1" checked/> xml
+           <input type="radio" name="backbao" value="0"/> json</span>
+<div class="clear"></div>
+</div>
+<textarea id="code_area1" placeholder="" rows="1" name="content_2" autocomplete="off" style="border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:100%" onfocus="resizeTextarea(this,5);" onclick="resizeTextarea(this, 5);" onkeyup="resizeTextarea(this,5);" onkeydown="resizeTextarea(this,5);" onpaste="textareaRightMenu(this);" oncut="textareaRightMenu(this);">
+</textarea>
+</div>
+</td>
+    </tr> 
+</table>
+    
+    
+    </div>  
+    </div>                  
+	</form>
+</body>
+</html>

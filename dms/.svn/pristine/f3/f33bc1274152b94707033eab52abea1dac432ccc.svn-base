@@ -1,0 +1,15 @@
+package com.landicorp.dms.service;
+
+import java.util.List;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Module;
+
+public interface IModuleService extends IBaseService<Module, Integer>{
+	public List<Module> getAllModule(Pager pager,Integer id); //得到所有的模块
+	public List<Module> getModuleListByModule(Module module,Document document,Pager pager);
+	public Integer getMaxId();   //得到最大的模块编号
+	public List<Module> getAllByDocumentId(Integer id);  //通过文档id得到所有的模块
+}

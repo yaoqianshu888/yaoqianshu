@@ -1,0 +1,117 @@
+package com.landicorp.dms.action.picture;
+
+import java.util.List;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.DmsPhoto;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.DocumentModule;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.service.IDmsPhotoService;
+import com.landicorp.dms.service.IDocumentModuleService;
+import com.landicorp.dms.service.IDocumentService;
+
+public class PictureSearchAction extends BaseActionSupport {
+	private Document document;
+	private IDocumentService documentService;
+	private DmsPhoto dmsPhoto;
+	private List<DmsPhoto> dmsPhotoList;
+	private IDmsPhotoService dmsPhotoService;
+	private List<Module> moduleList;
+	private IDocumentModuleService documentModuleService;
+	private List<DocumentModule> documentModuleList;
+	
+	
+
+	public IDocumentModuleService getDocumentModuleService() {
+		return documentModuleService;
+	}
+
+
+	public void setDocumentModuleService(
+			IDocumentModuleService documentModuleService) {
+		this.documentModuleService = documentModuleService;
+	}
+
+
+	public List<DocumentModule> getDocumentModuleList() {
+		return documentModuleList;
+	}
+
+
+	public void setDocumentModuleList(List<DocumentModule> documentModuleList) {
+		this.documentModuleList = documentModuleList;
+	}
+
+
+	public List<DmsPhoto> getDmsPhotoList() {
+		return dmsPhotoList;
+	}
+
+
+	public void setDmsPhotoList(List<DmsPhoto> dmsPhotoList) {
+		this.dmsPhotoList = dmsPhotoList;
+	}
+
+
+	public List<Module> getModuleList() {
+		return moduleList;
+	}
+
+
+	public void setModuleList(List<Module> moduleList) {
+		this.moduleList = moduleList;
+	}
+
+
+	public Document getDocument() {
+		return document;
+	}
+
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+
+
+	public DmsPhoto getDmsPhoto() {
+		return dmsPhoto;
+	}
+
+
+	public void setDmsPhoto(DmsPhoto dmsPhoto) {
+		this.dmsPhoto = dmsPhoto;
+	}
+
+
+	public IDmsPhotoService getDmsPhotoService() {
+		return dmsPhotoService;
+	}
+
+
+	public void setDmsPhotoService(IDmsPhotoService dmsPhotoService) {
+		this.dmsPhotoService = dmsPhotoService;
+	}
+
+
+	public String searchPicture(){
+		if(document==null || document.getId()==null){
+			dmsPhotoList=dmsPhotoService.getAllByNoDocument();
+		}else{
+			document=documentService.getById(document.getId());
+			documentModuleList=documentModuleService.getByDocumentId(document.getId());
+			dmsPhotoList=dmsPhotoService.getAllByDocumentId(document.getId());
+		}
+		return "picture";
+	}
+}

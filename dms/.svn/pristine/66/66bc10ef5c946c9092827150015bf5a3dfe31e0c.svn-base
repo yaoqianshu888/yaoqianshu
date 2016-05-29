@@ -1,0 +1,59 @@
+package com.landicorp.dms.action.project;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Project;
+
+public class DmsProjectSearchAction extends BaseActionSupport {
+	
+	private static final long serialVersionUID = 1L;
+	private Project project;
+	private List<Project> projectList;
+
+	public String searchProject() {
+		Project p = new Project();
+		p.setId(1);
+		p.setStatus(1);
+		p.setCreateTime(new Date());
+		p.setMemo("这个是测试项目");
+		p.setName("银销通项目");
+		p.setNo("007");
+		p.setCreateUser("薛云腾");
+		projectList = new ArrayList<Project>();
+		projectList.add(p);
+		return SUCCESS;
+	}
+
+	public String detail() {
+		project.setId(1);
+		project.setStatus(1);
+		project.setCreateTime(new Date());
+		project.setMemo("这个是测试项目");
+		project.setName("银销通项目");
+		project.setUpdateUser("你猜");
+		project.setCreateUser("薛云腾");
+		project.setUpdateTime(new Date());
+		project.setNo("007");
+		return "detail";
+	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
+	public List<Project> getProjectList() {
+		return projectList;
+	}
+
+	public void setProjectList(List<Project> projectList) {
+		this.projectList = projectList;
+	}
+
+}

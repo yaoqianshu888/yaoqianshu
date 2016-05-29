@@ -1,0 +1,17 @@
+package com.landicorp.dms.action.function;
+
+import com.landicorp.core.action.BaseActionSupport;
+
+public class FunctionInsertAction extends BaseActionSupport {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public String prepare() {
+		return INPUT;
+	}
+	public String addPhoto() {
+		return SUCCESS;
+	}
+}

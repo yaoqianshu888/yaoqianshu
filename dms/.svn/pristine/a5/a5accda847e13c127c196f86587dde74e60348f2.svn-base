@@ -1,0 +1,327 @@
+@charset "utf-8";
+
+body{
+	margin: 0px;
+	padding: 0px;
+	font: 12px/140% Arial,Verdana,"Microsoft YaHei";
+	background-color: #FFFFFF;
+}
+a:link {
+	text-decoration:none;
+	color:#535353;
+}
+a:visited {text-decoration:none;color:#535353;}
+a:hover {
+	text-decoration:none;
+	color:#ed8404;
+}
+a:active {text-decoration:none;color:#535353;}
+
+/* 头部 */
+.headerbg {
+	height: 70px;
+	background-image: url(../images/h-01.png);
+	background-repeat: repeat-x;
+}
+
+.header-r {
+	background-image: url(../images/h-03.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	height: 70px;
+	float: right;
+	width: 450px;
+}
+
+.header-l {
+	position: absolute;
+	background-image: url(../images/h-logo.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	height: 70px;
+	z-index: 999;
+}
+
+.header-l .headerfun {
+	font-size: 14px;
+	height: 36px;
+	line-height: 36px;
+	padding-right: 10px;
+	text-align: right;
+}
+
+.header-l span {
+	margin: auto 5px;
+} 
+
+.header-l .userinfo {
+	background-image: url("../images/im05.png");
+	background-position: left;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+}
+
+.header-l .help {
+	
+}
+
+.header-l .contactus {
+}
+
+.header-l .loginout {
+	
+}
+
+/* 导航 */
+.nav{
+	width: 100%;
+	height: 33px;
+	background-color: #f4f4f4;
+	background-image: url(../images/h-02.png);
+	margin: 0px;
+	white-space: nowrap;
+	float: left;
+	background-repeat: repeat-x;
+}
+.nav ul{
+	margin: 0px;
+	list-style-type: none;
+	float: left;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+}
+.nav li{
+	width: auto;
+	line-height: 20px;
+	float: left;
+	position: relative;
+}
+
+.nav li.nav_itemon{
+	width: auto;
+	_width: expression(this.offsetWidth > 60 ? 'auto' : '60px');
+	min-width: 60px;
+	height: 30px;
+	background-color: #05a5d7;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	color: #FFFFFF;
+	line-height: 30px;
+	padding-left: 25px;
+	padding-right: 25px;
+	border-top:1px solid #0189B3;
+	border-left: 1px solid #0189B3;
+	border-right: 1px solid #0189B3;
+	-moz-border-radius-topright: 3px;
+	border-top-right-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	border-top-left-radius: 3px;
+/* 	filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,
+	 direction=120, strength=4);
+	-moz-box-shadow: 2px 2px 10px #909090;
+	-webkit-box-shadow: 2px 2px 10px #909090;
+	box-shadow: 2px 2px 10px #909090; */
+}
+
+.nav li.nav_itemon .navtitle, .nav li.nav_item .navtitle{
+	cursor: pointer;
+}
+
+.nav li.nav_item{
+	width: auto;
+	_width: expression(this.offsetWidth > 60 ? 'auto' : '60px');
+	min-width: 60px;
+	height: 30px;
+	background-color: #e8f1f8;
+	font-size: 14px;
+	text-align: center;
+	color: #5d5d5d;
+	margin-left: -1px;
+	line-height: 30px;
+	padding-left: 25px;
+	padding-right: 25px;
+	border-top:1px solid #B2C6CB;
+	border-left: 1px solid #B2C6CB;
+	border-right: 1px solid #B2C6CB;
+	-moz-border-radius-topright: 3px;
+	border-top-right-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	border-top-left-radius: 3px;
+}
+.nav li.nav_item:hover {
+	background-color: #F5F9FC;
+}
+
+.nav .delbody {
+	width: 22px;
+	height: 23px;
+	background-image: url("../images/del01a.png");
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	float: left;
+	vertical-align: bottom;
+	margin-top: 8px;
+}
+
+.nav .delbody:hover{
+	cursor: pointer;
+	background-image: url("../images/del01b.png");
+}
+
+.nav_closebt{
+	float: right;
+	height: 20px;
+	width: 20px;
+	position: absolute;
+	top: 3px;
+	right: 2px;
+	background-image: url("../images/close04.png");
+	cursor: pointer;
+}
+.nav_closebt:hover{
+	background-image: url("../images/close03on.png");
+}
+
+/* 底部 */
+#footer{
+	float: left;
+	width: 100%;
+}
+.footer{
+	height: 30px;
+	background-color: #e5f8fe;
+	color: #e5f8fe;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #b7edfe;
+}
+.footertxt{
+	font-size: 12px;
+	line-height: 28px;
+	color: #525252;
+	float: left;
+	height: 28px;
+	margin-left: 15px;
+	text-align: left;
+}
+
+/* 侧边按钮 */
+.middlebut{
+	background-color: #edebec;
+}
+
+.middlebut div {
+	width: 7px;
+	height: 59px;
+	cursor: pointer;
+}
+
+.middlebutbg_l {
+	background-image: url("../images/left.gif");
+}
+
+.middlebutbg_r{
+	background-image: url("../images/right.gif");
+}
+
+.alltabbox {
+	position: relative;
+	display: none;
+	width: auto;
+	min-width: 180px;
+	_width: expression(this.offsetWidth > 180 ? 'auto' : '180px');
+	height: auto;
+	max-height: 400px;
+	_height: expression(this.offsetHeight > 400 ? 'auto' : '400px');
+	background-color: #FFF;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	box-shadow: 2px 2px 10px #909090;
+	border: 1px solid #B2C6CB;
+	margin-top: 23px;
+	float: right;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.alltabbox .alltabbox-item {
+	height: 26px;
+	line-height: 26px;
+	text-align: left;
+	cursor: default;
+}
+
+.alltabbox .alltabbox-item:hover {
+	background-color: #CDE3F3;
+	cursor: pointer;
+}
+
+.alltabbox-item-text {
+	font-size: 12px;
+}
+
+.alltabbox .alltabbox-item-iconcloseall{
+	width: 15px;
+	height: 26px;
+	padding: 0px 10px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url("../images/taballclose.png");
+}
+
+.alltabbox .alltabbox-item-noicon{
+	width: 15px;
+	height: 26px;
+	padding: 0px 10px;
+}
+
+.alltabbox .alltabbox-item-iconselected{
+	width: 15px;
+	height: 26px;
+	padding: 0px 10px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url("../images/xyd.png");
+}
+
+.alltabbox .alltabbox-item-close {
+ 	width: 20px;
+	height: 26px;
+	padding: 0px 10px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url("../images/close04.png");
+}
+
+.alltabbox .alltabbox-item-noclose {
+ 	width: 20px;
+	height: 26px;
+	padding: 0px 10px;
+}
+
+.alltabbox .alltabbox-item-close:hover {
+	background-image: url("../images/close03on.png");
+}
+
+.alltabbox .separator td {
+	height: 2px;
+	line-height: 2px;
+	border-bottom: 1px solid #E9E9E9;
+}
+ 
+.loadingmark {
+	position: absolute;
+	top: 103px;
+	left: 167px;
+	bottom: 31px;
+	right: 0px;
+	background: transparent url('../images/onloading.gif') no-repeat center 50%;
+	display: none;
+}

@@ -1,0 +1,15 @@
+package com.landicorp.dms.service;
+
+import java.util.Date;
+import java.util.List;
+
+import com.landicorp.core.service.base.IBaseService;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.entities.ProjectDoc;
+
+public interface IProjectDocService extends IBaseService<ProjectDoc, Integer>{
+	public List<ProjectDoc> getAllProject(Pager pager); //得到所有的项目
+	public List<ProjectDoc> getProjectListByProject(ProjectDoc projectDoc,Date startCreateTime,Date endCreateTime,Pager pager);
+	public int getMaxId();   //得到最大的项目编号
+	public List<ProjectDoc> getAllAlia();   //得到所有有效的项目
+}

@@ -1,0 +1,118 @@
+package com.landicorp.dms.service.impl;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.landicorp.core.dao.base.IMyBatisDao;
+import com.landicorp.core.service.base.AbstractBaseServiceImpl;
+import com.landicorp.core.web.pager.Pager;
+import com.landicorp.dms.dao.INodeDao;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.entities.Template;
+import com.landicorp.dms.service.INodeService;
+
+public class NodeServiceImpl extends AbstractBaseServiceImpl<Node, Integer>
+		implements INodeService {
+
+	private INodeDao nodeDao;
+	
+	public INodeDao getNodeDao() {
+		return nodeDao;
+	}
+
+	public void setNodeDao(INodeDao nodeDao) {
+		this.nodeDao = nodeDao;
+	}
+
+	@Override
+	public int add(Node arg0) {
+		return nodeDao.save(arg0);
+	}
+
+
+	@Override
+	public void delete(Integer[] arg0) {
+		nodeDao.delete(arg0);
+	}
+
+	
+	@Override
+	public Node getById(Integer arg0) {
+		return nodeDao.getById(arg0);
+	}
+
+	
+	@Override
+	public int update(Node arg0) {
+		return nodeDao.update(arg0);
+	}
+
+	@Override
+	public List<Node> getAllNode(Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(nodeDao.getAllNodeCount());
+		}
+		return nodeDao.getAllNode(pager);
+	}
+
+	@Override
+	public List<Node> getNodeListByNode(Node node, Date startCreateTime,
+			Date endCreateTime, Pager pager) {
+		if(pager!=null){
+			pager.setTotalCount(nodeDao.getNodeCountByNode(node, startCreateTime, endCreateTime));
+		}
+		return nodeDao.getNodeListByNode(node, startCreateTime, endCreateTime, pager);
+	}
+
+	@Override
+	public IMyBatisDao<Node, Integer> getMyBatisDao() {
+		return nodeDao;
+	}
+
+	@Override
+	public List<Node> getAllNodeByPid(int id) {
+		return nodeDao.getAllNodeByPid(id);
+	}
+
+	@Override
+	public Integer getMaxId() {
+		return nodeDao.getMaxId();
+	}
+
+	@Override
+	public void deleteById(int id) {
+		nodeDao.deleteById(id);
+	}
+
+	@Override
+	public void saveIncludeId(Node node) {
+		nodeDao.saveIncludeId(node);
+	}
+
+	@Override
+	public void deleteByTemplateId(int id) {
+		nodeDao.deleteByTemplateId(id);
+	}
+
+	@Override
+	public List<Node> getTemplateByTid(int id) {
+		return nodeDao.getTemplateByTid(id);
+	}
+
+	@Override
+	public List<Node> getAllNodesByTid(int id) {
+		return nodeDao.getAllNodesByTid(id);
+	}
+
+	@Override
+	public Integer getCircleTypeById(int id) {
+		return nodeDao.getCircleTypeById(id);
+	}
+
+	@Override
+	public List<Node> getAllNodesByTidAndType(int id) {
+		return nodeDao.getAllNodesByTidAndType(id);
+	}
+
+}

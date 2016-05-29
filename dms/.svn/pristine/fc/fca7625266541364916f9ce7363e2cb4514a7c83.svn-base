@@ -1,0 +1,513 @@
+/* 文本输入框 */
+.ldText {
+	width: 138px;
+	height: 24px;
+	text-align: left;
+	color: #626161;
+	padding-left: 5px;
+	font-family: "宋体";
+	font-size: 12px;
+	line-height: 24px;
+	border: 1px solid #d4d4d4;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+
+/* 文本域 */
+.ldTextArea {
+	text-align: left;
+	color: #626161;
+	padding-left: 5px;
+	font-family: "宋体";
+	font-size: 12px;
+	border: 1px solid #d4d4d4;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+
+/* 日期控件 */
+.ldDate {
+	width:138px;
+	height: 24px;
+	text-align: left;
+	color: #626161;
+	padding-left: 5px;
+	background-repeat: no-repeat;
+	background-position: left top;
+	font-family: "宋体";
+	font-size: 12px;
+	line-height: 24px;
+	border: 1px solid #d4d4d4;
+	background-image: url(../images/im07.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+/* 日期控件（带时间） */
+.ldDateTime {
+	width: 140px;
+	height: 24px;
+	text-align: left;
+	color: #626161;
+	padding-left: 5px;
+	background-repeat: no-repeat;
+	background-position: left top;
+	font-family: "宋体";
+	font-size: 12px;
+	line-height: 24px;
+	border: 1px solid #d4d4d4;
+	background-image: url(../images/im07.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.ldText:hover, .ldDate:hover, .ldTextArea:hover {
+	border: 1px solid rgb(59, 188, 220);
+}
+
+/* 灰色按钮 */
+.ldBtnGray {
+	font-size: 12px;
+	float: left;
+	height: 28px;
+	cursor: pointer;
+	text-align: center;
+	color: #545454;
+	border: 1px solid #d4d4d4;
+	background-image: url("../images/selectbg.png");
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding: 0px 15px;
+	margin-left: 10px;
+}
+
+.ldBtnGray:hover{
+	background-image: url("../images/selectbg2.png");
+}
+
+/* 绿色按钮 */
+.ldBtnGreen {
+	font-size: 12px;
+	float: left;
+	height: 28px;
+	cursor: pointer;
+	text-align: center;
+	color: #FFF;
+	border: 1px solid #119E21;
+	background-image: url("../images/btn-green.png");
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding: 0px 15px;
+	margin-left: 10px;
+}
+
+.ldBtnGreen:hover{
+	background-image: url("../images/btn-green-on.png");
+}
+
+/* 红色按钮 */
+.ldBtnRed {
+	font-size: 12px;
+	float: left;
+	height: 28px;
+	cursor: pointer;
+	text-align: center;
+	color: #FFF;
+	border: 1px solid #E6533F;
+	background-image: url("../images/btn-red.png");
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding: 0px 15px;
+	margin-left: 10px;
+}
+
+.ldBtnRed:hover{
+	background-image: url("../images/btn-red-on.png");
+}
+
+/* 蓝色按钮 */
+.ldBtnBlue {
+	font-size: 12px;
+	float: left;
+	height: 28px;
+	cursor: pointer;
+	text-align: center;
+	color: #FFF;
+	border: 1px solid #0063b3;
+	background-image: url("../images/btn-blue.png");
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding: 0px 15px;
+	margin-left: 10px;
+}
+
+.ldBtnBlue:hover{
+	background-image: url("../images/btn-blue-on.png");
+}
+
+/* 链接样式按钮 */
+.ldBtnLink {
+	font-size: 12px;
+	height: 28px;
+	text-align: center;
+	color: #2891d2;
+	line-height: 28px;
+	background-color: transparent;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	padding: 0px;
+	margin: 0px;
+	cursor: pointer;
+}
+
+.ldBtnLink:hover{
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+/* 按钮组 中 */
+.ldBtnGroupM {
+	float: left;
+	border-right: none;
+	margin-left: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
+}
+
+/* 按钮组 左 */
+.ldBtnGroupL {
+	float: left;
+	border-right: none;
+	margin-right: 0px;
+	-moz-border-radius-topright: 0px;
+	-moz-border-radius-bottomright: 0px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+/* 按钮组 右 */
+.ldBtnGroupR {
+	float: left;
+	margin-left: 0px;
+	margin-right: 10px;
+	-moz-border-radius-topleft: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+/*分页*/
+.ldPager {
+	float: right;
+}
+.ldPager div {
+	float: left;
+	height: 28px;
+	line-height: 28px;
+	margin-right: 10px;
+}
+
+.ldPager div.skip div {
+	margin-top: 10px;
+}
+
+.ldPager div.skip{
+	display: none;
+	height: 50px;
+	line-height: 50px;
+	background-color: #FFF;
+	border:1px solid #a0a0a0;
+	padding-left: 20px;
+	padding-right: 20px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,
+	 direction=120, strength=4);
+	-moz-box-shadow: 2px 2px 10px #909090;
+	-webkit-box-shadow: 2px 2px 10px #909090;
+	box-shadow: 2px 2px 10px #909090;
+	position: absolute;
+	right: 0px;
+}
+
+/* 开关 */
+.tzCheckBox{
+	background:url('../images/roundonoff.png') no-repeat right bottom;
+	display:inline-block;
+	min-width:50px;
+	height:22px;
+	white-space:nowrap;
+	position:relative;
+	cursor:pointer;
+	margin-left:10px;
+}
+
+.tzCheckBox.checked{
+	background-position:top left;
+	margin:0 10px 0 0;
+}
+
+.tzCheckBox .tzCBContent{
+	color: white;
+	line-height: 22px;
+	padding-right: 20px;
+	text-align: right;
+}
+
+.tzCheckBox.checked .tzCBContent{
+	text-align:left;
+	padding:0 0 0 24px;
+}
+
+.tzCBPart{
+	background:url('../images/roundonoff.png') no-repeat left bottom;
+	width:10px;
+	position:absolute;
+	top:0;
+	left:-10px;
+	height:22px;
+	overflow: hidden;
+}
+
+.tzCheckBox.checked .tzCBPart{
+	background-position:top right;
+	left:auto;
+	right:-10px;
+}
+
+
+
+/* 表格样式 */
+.ld-datagrid {
+	empty-cells: show;
+	border-collapse: collapse;
+	margin: 0 auto;
+}
+
+.ld-datagrid tr:first-child, .ld-datagrid th {
+	background-color: #efefef;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #dadada;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #dadada;
+	height: 34px;
+	text-align: center;
+	color: #555555;
+	font-size: 12px;
+	line-height: 34px;
+	font-weight: bold;
+}
+ .ld-datagrid td {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #dadada;
+	border-width: 1px;
+	border-style: solid;
+	border-color:#dadada;
+	height: 34px;
+	text-align: center;
+	color: #555555;
+	font-size: 12px;
+	line-height: 34px;
+}
+
+.ld-datagrid tr:HOVER {
+	background-color: #f4f4f4;
+}
+
+.ld-detailTable {
+	empty-cells: show;
+	border-collapse: collapse;
+	margin: 0 auto;
+}
+
+.ld-detailTable td {
+	padding-left:5px;
+	padding-top:2px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #dadada;
+	border-width: 1px;
+	border-style: solid;
+	border-color:#dadada;
+	height: 34px;
+	color: #555555;
+	font-size: 12px;
+	line-height: 34px;
+	word-wrap:break-word;
+	word-break:break-all;
+}
+
+.selectedTrBgColor {
+	background-color: #fef5e1;
+	cursor: pointer;
+}
+.evenTrBgColor {
+	background-color: #f5f8fa;
+}
+.oddTrBgColor {
+	background-color: white;
+}
+
+
+/* 复选框、单选框 */
+label.unchecked {
+	padding-left: 20px;
+	cursor: pointer;
+	background: url(../images/iconUncheckAll.gif) no-repeat;
+	line-height: 18px;
+	height: 18px;
+	display: inline-block;
+}
+
+label.checked {
+	padding-left: 20px;
+	cursor: pointer;
+	background: url(../images/iconCheckAll.gif) no-repeat;
+	line-height: 18px;
+	height: 18px;
+	display: inline-block;
+}
+
+label.uncheckDis {
+	cursor: auto;
+	padding-left: 20px;
+	background: url(../images/iconUncheckDis.gif) no-repeat;
+}
+
+label.checkDis {
+	cursor: auto;
+	padding-left: 20px;
+	background: url(../images/iconCheckDis.gif) no-repeat;
+}
+
+.hRadio {
+	padding-left: 22px;
+	display: inline-block;
+	background: transparent url(../images/radiobg.png) no-repeat left top;
+	height: 19px;
+	line-height: 20px;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+.hRadio_Checked {
+	background-position: left bottom;
+}
+
+.multiplepageselectitem {
+	float: left;
+	border: 1px solid #dadada;
+	margin: 2px 5px;
+	padding: 2px 5px;
+	height: 29px;
+	line-height: 29px;
+}
+
+.multiplepageselectitem:hover {
+	border: 1px solid #FF961A;
+}
+
+.multiplepageselectitem .mpsiclosebtn {
+	display: inline-block;
+	border: none;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	margin: 0px;
+	padding: 0px;
+	background-image: url("../images/close04.png");
+	background-position: center;
+}
+
+.multiplepageselectitem .mpsiclosebtn:hover {
+	background-image: url("../images/close03on.png");
+	cursor: pointer;
+}
+/*实时监控*/
+.monitor-list {
+	height: auto;
+	width: 100%;
+}
+
+.monitor-list-body {
+	height: auto;
+	width: 98%;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-bottom: 20px;
+	margin-left: auto;
+}
+
+.monitor_box {
+	width: 80px;
+	float: left;
+	margin-right: 6px;
+	margin-top: 3px;
+}
+
+.monitor_pic {
+	width: 70px;
+	height: 60px;
+	margin: 0 auto;
+	margin-bottom: 3px;
+	text-align: center;
+}
+
+.monitor_text {
+	text-align: center;
+	font-size: 18px;
+	color: #FFF;
+	width: 80px;
+	font-family: "微软雅黑";
+	font-weight: bold;
+	word-wrap: break-word;
+	margin-right: auto;
+	margin-left: auto;
+	line-height: 25px;
+	height: 50px;
+}
+
+
+.monitor_map {
+	background-image: url(../images/mapbg1.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	height: 230px;
+	width: 181px;
+	float: left;
+}
+
+.monitor_mapbody {
+	font-family: "宋体";
+	font-size: 12px;
+	line-height: 16px;
+	color: #000;
+	height: 180px;
+	width: 170px;
+	margin-top: 10px;
+	text-align: left;
+	margin-right: auto;
+	margin-left: auto;
+}
+

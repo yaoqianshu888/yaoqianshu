@@ -1,0 +1,99 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+
+<link href="${basePath}dms/css/my.css" rel="stylesheet" type="text/css" />
+
+<script>
+	function anchor(name){
+		document.getElementById(name).scrollIntoView();
+	}
+</script>
+</head>
+
+  <body>
+  
+    
+ <div id="bodyContent" class="bodyContent">
+ 		<c:forEach items="${nodeLists}" var="item" varStatus="status">
+			 <c:forEach items="${nodeLists.get(status.index)}" var="item1" varStatus="status1">
+			 	<c:if test="${item1.nodeFormat==1 || item1.nodeFormat==0 }">
+			 		<h1 id="${item1.titleNo}"><b>${item1.titleNo}${item1.title }</b></h1>
+			 	</c:if>
+			 	<c:if test="${item1.nodeFormat==2 || item1.nodeFormat==3}">
+					<h2 id="${item1.titleNo}"><b>${item1.titleNo}${item1.title }</b></h2>
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${map[item1.id]}</p>
+				</c:if>
+				<c:if test="${item1.nodeFormat==4 }">
+					<h2 id="${item1.titleNo}"><b>${item1.titleNo}${item1.title }</b></h2>
+					<table border="1" class="dataTable">
+						<tr>
+	                         <td>
+	                                                                                     参数名
+	                         </td>
+	                         <td>
+	                                                                                    描述
+	                         </td>
+	                         <td>
+	                                                                                     是否必填
+	                         </td>
+	                         <td>
+	                                                                                      说明
+	                         </td>
+	                     </tr>
+	                     <c:forEach items="${map[item1.id].split('☆')}" var="item2" varStatus="status2">
+							<tr>
+								<td align="center">${item2.split('★')[0]}</td>
+								<td>${item2.split('★')[1]}</td>
+								<td>
+								<c:if test="${item2.split('★')[2]==1}">
+								是</td>
+								</c:if>
+								<c:if test="${item2.split('★')[2]==0}">
+								否</td>
+								</c:if>
+								<td>${item2.split('★')[3]}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</c:if>
+				<c:if test="${item1.nodeFormat==5 }">
+					<h2 id="${item1.titleNo}"><b>${item1.titleNo}${item1.title }</b></h2>
+					<table border="1" class="dataTable">
+						<tr>
+	                         <td>
+	                                                                                    序号
+	                         </td>
+	                         <td>
+	                                                                                    返回
+	                         </td>
+	                         <td>
+	                                                                                     描述
+	                         </td>
+	                     </tr>
+	                     <c:forEach items="${map[item1.id].split('☆')}" var="item2" varStatus="status2">
+	                     	<tr>
+	                     		<td>${item2.split('★')[1]}</td>
+	                     		<td>${item2.split('★')[2]}</td>
+	                     		<td>${item2.split('★')[3]}</td>
+	                     	</tr>
+	                     </c:forEach>
+					</table>
+				</c:if>
+				<c:if test="${item1.nodeFormat==6 }">
+					<h2 id="${item1.titleNo}"><b>${item1.titleNo}${item1.title }</b></h2>
+					<pre>${map[item1.id].split('★')[1]}</pre>
+				</c:if>
+				<c:if test="${item1.nodeFormat==7 }">
+					<h2 id="${item1.titleNo}"><b>${item1.titleNo}${item1.title }</b></h2>
+					<pre>${map[item1.id].split('★')[1]}</pre>
+				</c:if>
+			 </c:forEach>
+		 </c:forEach>
+ 
+ 		
+    </div>
+
+  </body>
+</html>

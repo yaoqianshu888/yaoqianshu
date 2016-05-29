@@ -1,0 +1,75 @@
+package com.landicorp.dms.action.node;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.service.INodeService;
+
+public class NodeUpdateAction extends BaseActionSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Node node;
+	private INodeService nodeService;
+	
+	
+	public Node getNode() {
+		return node;
+	}
+
+
+	public void setNode(Node node) {
+		this.node = node;
+	}
+
+
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+
+
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+
+	public String updateNode(){
+		node=nodeService.getById(node.getId());
+		return SUCCESS;
+	}
+
+	public void nodeUpdate() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		String reason="";
+		int code=0;
+		String returnValue="";
+		try {
+			Node updateNode=nodeService.getById(node.getId());
+			updateNode.setNodeName(node.getNodeName());
+			updateNode.setTemplate(node.getTemplate());
+			updateNode.setNodeType(node.getNodeType());
+			updateNode.setCircleType(node.getCircleType());
+			updateNode.setLastModifier(getSessionUser());
+			updateNode.setLastModifyTime(new Date());
+			updateNode.setMemo(node.getMemo());
+			nodeService.update(updateNode);
+			returnValue="修改成功";
+			code=1;
+			//setWindowReturnValue(returnValue);
+		}catch (Exception e) {
+			reason="修改失败";
+		}
+		
+		response.getWriter().write("[{\"code\":\""+code+"\",\"reason\":\""+reason+"\",\"returnValue\":\""+returnValue+"\"}]");
+	}
+
+}

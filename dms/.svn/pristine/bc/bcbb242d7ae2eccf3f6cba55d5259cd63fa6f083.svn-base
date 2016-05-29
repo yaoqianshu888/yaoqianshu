@@ -1,0 +1,421 @@
+﻿<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<%@include file="/headDeclare.jsp"%>
+<script type="text/javascript">
+	function showModules(id,type){
+		if(type==0){
+			parent.addTab(2000+id,"模块管理","${basePath}dms/moduleSearch!searchModule.action?document.id="+id);
+		}
+	}	
+	function pictureManage(id){
+		ldDialog.openLarge("${basePath}dms/pictureSearch!searchPicture.action?document.id="+id
+				, "图片管理", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				loadData(curPageNum);
+				return true;
+			}
+		});
+	}
+	function openMenu(id, name, url, obj) {
+		parent.addTab(id, name, url);
+		$(".menuselected").removeClass("menuselected").addClass("menuitem");
+		$(obj).removeClass("menuitem").addClass("menuselected");
+	}
+	
+	
+	function previewItem(id) {
+		ldDialog.openLarge(
+			"${basePath}dms/documentUpload!preview.action?document.id="+id,
+			"文件预览", 
+			function(window) {
+			
+		});
+	}
+	function showVersion(id){
+		ldDialog.openLarge("${basePath}dms/documentVersionSearch!searchDocumentVersion.action?document.id=" + id,
+			"文档版本", 
+			function(window) {
+				var returnValue = window.returnValue;
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					return true;
+				} else {//有返回值 处理一些事
+					ldDialog.tips("处理成功！");
+					loadData(1);
+					return true;
+				}
+		});
+	}
+	
+	function showItem(id) {
+		ldDialog.openMini(
+			"${basePath}dms/documentSearch!detail.action?document.id=" + id,
+			"文档详情", 
+			function(window) {
+		});
+	}
+	function addItem() {
+		ldDialog.openLarge("${basePath}dms/documentInsert!prepare.action",
+			"文档新增", 
+			function(window) {
+				var returnValue = window.returnValue;
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					return true;
+				} else {//有返回值 处理一些事
+					ldDialog.tips("处理成功！");
+					document.pagerForm.submit();
+					return true;
+				}
+		});
+	}
+	function uploadItem() {
+		ldDialog.openMini("${basePath}dms/documentUpload!prepare.action",
+			"文档上传", 
+			function(window) {
+				var returnValue = window.returnValue;
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					return true;
+				} else {//有返回值 处理一些事
+					ldDialog.tips("处理成功！");
+					document.pagerForm.submit();
+					return true;
+				}
+		});
+	}
+	function editItem(id,type) {
+		if(type==0){
+			ldDialog.openLarge(
+			"${basePath}dms/documentUpdate!prepare.action?document.id="+ id,
+			"文档编辑",
+			function(window) {
+				var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.tips("处理成功！");
+						var curPageNum = $("input[name='pager.curPageNum']").val();
+						document.pagerForm.submit();
+						return true;
+					}
+			});
+		}else{
+			ldDialog.openMini(
+			"${basePath}dms/documentBaseUpdate!prepare.action?document.id="+ id,
+			"文档基本信息编辑",
+			function(window) {
+				var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.tips("处理成功！");
+						var curPageNum = $("input[name='pager.curPageNum']").val();
+						document.pagerForm.submit();
+						return true;
+					}
+			});
+		}
+	}
+	function deleteItems() {
+		var dms = getAllChose("delete");
+		if (dms == "") {
+			ldDialog.alert("请先选择要删除的项");
+			return;
+		}
+		var param = $("#deleteForm").serialize();
+		ldDialog.confirm("你确定要删除这些项吗？", function() {
+			var url = "${basePath}coreAjax/documentSearch!deleteDocument.action?" + param;
+			$.ajax({
+				type : "POST",
+				url : url,
+				dataType : "text",
+				success : function(result) {
+					var res = JSON.parse(result);
+					if (res.code == 1) {
+						ldDialog.tips("处理完成");
+						var curPageNum = $("input[name='pager.curPageNum']").val();
+						loadData(curPageNum);
+					} else {
+						ldDialog.alert(res.reason);
+					}
+				},
+				error : function() {
+					
+				}
+			});
+		});
+	}
+	
+	function setAvailable(id,page){
+		document.getElementById("statusForm").action = "${basePath}dms/documentSearch!setAvailable.action?document.id="
+				+ id + '&pager.curPageNum=' + page+"&document.project.id="+$("#document\\.project\\.id").val()
+				+"&document.documentName="+$("#document\\.documentName").val();
+		document.statusForm.submit();
+	
+	}
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post" action="${basePath}dms/documentSearch!searchDocumentAllByInfo.action">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+									<div class="conditionsrow">
+										<div class="conditionsitem">
+											<div class="conditionsitemL">所属项目：</div>
+											<div class="conditionsitemR">
+												<select name="document.project.id" id="document.project.id" class="ldSelect select144" style="width:144px">
+													<option value="">全部</option>
+												</select>
+											</div>
+										</div>
+										<div class="conditionsitem">
+											<div class="conditionsitemL">文档名称：</div>
+											<div class="conditionsitemR">
+												<input name="document.documentName" class="ldText" style="width:144px" id="document.documentName"
+													value="${document.documentName}" />
+											</div>
+										</div>
+										<div class="conditionsitem">
+						                  <div class="conditionsitemL">状态：</div>
+						                  <div class="conditionsitemR">
+						                    <ld:select groupName="availableAll" name="document.available" id="document.available"
+						                               value="${document.available}" className="ldSelect select144" />
+						                  </div>
+						                </div>
+									</div>
+									<div class="conditionsrow">
+										<div class="conditionsitem">
+											<div class="conditionsitemL">创建人：</div>
+											<div class="conditionsitemR">
+												<input name="document.creator.userName" class="ldText" style="width:144px" 
+												value="${document.creator.userName}"/>
+											</div>
+										</div>
+										<div class="conditionsitem">
+						                  <div class="conditionsitemL">类型：</div>
+						                  <div class="conditionsitemR">
+						                   <ld:select groupName="docType" name="document.docType"
+						                               value="${document.docType}" className="ldSelect select144" />
+						                  </div>
+						                </div>
+									</div>
+							</div>
+							<div class="yhlist3">
+								<div class="toolbarL">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>
+												<ld:check mark="documentInsert">
+													<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+												</ld:check>
+												<ld:check mark="documentUpload">
+													<input type="button" value="上传" class="ldBtnGray" onclick="uploadItem();" />
+												</ld:check>
+											</td>
+										</tr>
+									</table>
+								</div>
+								<div class="toolbarR">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>
+												<input id="searchBtn" type="submit" class="ldBtnBlue" value="查询" />
+												<input type="hidden" value="0" name="pager.curPageNum" />
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			
+			
+			<div class="yhlist2">
+				<form method="post" name="statusForm" id="statusForm">
+					<table id="contentTable" width="100%" border="0" cellspacing="1" cellpadding="0" class="ld-datagrid">
+					<input name="document.creator.userName" type="hidden" value="${document.creator.userName}"/>
+					<input name="document.docType" type="hidden"  value="${document.docType}"/>
+					<input name="document.available" type="hidden"  value="${document.available}"/>
+						<tr>
+							<th>文档编号</th>
+							<th>版本</th>
+							<th>文档名称</th>
+							<th>类型</th>
+							<th>状态</th>
+							<th>所属项目</th>
+							<th>创建者</th>
+							<th>操作</th>
+						</tr>
+						
+						<c:forEach items="${documentList }" var="item">
+						<c:if test="${item.docType==1 }">
+						<tr>
+							<td>${ item.no} </td>
+							<td>${ item.versionId} </td>
+							<td><span style="font-weight:bold;">${ item.documentName}</span></td>
+							<td>
+								<a href="javascript:void(0);">
+									<c:if test="${item.docType==1 }">外部上传</c:if>
+									<c:if test="${item.docType==0 }">在线文档</c:if>
+								</a>
+						    </td>
+							<td>
+								<a href="javascript:void(0);" onclick="setAvailable(${ item.id},${pager.curPageNum});" >
+									<c:if test="${item.available==1 }">
+									 	<input type="checkbox" class="ldSwitch" checked />
+									 </c:if>
+									 <c:if test="${item.available==0 }">
+									 	<input type="checkbox" class="ldSwitch"/>
+									</c:if>
+								</a>
+							</td>
+							<td>${ item.project.projectName}  </td>
+							<td>${ item.creator.userName}</td>
+							<td>
+								<ld:check mark="documentDetail">
+									<input type="button" value="详情" class="ldBtnLink" onclick="showItem(${item.id});" />&nbsp;
+								</ld:check>
+								<ld:check mark="documentUpdate">
+									<input type="button" value="编辑" class="ldBtnLink" onclick="editItem(${item.id},${item.docType});" />&nbsp;
+								</ld:check>
+								<ld:check mark="documentPreview">
+									<input type="button" value="预览" class="ldBtnLink" onclick="previewItem(${item.id});" />&nbsp;
+								</ld:check>
+								<ld:check mark="documentDownload">
+									<a href="${basePath}dms/documentUpload!downLoad.action?document.id=${item.id}" style="color: #2891d2">下载</a>
+								</ld:check>			
+							</td>
+						</tr>
+						</c:if>
+						<c:if test="${item.docType==0 }">
+							<tr>
+								<td onclick="showModules(${item.id},${item.docType});">${ item.no} </td>
+							<td onclick="showModules(${item.id},${item.docType});">${ item.versionId} </td>
+							<td onclick="showModules(${item.id},${item.docType});"><span style="font-weight:bold;">${ item.documentName}</span></td>
+							<td onclick="showModules(${item.id},${item.docType});">
+								<a href="javascript:void(0);">
+									<c:if test="${item.docType==1 }">外部上传</c:if>
+									<c:if test="${item.docType==0 }">在线文档</c:if>
+								</a>
+						    </td>
+							<td>
+								<a href="javascript:void(0);" onclick="setAvailable(${ item.id},${pager.curPageNum});" >
+									<c:if test="${item.available==1 }">
+									 	<input type="checkbox" class="ldSwitch" checked />
+									 </c:if>
+									 <c:if test="${item.available==0 }">
+									 	<input type="checkbox" class="ldSwitch"/>
+									</c:if>
+								</a>
+							</td>
+							<td onclick="showModules(${item.id},${item.docType});">${ item.project.projectName}  </td>
+							<td onclick="showModules(${item.id},${item.docType});">${ item.creator.userName}</td>
+							<td>
+							<ld:check mark="documentDetail">
+									<input type="button" value="详情" class="ldBtnLink" onclick="showItem(${item.id});" />&nbsp;
+								</ld:check>
+								<ld:check mark="documentUpdate">
+									<input type="button" value="编辑" class="ldBtnLink" onclick="editItem(${item.id},${item.docType});" />&nbsp;
+								</ld:check>
+									<ld:check mark="documentVersion">
+										<input type="button" value="版本查看" class="ldBtnLink" onclick="showVersion(${item.id});" />&nbsp;
+									</ld:check>
+								<ld:check mark="documentPicture">
+										<input type="button" value="图片池" class="ldBtnLink" onclick="pictureManage(${item.id});" />&nbsp;
+									</ld:check>
+							</td>
+							</tr>
+						</c:if>
+						</c:forEach>
+					</table>
+				</form>
+			</div>
+			
+			
+			<div class="yhlist3">
+				<div class="toolbarL">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<ld:check mark="documentInsert">
+									<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+								</ld:check>
+								<ld:check mark="documentUpload">
+									<input type="button" class="ldBtnGray" value="上传" onclick="uploadItem();" />
+								</ld:check>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="toolbarR">
+						<div class="ldPager">
+						<form action="${basePath}dms/documentSearch!searchDocumentAllByInfo.action"
+							  method="post" name="pagerForm">
+							    <input name="document.documentName" type="hidden"
+								value="${document.documentName}" /> <input name="document.project.id"
+								type="hidden" id="document.project.id" value="${document.project.id}" /> 
+								<input name="document.creator.userName" type="hidden"
+								value="${document.creator.userName}" />
+								<input name="document.available" type="hidden"
+								value="${document.available}" />
+								<input name="document.docType" type="hidden"
+								value="${document.docType}" />
+							<ld:pager type="form" action="pagerForm" />
+						</form>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+    //得到所有项目  
+	$.ajax({
+			async: false,
+	        type:"POST",
+	        url:"${basePath}dms/dmsProjectSearch!getAllProjectDoc.action",
+	        dataType:"json",
+	        beforeSend:function(XMLHttpRequest)
+	            {
+	            },
+	        success:function(msg)
+	            {
+					for(var i=0;i<msg.length;i++){
+						var str="<option value="+msg[i].id+">"+msg[i].projectName+"</option>";
+						
+						$("#document\\.project\\.id").append(str);
+					} 
+					
+					if("${document.project.id}"==""){
+						$("select").get(0).selectedIndex =0;
+					}else{
+						$("#document\\.project\\.id").find("option[value="+"${document.project.id}"+"]").attr("selected", true);
+					}        
+	            },
+	       complete:function(XMLHttpRequest,textStatus)
+	            {
+	                //alert("complete");
+	            },
+	      error:function()
+	           {
+	                ldDialog.alert("获取项目名称出错");
+	           }
+	        });
+</script>
+</html>
+

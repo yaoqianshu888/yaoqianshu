@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="webservice" extends="myDefault" namespace="/">
+		<action name="coreWebserviceHandler" class="coreWebserviceHandlerAction"></action>
+	</package>
+	<package name="coreAjax" extends="myDefault" namespace="/coreAjax">
+		<action name="mainFormMenu" class="coreMainFormMenuAction"></action>
+		
+		<!-- user -->
+		<action name="userSearch" class="coreUserSearchAction"></action>
+		<action name="userInsert" class="coreUserInsertAction"></action>
+		<action name="userUpdate" class="coreUserUpdateAction"></action>
+		<action name="userForChoose" class="coreUserForChooseAction"></action>
+		<action name="userImport" class="coreUserImportAction"></action>
+
+		<!-- 角色管理 -->
+		<action name="roleSearch" class="coreRoleSearchAction"></action>
+		<action name="roleInsert" class="coreRoleInsertAction"></action>
+		<action name="roleUpdate" class="coreRoleUpdateAction"></action>
+		<action name="roleUpdateRight" class="coreRoleUpdateRightAction"></action>
+		<!-- 权限管理 -->
+		<action name="rightSearch" class="coreRightSearchAction"></action>
+		<action name="rightInsert" class="coreRightInsertAction"></action>
+		<action name="rightUpdate" class="coreRightUpdateAction"></action>
+		<action name="rightUpdateOrder" class="coreRightUpdateOrderAction"></action>
+		<!-- 部门管理 -->
+		<action name="areaForChoose" class="coreAreaForChooseAction"></action>
+		<action name="areaSearch" class="coreAreaSearchAction"></action>
+		<action name="areaInsert" class="coreAreaInsertAction"></action>
+		<action name="areaUpdate" class="coreAreaUpdateAction"></action>
+
+		<!-- 用户角色管理 -->
+		<action name="roleUserSearch" class="coreRoleUserSearchAction"></action>
+		<action name="roleUserInsert" class="coreRoleUserInsertAction"></action>
+
+		<!-- 操作日志 -->
+		<action name="operateLogSearch" class="coreOperateLogSearch"></action>
+
+		<!--软件升级 -->
+		<action name="checkstandVersionSearch" class="coreCheckstandVersionSearchAction"></action>
+		<action name="checkstandVersionUpdate" class="coreCheckstandVersionUpdateAction"></action>
+		<action name="checkstandVersionInsert" class="coreCheckstandVersionInsertAction"></action>
+
+		<action name="versionUpdate" class="coreVersionUpdateAction"></action>
+		<action name="systemMonitor" class="coreSystemMonitorAction"></action>
+
+		<!--项目管理 -->
+		<action name="projectSearch" class="coreProjectSearchAction"></action>
+		<action name="projectUpdate" class="coreProjectUpdateAction"></action>
+		<action name="projectInsert" class="coreProjectInsertAction"></action>
+		<!--选项管理 -->
+		<action name="optionSearch" class="coreOptionSearchAction"></action>
+		<action name="optionUpdate" class="coreOptionUpdateAction"></action>
+		<!--选择 -->
+		<action name="selectForChoose" class="coreSelectForChooseAction"></action>
+
+	</package>
+</struts>
+

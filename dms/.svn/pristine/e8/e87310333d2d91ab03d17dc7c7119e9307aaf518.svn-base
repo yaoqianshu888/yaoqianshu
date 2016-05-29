@@ -1,0 +1,364 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<head>
+<script type="text/javascript">
+	/* function resetPassword(id) {
+		ldDialog.confirm(
+						"确定重置密码吗？",
+						function() {
+							var url = "${basePath}coreAjax/userUpdate!resetPassword.action?user.id="
+									+ id;
+							$.post(url, function(result) {
+								var res = JSON.parse(result);
+								ldDialog.alert(res.tip);
+								ldDialog.unmask();
+							});
+						});
+	}
+	function setAvailable(id) {
+		var url = "${basePath}coreAjax/userUpdate!updateStatus.action";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			data : {
+				'user.id' : id
+			},
+			success : function(result) {
+				var res = JSON.parse(result);
+				if (res.code == 1) {
+					ldDialog.tips("处理完成");
+				} else {
+					ldDialog.alert(res.reason);
+					var curPageNum = $("input[name='pager.curPageNum']").val();
+					loadData(curPageNum);
+				}
+				ldDialog.unmask();
+			},
+			error : function() {
+
+			}
+		});
+	} */
+	function addItem() {
+		ldDialog.openLarge("${basePath}dms/draftUpdate!prepare.action", "编辑草稿",
+				function(window) {
+					var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.alert("密码：" + returnValue);
+						return true;
+					}
+				});
+	}
+
+	function showItem(id) {
+		ldDialog.openLarge("${basePath}dms/draftDetail!detailDraft.action?draft.id="+id
+				, "草稿详情", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				document.pagerForm.submit();
+				return true;
+			}
+		});
+	}
+
+	function editItem(id) {
+		ldDialog.openLarge("${basePath}dms/draftUpdate!prepare.action?draft.id="+id
+				, "编辑草稿", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				document.pagerForm.submit();
+				return true;
+			}
+		});
+	}
+	function deleteItems() {
+		var dms = getAllChose("delete");
+		if (dms == "") {
+			ldDialog.alert("请先选择要删除的项");
+			return;
+		}
+		ldDialog.confirm("确认删除吗？", function(){
+			document.deleteForm.submit();
+		});
+	
+		
+	}
+	
+/* 	function loadData(curPageNum){
+		var url = "${basePath}coreAjax/userSearch!searchUser.action";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			data : $("#searchForm").serialize()+"&pager.curPageNum="+curPageNum,
+			async:false,
+			success : function(result) {
+				 $("#contentTable td").remove(); 
+				var res = eval('(' + result + ')');
+				if(res.code == 1){
+					var items = res.list;
+					var pagerStr = res.pagerStr;
+					$(".ldPager").empty();
+					$(".ldPager").append(pagerStr);
+					var html = "";
+					$.each(items,function(i, item){
+						html += "<tr>";
+						html += "<td>"+ (i+1) +"</td>";
+						html += "<td>"+ item.userAlias +"</td>";
+						html += "<td>"+ item.userNum +"</td>";
+						html += "<td>"+ item.userName +"</td>";
+						
+						html += "<td>";
+					<ld:rightMark>
+					<ld:check mark="userStatusUpdate">
+						html += "<a href='javascript:void(0);' onclick='setAvailable("+item.id+");'>";
+						if(item.available==1){
+							html += "<input type='checkbox' class='ldSwitch' checked/>";
+						}else{
+							html += "<input type='checkbox' class='ldSwitch' />";
+						}
+						html += "</a>";
+					</ld:check>
+					<ld:fail>
+						if(item.available==1){
+							html += "<input type='checkbox' class='ldSwitch' checked disabled='disabled' />";
+						}else{
+							html += "<input type='checkbox' class='ldSwitch' disabled='disabled' />";
+						}
+					</ld:fail>
+					</ld:rightMark>
+						html += "</td>";
+						
+						var createTime = new Date(item.createTime).format("yyyy-MM-dd HH:mm:ss");
+						html += "<td>"+ createTime +"</td>";
+						html += "<td>"+ item.creator.userName +"</td>";
+						
+						html += "<td>";
+					<ld:check mark="userDetail">
+						html += "<input type='button' value='详情' class='ldBtnLink' onclick='showItem("+item.id+");' />&nbsp;";
+					</ld:check>
+					<ld:check mark="userUpdate">
+						html += "<input type='button' value='编辑' class='ldBtnLink' onclick='editItem("+item.id+");' />&nbsp;";
+					</ld:check>
+					<ld:check mark="userPasswordReset">
+						html += "<input type='button' value='密码重置' class='ldBtnLink' onclick='resetPassword("+item.id+");' />";
+					</ld:check>
+						html += "</td>";
+					
+						html += "</tr>";
+					});
+				html+="<tr>"
+						+"<td>1</td>"
+						+"<td>aaa</td>"
+						+"<td>bbb</td>"
+						+"<td>ccc</td>"
+						+"<td><input type='checkbox' class='ldSwitch' /></td>"
+						+"<td>2015-08-10 12:13:34</td>"
+						+"<td>guanliy</td>"
+						+"<td>操作</td>"
+						+"</tr>" 
+					$("#contentTable").append(html);
+					ldDialog.unmask();
+				}else{
+					ldDialog.alert(res.reason);
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+			}
+		});
+		addTableCss();
+		initCheckboxAndRadio();
+		initSkip();
+	} */
+/*  	$(function(){
+ 		$("#checkboxAllTh").empty();
+		$("#checkboxAllTh").append("<input type=\"checkbox\" name=\"deleteAll\" class=\"ldCheckbox all\" id=\"checkboxAll\" />");
+	});  */
+</script>
+</head>
+<body>
+	<div id="rightcontent">
+		<div id="rightcontent1">
+			<div class="yhlist">
+				<form id="searchForm" method="post" action="${basePath}dms/draftSearch!searchDraftsByInfo.action">
+					<div class="conditionsbox">
+						<div id="conditionsbox">
+							<div class="yhlist1">
+								<div class="yhlist1L">查询条件</div>
+							</div>
+							<div class="yhlist2">
+								<div class="conditionsrow">
+									<div class="conditionsitem">
+										<div class="conditionsitemL">草稿名称：</div>
+										<div class="conditionsitemR">
+											<input name="draft.draftName" class="ldText input138" id="draft.draftName" value="${draft.draftName}" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属项目：</div>
+										<div class="conditionsitemR">
+											<input name="draft.projectDoc.projectName" class="ldText input138" id="draft.projectDoc.projectName" value="${draft.projectDoc.projectName}" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属文档：</div>
+										<div class="conditionsitemR">
+											<input name="draft.document.documentName" class="ldText input138" id="draft.document.documentName" value="${draft.document.documentName}" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">所属模块：</div>
+										<div class="conditionsitemR">
+											<input name="draft.module.moduleName" class="ldText input138" id="draft.module.moduleName" value="${draft.module.moduleName}" />
+										</div>
+									</div>
+								</div>
+								<div class="conditionsrow">
+								<div class="conditionsitem">
+										<div class="conditionsitemL">状态：</div>
+										<div class="conditionsitemR">
+											<ld:select groupName="draftStatus" name="draft.status" 
+						                               value="${draft.status}" className="ldSelect select144" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">创建人：</div>
+										<div class="conditionsitemR">
+											<input name="draft.creator.userName" class="ldText input138" id="draft.creator.userName" value="${draft.creator.userName}" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">创建起始时间：</div>
+										<div class="conditionsitemR">
+											<input name="startCreateTime" type="text" id="startCreateTime"
+												class="ldDateTime input138"
+												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+												value="<f:formatDate value="${startCreateTime}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+										</div>
+									</div>
+									<div class="conditionsitem">
+										<div class="conditionsitemL">创建终止时间：</div>
+										<div class="conditionsitemR">
+											<input name="endCreateTime" type="text" id="endCreateTime"
+												class="ldDateTime input138"
+												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+												value="<f:formatDate value="${endCreateTime}"
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="yhlist3">
+						<div class="toolbarL">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input type="button" value="删除" class="ldBtnGray"
+											onclick="deleteItems();" /></td>
+								</tr>
+							</table>
+						</div>
+						<div class="toolbarR">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td><input id="searchBtn" type="submit" class="ldBtnBlue" value="查询"/></td>
+									<input type="hidden" value="0" name="pager.curPageNum" />
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="yhlist2">
+			<form method="post" name="deleteForm" id="deleteForm" 
+				      action="${basePath}dms/draftDelete!deleteDraft.action?pager.curPageNum=${pager.curPageNum}">
+				<table id="contentTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+					<tr>
+					<th id="checkboxAllTh"><input type="checkbox" name="deleteAll" class="ldCheckbox all" id="checkboxAll" style="display: none;">
+					</th>
+        				<th>序号</th>
+        				<th>草稿名称</th>
+        				<th>所属项目</th>
+        				<th>所属文档</th>
+        				<th>所属模块</th>
+       					<th>创建人</th>
+       					<th>创建时间</th>
+        				<th>状态</th>
+        				<th>操作</th>
+					</tr>
+					<c:forEach items="${draftList}" var="item" varStatus="status">
+						<tr>
+							<td><input type="checkbox" name="delete" class="ldCheckbox" value="${item.id}" /></td>
+							<td>${status.count}</td>
+							<td>${item.draftName}</td>
+							<td>${item.projectDoc.projectName}</td>
+							<td>${item.document.documentName}</td>
+							<td>${item.module.moduleName}</td>
+							<td>${item.creator.userName}</td>
+							<td><f:formatDate value="${item.createTime}"
+										pattern="yyyy-MM-dd" /></td>
+							<td>
+								<c:if test="${item.status == 0 }">未提交</c:if>
+								<c:if test="${item.status == 1 }">未通过审核</c:if>
+							</td>
+							<td>
+				                 <input type='button' value='编辑' class='ldBtnLink' onclick="editItem(${item.id});" />
+				                 <input type='button' value='查看' class='ldBtnLink' onclick="showItem(${item.id});" />
+				            </td>
+						</tr>
+					</c:forEach>
+				</table>
+				</form>
+			</div>
+			<div class="yhlist3">
+				<%-- <div class="toolbarL">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><ld:check mark="userInsert">
+									<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
+								</ld:check></td>
+						</tr>
+					</table> --%>
+				
+				<div class="toolbarR">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<div class="ldPager">
+								<form action="${basePath}dms/draftSearch!searchDraftsByInfo.action" method="post" name="pagerForm">
+								<input name="draft.draftName" type="hidden" value="${draft.draftName}" /> 
+								<input name="draft.creator.userName" type="hidden" id="draft.creator.userName" value="${draft.creator.userName}" /> 
+								<input name="draft.document.documentName" type="hidden" value="${draft.document.documentName}" /> 
+								<input name="startCreateTime" type="hidden" id="startCreateTime" value="${startCreateTime}" />
+								<input name="endCreateTime" type="hidden" id="endCreateTime" value="${endCreateTime}" />
+								<input name="draft.projectDoc.projectName" type="hidden" value="${draft.projectDoc.projectName}" />
+								<input name="draft.module.moduleName" type="hidden" value="${draft.module.moduleName}" />
+								<input name="draft.status" type="hidden" value="${draft.status}" />
+								<ld:pager type="form" action="pagerForm" />
+								</form>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

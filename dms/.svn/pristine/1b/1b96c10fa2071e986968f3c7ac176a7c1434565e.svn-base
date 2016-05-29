@@ -1,0 +1,315 @@
+package com.landicorp.dms.action.function;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.dms.entities.BasicNodeCont;
+import com.landicorp.dms.entities.Document;
+import com.landicorp.dms.entities.Function;
+import com.landicorp.dms.entities.Module;
+import com.landicorp.dms.entities.Node;
+import com.landicorp.dms.service.IBasicNodeContService;
+import com.landicorp.dms.service.IDocumentService;
+import com.landicorp.dms.service.IFunctionService;
+import com.landicorp.dms.service.IModuleService;
+import com.landicorp.dms.service.INodeService;
+import com.sun.faces.renderkit.html_basic.HtmlBasicRenderer.Param;
+
+public class FunctionUpdateAction extends BaseActionSupport{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Function function;
+	private IFunctionService functionService;
+	private List<Node> nodeList;
+	private List<List<Node>> nodeLists;
+	private INodeService nodeService;
+	private Map<Integer, String> map;
+	private IBasicNodeContService basicNodeContService;
+	private Document document;
+	private IDocumentService documentService;
+	private Module module;
+	private IModuleService moduleService;
+	private Node node;
+	private BasicNodeCont basicNodeCont;
+	
+	
+	
+	public BasicNodeCont getBasicNodeCont() {
+		return basicNodeCont;
+	}
+	public void setBasicNodeCont(BasicNodeCont basicNodeCont) {
+		this.basicNodeCont = basicNodeCont;
+	}
+	public Node getNode() {
+		return node;
+	}
+	public void setNode(Node node) {
+		this.node = node;
+	}
+	public Module getModule() {
+		return module;
+	}
+	public void setModule(Module module) {
+		this.module = module;
+	}
+	public IModuleService getModuleService() {
+		return moduleService;
+	}
+	public void setModuleService(IModuleService moduleService) {
+		this.moduleService = moduleService;
+	}
+	public Document getDocument() {
+		return document;
+	}
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
+	}
+	public Function getFunction() {
+		return function;
+	}
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+	public IFunctionService getFunctionService() {
+		return functionService;
+	}
+	public void setFunctionService(IFunctionService functionService) {
+		this.functionService = functionService;
+	}
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+	public List<List<Node>> getNodeLists() {
+		return nodeLists;
+	}
+	public void setNodeLists(List<List<Node>> nodeLists) {
+		this.nodeLists = nodeLists;
+	}
+	public INodeService getNodeService() {
+		return nodeService;
+	}
+	public void setNodeService(INodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+	public Map<Integer, String> getMap() {
+		return map;
+	}
+	public void setMap(Map<Integer, String> map) {
+		this.map = map;
+	}
+	public IBasicNodeContService getBasicNodeContService() {
+		return basicNodeContService;
+	}
+	public void setBasicNodeContService(IBasicNodeContService basicNodeContService) {
+		this.basicNodeContService = basicNodeContService;
+	}
+	public String prepare() {
+		function=functionService.getById(function.getId());
+		document=function.getDocument();
+		
+		if(document!=null && document.getTemplate()!=null){
+			List<Node> rootNodes=nodeService.getAllNodesByTidAndType1(document.getTemplate().getId());
+			Node firstNode=new Node();
+			if(rootNodes.size()>0){
+				firstNode=rootNodes.get(0);
+				nodeList=nodeService.getAllFirstNodeByPid(firstNode.getId());
+				nodeLists=new ArrayList<List<Node>>();
+				for(int i=0;i<nodeList.size();i++){
+					List<Node> nodes=nodeService.getAllNodeByPid(nodeList.get(i).getId());
+					nodes.get(0).setTitleNo((i+1)+"");
+					for(int j=0;j<nodes.size();j++){
+						int c=1;
+						for(int k=1;k<nodes.size();k++){
+							if(nodes.get(k).getUpNode().getId().equals(nodes.get(j).getId())){
+								nodes.get(k).setTitleNo(nodes.get(j).getTitleNo()+"."+c);
+								c++;
+							}
+						}
+					}
+					
+					nodeLists.add(nodes);
+				}
+			}
+			
+			//内容传值
+			map=new HashMap<Integer, String>();
+			List<BasicNodeCont> basicNodeContList=basicNodeContService.getByDocumentIdAndFunctionId(document.getId(),function.getId());
+			for(int i=0;i<basicNodeContList.size();i++){
+				map.put(basicNodeContList.get(i).getNode().getId(), basicNodeContList.get(i).getContent());
+			}
+		}
+		
+		return INPUT;
+	}
+	
+	public String updateFunction()throws IOException{
+		HttpServletRequest request=ServletActionContext.getRequest();
+		request.setCharacterEncoding("UTF-8"); 
+		Function function1=new Function();
+		
+		function.setAvailable(1);
+		function.setCreateTime(new Date());
+		function.setCreator(getSessionUser());
+		function.setOperationType(0);  //设置未审核
+		
+		//修改基本节点内容
+		 Map<String,String[]> map = request.getParameterMap();
+	     for(Entry<String, String[]> me : map.entrySet()){
+	       String name = me.getKey();
+	       String [] v = me.getValue();
+	       if(name.equals("function.module.id")){
+	    	   Module module1 =new Module();
+	    	   module1.setId(Integer.valueOf(v[0]));
+	    	   module=moduleService.getById(module1.getId());
+	    	   function.setModule(module1);
+	       }else if(name.equals("function.functionName")){
+	    	   function.setFunctionName(v[0]);
+	       }else if(name.equals("function.urlPath")){
+	    	   function.setUrlPath(v[0]);
+	       }else if(name.equals("function.memo")){
+	    	   function.setMemo(v[0]);
+	       }else if(name.equals("document.id")){
+	    	   document=documentService.getById(document.getId());
+	    	   function.setDocument(document);
+	       }else if(name.equals("function.no")){
+	    	   function.setNo(Integer.valueOf(v[0]));
+	       }else if(name.equals("function.id")){
+	    	   function1=functionService.getById(Integer.valueOf(v[0]));
+	    	   function.setRequestCode(function1.getRequestCode());
+	    	  
+	       }else
+	       {
+	    	   BasicNodeCont basicNodeCont=new BasicNodeCont();
+		       basicNodeCont.setDocument(document);
+		       
+		       function1.setId(functionService.getMaxId()+1);
+		       basicNodeCont.setFunction(function1);
+		       String[] id=name.split("_");
+		       //System.out.println(name);
+		       Node node1=new Node();
+		       node1.setId(Integer.valueOf(id[1]));
+		       basicNodeCont.setNode(node1);
+		       StringBuffer sb=new StringBuffer("");
+	    	   for(int i=0;i<v.length;i++){
+	    		   if((i+1)%4==0){
+	    			   sb.append(v[i]+"☆");
+	    		   }else {
+	    			   sb.append(v[i]+"★");
+	    		   }
+		       }
+	    	   if(sb.length()>0){
+					sb.deleteCharAt(sb.length()-1);
+			   }
+	    	   basicNodeCont.setContent(sb.toString());
+	    	   basicNodeCont.setModule(function.getModule());
+	    	   basicNodeContService.add(basicNodeCont);   //内容节点
+	       }
+	       
+	     }
+	     functionService.add(function);
+	     setWindowReturnValue("ok");
+		 return "update";
+	}
+	
+	public String requestTest() {
+		function=functionService.getById(function.getId());
+		node=nodeService.getById(node.getId());
+		
+		List<BasicNodeCont> basicNodeContList=basicNodeContService.getByNodeIdAndFunctionId(node.getId(), function.getId());
+		
+		if(basicNodeContList!=null){
+			basicNodeCont=basicNodeContList.get(0);
+		}
+		return SUCCESS;
+	}
+	
+	public void test(){
+		HttpServletResponse response = ServletActionContext.getResponse(); 
+		response.setCharacterEncoding("UTF-8"); 
+		URL url;
+		basicNodeCont=basicNodeContService.getById(basicNodeCont.getId());
+		function=functionService.getById(function.getId());
+		StringBuffer sb=new StringBuffer("");
+		try {
+			url = new  URL(function.getUrlPath());
+			for (int i = 0; i < 1; i++) {
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setDoOutput(true);
+				conn.setDoInput(true);
+				conn.setUseCaches(false);
+				conn.setRequestMethod("POST");
+				conn.setRequestProperty("connection", "Keep-Alive");
+				conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
+				conn.setRequestProperty("Charsert", "UTF-8");
+				// 设置发送类型，以防被struts拦截参数
+				//conn.setRequestProperty("Content-Type", "application/soap+xml; charset=utf-8");
+				conn.setRequestProperty("Content-Type", "text/html");
+
+				OutputStream out = conn.getOutputStream();
+				basicNodeCont.setContent(basicNodeCont.getContent().replaceAll("&lt;", "<"));
+				basicNodeCont.setContent(basicNodeCont.getContent().replaceAll("&quot;", "\""));
+				basicNodeCont.setContent(basicNodeCont.getContent().replaceAll("&gt;", ">"));
+				
+				byte[] bs=basicNodeCont.getContent().split("★")[1].getBytes();
+
+				out.write(bs);
+
+				// out.write(end_data);
+
+				out.flush();
+
+				out.close();
+
+				// 定义BufferedReader输入流来读取URL的响应
+
+				BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+				String line = null;
+
+				while ((line = reader.readLine()) != null) {
+					sb.append(line+"\n");
+					// System.out.println(new String(line.getBytes("UTF-8")));
+					//System.out.println(line);
+				}
+				response.getWriter().write("[{\"sb\":\""+sb+"\"}]");
+			}
+			
+		}catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

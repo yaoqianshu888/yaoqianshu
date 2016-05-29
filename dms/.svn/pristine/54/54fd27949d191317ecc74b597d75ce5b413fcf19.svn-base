@@ -1,0 +1,533 @@
+<%@page language="java" contentType="text/html; charset=utf-8"%>
+<%@include file="/tagDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>
+<script type="text/javascript" src="${basePath}dms/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="${basePath}dms/js/jquery.smartWizard-2.0.js"></script>
+<link href="${basePath}dms/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+<script>
+
+	function checkSubmit() {
+		if (!checkData(true, 'user.userAlias', "登录名称", 2, 8)) {
+			return false;
+		}
+		if (!checkData(true, 'user.userNum', "用户编码", 2, 8)) {
+			return false;
+		}
+		if (!checkData(true, 'user.userName', "用户全称", 2, 8)) {
+			return false;
+		}
+		var newId = document.getElementById('belongAreaId').value;
+		if (newId == '') {
+			ldDialog.alert("请选择用户归属部门!");
+			return false;
+		}
+		if (!checkData(false, 'user.memo', "备注", 1, 255)) {
+			return false;
+		}
+		submitForm();
+	}
+	function submitForm(){
+		var url = "${basePath}coreAjax/userUpdate!updateUser.action";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "text",
+			data : $("#submitForm").serialize(),
+			success : function(result) {
+				var res = JSON.parse(result);
+				if (res.code == 1) {
+					ldDialog.close(res.returnValue);
+				} else {
+					ldDialog.alert(res.reason);
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+
+			}
+		});
+	}
+	
+	//增加行
+	var i=2;
+	function AddRow(table, index){
+		i++;
+	    var lastRow = table.rows[table.rows.length-1];
+	    var newRow = lastRow.cloneNode(true);
+	    $(newRow).find("input:radio").attr("name","yes"+i);
+	    table.tBodies[0].appendChild(newRow);
+	/*    SetRowCanEdit(newRow);*/
+	    return newRow;
+	}
+
+
+	//删除行
+	function DeleteRow(table, index){
+	    for(var i=table.rows.length - 1; i>0;i--){
+	        var chkOrder = table.rows[i].cells[0].firstChild;
+	        if(chkOrder){
+	            if(chkOrder.type = "CHECKBOX"){
+	                if(chkOrder.checked){
+	                    //执行删除
+	                    table.deleteRow(i);
+	                }
+	            }
+	        }
+	    }
+	}
+	//测试请求
+	function requestTest() {
+		ldDialog.open("${basePath}dms/functionUpdate!requestTest.action", "模拟测试请求",
+				function(window) {
+					var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.alert("密码：" + returnValue);
+						return true;
+					}
+				});
+	}
+
+	$(document).ready(function(){
+		// Smart Wizard 	
+		$('#wizard').smartWizard({
+			onFinish:onFinishCallback
+		});
+
+		function onFinishCallback(){
+			if (!checkData(true, 'function.functionName', "功能点名称", 2, 30)) {
+			return false;
+			}
+			
+			if($("#function\\.urlPath").val()==""){
+				ldDialog.alert("请输入请求url！");
+				return false;
+			}
+			if (!checkData(false, 'function.memo', "备注", 1, 255)) {
+				return false;
+			}
+			
+            document.insertForm.submit();
+		}
+		$(".photoText").focus(function(){
+	    	 focusId=$(this).attr("id"); 
+	    });
+	  
+	});
+	function managePhoto(){
+		ldDialog.openLarge("${basePath}dms/pictureSearch!searchPicture.action"
+				, "图片管理", function(window) {
+			var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				loadData(curPageNum);
+				return true;
+			}
+		});
+	}
+</script>
+<script type="text/javascript">
+    var start=0;
+    var end=0;
+    var focusId="";
+    function add(){
+        ldDialog.open("${basePath}dms/functionInsert!addPhoto.action?document.id="+${document.id }, "图片池管理",
+				function(window) {
+					var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						if(focusId == "")
+							{return true;}
+						else{
+							var textBox = $("#"+focusId)[0];
+				        var pre = textBox.value.substr(0, start);
+				        var post = textBox.value.substr(end);
+						textBox.value =pre +"<img alt='图片' src='"+returnValue +"'/>"+ post;
+						return true;
+						}
+				        
+						
+					}
+				});
+    }
+    function savePos(textBox){
+        //如果是Firefox(1.5)的话，方法很简单
+        if(typeof(textBox.selectionStart) == "number"){
+            start = textBox.selectionStart;
+            end = textBox.selectionEnd;
+            end = textBox.selectionEnd;
+        }
+        //下面是IE(6.0)的方法，麻烦得很，还要计算上'/n'
+        else if(document.selection){
+            var range = document.selection.createRange();
+            if(range.parentElement().id == textBox.id){
+                var range_all = document.body.createTextRange();
+                range_all.moveToElementText(textBox);
+                for (start=0; range_all.compareEndPoints("StartToStart", range) < 0; start++)
+                    range_all.moveStart('character', 1);
+                for (var i = 0; i <= start; i ++){
+                    if (textBox.value.charAt(i) == '/n')
+                        start++;
+                }
+                 var range_all = document.body.createTextRange();
+                 range_all.moveToElementText(textBox);
+                 // calculate selection end point by moving beginning of range_all to end of range
+                 for (end = 0; range_all.compareEndPoints('StartToEnd', range) < 0; end ++)
+                     range_all.moveStart('character', 1);
+                     // get number of line breaks from textarea start to selection end and add them to end
+                     for (var i = 0; i <= end; i ++){
+                         if (textBox.value.charAt(i) == '/n')
+                             end ++;
+                     }
+                }
+            }
+        /*document.getElementById("start").value = start;
+        document.getElementById("end").value = end;*/
+    }
+</script>
+<style>
+.ld-datagrid td{border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #dadada;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #dadada;
+  height: 34px;
+  text-align: left;
+  padding:5px 6px;
+  color: #555555;
+  font-size: 12px;
+}
+  .ld-datagrid td table td{  text-align: center;  line-height: 34px;padding:0px;}
+  .dialogTop{padding:15px}
+  .red{color:red}
+  .labels a {
+    background-color: rgba(255, 165, 0, 0.3);
+    color: #FFFFFF;
+    display: none;
+    height: 44px;
+    padding: 24px 0 0;
+    position: fixed;
+    text-align: center;
+    text-decoration: none;
+    width: 68px;
+	right:3%;
+	top:3%;
+	z-index:99;
+    -moz-border-radius: 40px;
+    -ms-border-radius: 40px;
+    -o-border-radius: 40px;
+    -webkit-border-radius: 40px;
+    border-radius: 40px;
+}
+.labels > a {
+    background-color: rgba(255, 165, 0, 0.3);
+    -moz-transition: .3s;
+    -ms-transition: .3s;
+    -o-transition: .3s;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+.labels a:hover {
+ 	background-color:rgba(255, 165, 0, 1.0);
+    cursor:point;
+}
+</style>
+</head>
+<body style="overflow: auto">
+	<form action="${basePath}dms/draftUpdate!updateDraft.action?document.id=${document.id}" method="post" name="insertForm" id="insertForm">
+		<input type="hidden" name="draft.id" value="${draft.id}" />
+		<input type="hidden" name="function.id" value="${function.id}" />
+		<input type="hidden" name="operationType" id="operationType" value="" />
+		<div class="dialogTop">
+		 <div class="labels">
+			<a id="label1"  style="display: inline;" onclick="add();">图片池
+			</a>
+		</div>
+	<table  width="100%" border="0" cellspacing="0" cellpadding="0" class="ld-datagrid">
+   <tr>
+        <td width="10%" class="tableleft">功能点名称</td>
+        <td><input type="text" class="ldText input138" name="function.functionName" id="function.functionName" value="${function.functionName }"/></td>
+    </tr>
+     <tr>
+        <td class="tableleft"><span class="red">*</span>请求url</td>
+        <td>
+        <input type="text" class="ldText input138" name="function.urlPath" id="function.urlPath" value="${function.urlPath }"/></td>
+    </tr> 
+    <tr>
+        <td class="tableleft">备注</td>
+        <td><textarea name="function.memo" id="function.memo" cols="20" rows="3"style="width:700px" class="ldTextArea" >${function.memo }</textarea></td>
+    </tr>   
+    <c:forEach items="${nodeLists}" var="item" varStatus="status">
+		   			 <c:forEach items="${nodeLists.get(status.index)}" var="item1" varStatus="status1">
+							<c:if test="${item1.nodeFormat==1 || item1.nodeFormat==0 }">
+								<tr>
+									<td class="tableleft" colspan="2">${item1.titleNo}${item1.title }</td>
+								</tr>
+							</c:if>
+							<c:if test="${item1.nodeFormat==2 }">
+								<tr>
+									<td class="tableleft">${item1.titleNo}${item1.title }</td>
+									<td><textarea cols="20" rows="3" name="cont_${item1.id}"
+										style="width:700px" class="ldTextArea">${map[item1.id]}</textarea></td>
+								</tr>
+							</c:if>
+							<c:if test="${item1.nodeFormat==3 }">
+								<tr>
+									<td class="tableleft">${item1.titleNo}${item1.title }</td>
+									<td><textarea cols="20" rows="3" name="cont_${item1.id}"
+												style="width:700px" class="ldTextArea photoText"  onpropertychange='this.style.posHeight=this.scrollHeight' onkeydown="savePos(this)"
+										onkeyup="savePos(this)" onmousedown="savePos(this)"
+										onmouseup="savePos(this)" onfocus="savePos(this)" id="cont_${item1.id}">${map[item1.id]}</textarea></td>
+								</tr>
+							</c:if>
+							<c:if test="${item1.nodeFormat==4 }">
+								<frame>
+								<tr>
+									<td class="tableleft">${item1.titleNo}${item1.title }</td>
+									<td>
+										<div>
+											<table width="698px" border="0" cellpadding="0" cellspacing="0" 
+												id="tabProduct${item1.id }">
+												<tr>
+													<td width="32" align="center" bgcolor="#EFEFEF" Name="Num"></td>
+													<td width="120" bgcolor="#EFEFEF" Name="Num" EditType="TextBox">参数名</td>
+													<td width="152" bgcolor="#EFEFEF" Name="ProductName"
+														EditType="TextBox">描述</td>
+													<td width="103" bgcolor="#EFEFEF" Name="Amount"
+														EditType="TextBox">是否必填</td>
+													<td width="153" bgcolor="#EFEFEF" Name="Price"
+														EditType="TextBox">说明</td>
+													<!--  <td bgcolor="#EFEFEF" Name="SumMoney" Expression="Amount*Price" >备注</td> -->
+												</tr>
+												 <c:forEach items="${map[item1.id].split('☆')}" var="item2" varStatus="status2">
+													<tr>
+														<td align="center"><input type="checkbox" class="che"
+															value="checkbox" /></td>
+														<td><input type="text" class="ldText input138"
+															name="cont_${item1.id}" value="${item2.split('★')[0]}"></td>
+														<td><textarea name="cont_${item1.id}" style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea >${item2.split('★')[1]}</textarea></td>
+														<td>
+														<c:if test="${item2.split('★')[2]==1}">
+														<input type="checkbox" class="check${status2.count}" name="cont_${item1.id}"
+															value="1" checked />是 <input type="checkbox" class="check${status2.count}"
+															name="cont_${item1.id}" value="0" />否</td>
+														</c:if>
+														<c:if test="${item2.split('★')[2]==0}">
+														<input type="checkbox" class="check${status2.count}" name="cont_${item1.id}"
+															value="1"  />是 <input type="checkbox" class="check${status2.count}"
+															name="cont_${item1.id}" value="0" checked/>否</td>
+														</c:if>
+														<td><textarea name="cont_${item1.id}" style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea >${item2.split('★')[3]}</textarea></td>
+													</tr>
+												</c:forEach>
+				
+											</table>
+											<br /> <input type="button" name="Submit" class="ldBtnGreen"
+												value="新增"
+												onclick="AddRow1('tabProduct${item1.id }',${item1.id})" /> <input
+												type="button" name="Submit2" class="ldBtnGreen" value="删除"
+												onclick="DeleteRow(document.getElementById('tabProduct${item1.id }'),1)" />
+				
+										</div>
+									</td>
+								</tr>
+								</frame>
+							</c:if>
+							<c:if test="${item1.nodeFormat==5 }">
+								<tr>
+									<td class="tableleft">${item1.titleNo}${item1.title }</td>
+									<td>
+										<div>
+									        <table width="698px" border="0" cellpadding="0" cellspacing="0" id="tabProduct${item1.id }"class="newtable">
+									            <tr>
+									                <td width="32" align="center" bgcolor="#EFEFEF" Name="Num"></td>
+									                <td width="40" bgcolor="#EFEFEF" Name="Num" EditType="TextBox">序号</td>
+									                <td width="120" bgcolor="#EFEFEF" Name="Num" EditType="TextBox">返回</td>
+									                <td width="152" bgcolor="#EFEFEF" Name="ProductName" EditType="TextBox" >描述</td>
+									            </tr>
+									            <c:forEach items="${map[item1.id].split('☆')}" var="item2" varStatus="status2">
+									            <tr>
+									                <td align="center"><input type="checkbox" class="che" value="" /></td>
+									                <input type="hidden" name="cont_${item1.id}" value="1" />
+									                <td><input type="text" class="ldText input138" name="cont_${item1.id}" value="${item2.split('★')[1]}"></td>
+									                <td><input type="text" class="ldText input138" name="cont_${item1.id}" value="${item2.split('★')[2]}"></td>
+									                <td><textarea name="cont_${item1.id}" style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea >${item2.split('★')[3]}</textarea></td>
+									            </tr>
+									            </c:forEach>
+									        </table>
+									        <br />
+									        <input type="button" name="Submit" class="ldBtnGreen" value="新增" onclick="AddRow(document.getElementById('tabProduct${item1.id }'),1)" />
+									        <input type="button" name="Submit2" class="ldBtnGreen" value="删除" onclick="DeleteRow(document.getElementById('tabProduct${item1.id }'),1)" />
+										</div>
+									</td>
+								</tr>
+							</c:if>
+							<c:if test="${item1.nodeFormat==6 }">
+								<tr>
+									<td class="tableleft">${item1.titleNo}${item1.title }</td>
+									<td>
+										<div class="d_edit_part_d"
+											style="float: left; padding: 10px 0px; width: 725px;">
+											<div>
+												<c:if test="${map[item1.id].split('★')[0]==1}">
+												<span style="float:right;"> <input type="radio"
+													name="cont_${item1.id}" value="1" checked /> xml <input type="radio"
+													name="cont_${item1.id}" value="0" /> json<input type="radio"
+													name="cont_${item1.id}" value="2" /> url</span>
+												<div class="clear"></div>
+												</c:if>
+												<c:if test="${map[item1.id].split('★')[0]==0}">
+												<span style="float:right;"> <input type="radio"
+													name="cont_${item1.id}" value="1"  /> xml <input type="radio"
+													name="cont_${item1.id}" value="0" checked/> json<input type="radio"
+													name="cont_${item1.id}" value="2" /> url</span>
+												<div class="clear"></div>
+												</c:if>
+												<c:if test="${map[item1.id].split('★')[0]==2}">
+												<span style="float:right;"> <input type="radio"
+													name="cont_${item1.id}" value="1"  /> xml <input type="radio"
+													name="cont_${item1.id}" value="0" /> json<input type="radio"
+													name="cont_${item1.id}" value="2" checked/> url</span>
+												<div class="clear"></div>
+												</c:if>
+											</div>
+											<textarea id="code_area1" placeholder="" rows="1"
+												name="cont_${item1.id}" autocomplete="off"
+												style="border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:100%"
+												onfocus="resizeTextarea(this,5);"
+												onclick="resizeTextarea(this, 5);"
+												onkeyup="resizeTextarea(this,5);"
+												onkeydown="resizeTextarea(this,5);"
+												onpaste="textareaRightMenu(this);"
+												oncut="textareaRightMenu(this);">${map[item1.id].split('★')[1]}</textarea>
+										</div>
+									</td>
+								</tr>
+								
+							</c:if>
+							<c:if test="${item1.nodeFormat==7 }">
+								<tr>
+									<td class="tableleft">${item1.titleNo}${item1.title }</td>
+									<td>
+										<div class="d_edit_part_d"
+											style="float: left; padding: 10px 0px; width: 700px;">
+											<div>
+											    <c:if test="${map[item1.id].split('★')[0]==1}">
+												<span
+													style="float:right;"> <input type="radio"
+													name="cont_${item1.id}" value="1" checked /> xml <input type="radio"
+													name="cont_${item1.id}" value="0" /> json</span>
+												<div class="clear"></div>
+												</c:if>
+												<c:if test="${map[item1.id].split('★')[0]==0}">
+												<span
+													style="float:right;"> <input type="radio"
+													name="cont_${item1.id}" value="1" /> xml <input type="radio"
+													name="cont_${item1.id}" value="0" checked /> json</span>
+												<div class="clear"></div>
+												</c:if>
+											</div>
+											<textarea id="code_area1" name="cont_${item1.id}" placeholder="" rows="1"
+												name="content_2" autocomplete="off"
+												style="border: 1px solid #ccc;margin-bottom:10px; height: 125px;width:100%"
+												onfocus="resizeTextarea(this,5);"
+												onclick="resizeTextarea(this, 5);"
+												onkeyup="resizeTextarea(this,5);"
+												onkeydown="resizeTextarea(this,5);"
+												onpaste="textareaRightMenu(this);"
+												oncut="textareaRightMenu(this);">${map[item1.id].split('★')[1]}</textarea>
+										</div>
+									</td>
+								</tr>
+							</c:if>
+		   			 </c:forEach>
+		   	</c:forEach>
+    <tr>
+        <td class="tableleft"></td>
+        <td>
+            <button type="button" class="ldBtnGreen" type="button"id="save">保存</button> &nbsp;&nbsp;
+            <button type="button" class="ldBtnBlue" type="button"id="refer">提交</button>&nbsp;&nbsp;
+            <button type="button" class="ldBtnBlue" name="backid" onclick="ldDialog.close();">关闭</button>
+        </td>
+    </tr>
+</table>
+</div>
+		<%-- <div class="dialogBottom">
+			<div class="btns">
+				<ld:check mark="userInsertCommit">
+					<input type="button" value="确 定" class="ldBtnGreen"
+						onclick="ldDialog.close();" />
+				</ld:check>
+				<input type="button" value="关 闭" class="ldBtnGray"
+					onclick="ldDialog.close();" />
+			</div>
+		</div> --%>
+	</form>
+</body>
+</html>
+<script>
+   $(function () {      
+         $('#refer').click(function(){
+        	 	if (!checkData(true, 'function.functionName', "功能点名称", 2, 30)) {
+			return false;
+			}
+			
+			if($("#function\\.urlPath").val()==""){
+				ldDialog.alert("请输入请求url！");
+				return false;
+			}
+			if (!checkData(false, 'function.memo', "备注", 1, 255)) {
+				return false;
+			}
+			
+            document.insertForm.submit();
+         });
+        $('#save').click(function(){
+        	if (!checkData(true, 'function.functionName', "功能点名称", 2, 30)) {
+			return false;
+			}
+			
+			if($("#function\\.urlPath").val()==""){
+				ldDialog.alert("请输入请求url！");
+				return false;
+			}
+			if (!checkData(false, 'function.memo', "备注", 1, 255)) {
+				return false;
+			}
+			$("#operationType").val("1");   //标记为保存操作
+			document.insertForm.submit();
+        	
+         });
+
+    });
+    
+     var  num=100;
+    //添加行
+		function AddRow1(table, index) {
+			var newRow = "<tr><td align='center'><input type='checkbox' value='checkbox' /></td><td><input type='text' class='ldText input138' name='cont_"+index+"' value=''></td><td><textarea name='cont_"+index+"' style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td><td><input type='checkbox' class='check"+num+"' onclick='checkClick(this)' name='cont_"+index+"' value='1' checked />是 <input type='checkbox' class='check"+num+"' onclick='checkClick(this)' name='cont_"+index+"' value='0' />否</td><td><textarea name='cont_"+index+"' style='border: 1px solid #94BBE2;width:98%;overflow-y:hidden' row=1 onpropertychange='this.style.posHeight=this.scrollHeight' id=textarea ></textarea></td></tr>";
+			$("#"+table+"").append(newRow);
+			num++;
+			return newRow;
+		}
+		$(":checkbox").click(function() {
+            var classname = $(this).attr('class');
+            if(classname!="che"){
+            	$("." + classname).prop("checked", false);
+           	    $(this).prop("checked", true);
+            }
+            
+        });
+        
+        function checkClick(target){
+        	var classname = $(target).attr('class');
+            $("." + classname).prop("checked", false);
+            $(target).prop("checked", true);
+        }
+        
+</script>

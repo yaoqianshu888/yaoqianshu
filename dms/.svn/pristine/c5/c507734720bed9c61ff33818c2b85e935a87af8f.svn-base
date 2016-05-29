@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+	default-autowire="byName">
+
+
+	<!-- initTask -->
+
+	<!-- dao -->
+	
+	<!-- service -->
+
+
+	<!-- struts2 action -->
+	
+	<!-- 文档权限管理action -->
+	<bean id="documentTreeAction" class="com.landicorp.dms.action.docUser.DocumentTreeAction"
+		scope="prototype" />
+	<bean id="docUserSearchAction" class="com.landicorp.dms.action.docUser.DocUserSearchAction"
+		scope="prototype" />
+	<bean id="docDocRightSearchAction" class="com.landicorp.dms.action.docUser.DocDocRightSearchAction"
+		  scope="prototype" />
+	<bean id="userDocRightEditConfAction" class="com.landicorp.dms.action.docUser.UserDocRightEditConfAction"
+		  scope="prototype" />
+	<bean id="userDocRightReadConfAction" class="com.landicorp.dms.action.docUser.UserDocRightReadConfAction"
+		  scope="prototype" />
+	<bean id="userDocRightSearchAction" class="com.landicorp.dms.action.docUser.UserDocRightSearchAction"
+		  scope="prototype" />
+	<!-- 模板 -->
+	<bean id="templateSearchAction" class="com.landicorp.dms.action.template.TemplateSearchAction"
+		  scope="prototype" />
+	<bean id="templateUpdateAction" class="com.landicorp.dms.action.template.TemplateUpdateAction"
+		  scope="prototype" />
+	<bean id="templateDeleteAction" class="com.landicorp.dms.action.template.TemplateDeleteAction"
+		  scope="prototype" />
+	<!-- 操作记录 -->
+	<bean id="operatorLogSearchAction" class="com.landicorp.dms.action.operatorlog.OperatorLogSearchAction"
+		  scope="prototype" />
+
+</beans>

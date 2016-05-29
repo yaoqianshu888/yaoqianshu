@@ -1,0 +1,56 @@
+package com.landicorp.dms.util;
+
+import com.landicorp.core.util.DateUtil;
+import com.landicorp.dms.helper.DmsValue;
+
+import java.text.MessageFormat;
+import java.util.Date;
+
+public class DmsEmailUtil {
+
+		private static final String NOTIFY_MAIL_CONTENT_STRING =
+						"<div><p>尊敬的用户:您好!</br></p>" + "<p  style=\"text-indent: 2em;\">文档：<span style=\"color: red;text-indent: 2em;\">{0}</span>已更新。</p>"
+										+ "<div>请点击该链接查看更新：<a href='{1}' target='_blank'>{1}</a></div>" + "<p>如不能点击，请将链接复制到浏览器访问.</p>"
+										+ "<div style=\"border-bottom:1px dotted #999999; margin-top: 15px; margin-bottom: 15px; width:800px;\"></div>"
+										+ "<p>此信由联迪商用文档管理系统发出，系统不接受回信，请勿直接回复，谢谢合作。</p>" + "</div>";
+
+		private static String getNotifyMail(String docName, String viewUrl) {
+				return MessageFormat.format(NOTIFY_MAIL_CONTENT_STRING, docName, viewUrl,
+								DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		}
+
+		/**
+		 * 文档更新后调用此接口通知用户
+		 * @param docName  文档名称
+		 * @param userEmails 用户邮箱
+		 * @param viewUrl 文档查看链接
+		 * @return  是否发送成功
+		 */
+		public static boolean sendNotify(String docName, String[] userEmails, String viewUrl) {
+				String from = DmsValue.NOTIFY_MAIL_SENDER_ADDR;
+				String personalName = DmsValue.NOTIFY_MAIL_SENDER_NAME;
+				String to[] = userEmails;
+				String cc[] = null;
+				String bcc[] = null;
+				String subject = DmsValue.NOTIFY_MAIL_SUBJECT_STRING;
+				StringBuffer content = new StringBuffer("");
+
+				content.append(getNotifyMail(docName, viewUrl));
+				boolean isSend = false;
+				try {
+						DmsMailSender.sendMail(from, personalName, to, cc, bcc, subject, content.toString());
+						isSend = true;
+				} catch (Exception e) {
+						System.out.println(e.getMessage());
+						e.printStackTrace();
+						isSend = false;
+				}
+				return isSend;
+		}
+
+		public static void main(String[] args) {
+				boolean flag = sendNotify("testDoc", new String[]{"burn_x7@163.com"}, "www.baidu.com");
+				System.out.println(flag);
+		}
+
+}
