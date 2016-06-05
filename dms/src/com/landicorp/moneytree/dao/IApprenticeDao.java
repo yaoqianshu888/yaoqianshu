@@ -18,4 +18,5 @@ public interface IApprenticeDao extends IMyBatisDao<Apprentice, Integer> {
             @Param("pager") Pager pager);
         
     public int getApprenticeCountByApprentice(@Param("apprentice") Apprentice apprentice);  //按条件得到下家数
+    public void deleteApprentice(Integer[] item);   //逻辑删除下家
 }

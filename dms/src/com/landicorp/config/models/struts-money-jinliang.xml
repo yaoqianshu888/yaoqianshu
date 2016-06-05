@@ -16,6 +16,30 @@
 			<result name="input">/WEB-INF/moneyTree/apprentice/apprenticeUpdate.jsp</result>
 			<result name="success">/WEB-INF/core/success.jsp</result>
 		</action>
+		<action name="apprenticeDelete" class="apprenticeDeleteAction">
+			<result name="success" type="redirect">/moneyJinliang/apprenticeSearch!searchApprenticeByInfo.action</result>
+		</action>
+		<!--收数管理 -->
+		<action name="chargeNumber" class="chargeNumberAction">
+			<result name="success">/WEB-INF/moneyTree/chargeNumber/chargeNumber.jsp</result>
+		</action>
+		
+		<!--号码群组 -->
+		<action name="numgroupSearch" class="numgroupSearchAction">
+			<result name="detail">/WEB-INF/moneyTree/numgroup/numgroupDetail.jsp</result>
+			<result name="success">/WEB-INF/moneyTree/numgroup/numgroupSearch.jsp</result>
+		</action>
+		<action name="numgroupInsert" class="numgroupInsertAction">
+			<result name="input">/WEB-INF/moneyTree/numgroup/numgroupInsert.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="numgroupUpdate" class="numgroupUpdateAction">
+			<result name="input">/WEB-INF/moneyTree/numgroup/numgroupUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="numgroupDelete" class="numgroupDeleteAction">
+			<result name="success" type="redirect">/moneyJinliang/numgroupSearch!searchNumgroupByInfo.action</result>
+		</action>
 	</package>
 </struts>
 

@@ -40,6 +40,7 @@ public class ApprenticeInsertAction extends BaseActionSupport {
         int code=0;
         String returnValue="";
         try {
+            apprentice.setStatus(1);
             apprentice.setUser(getSessionUser());
             apprentice.setCreateTime(new Date());
             apprentice.setCreator(getSessionUser());

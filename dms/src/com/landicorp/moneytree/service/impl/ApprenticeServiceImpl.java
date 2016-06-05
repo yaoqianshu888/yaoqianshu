@@ -66,4 +66,12 @@ public class ApprenticeServiceImpl extends AbstractBaseServiceImpl<Apprentice, I
         return apprenticeDao;
     }
 
+    @Override
+    public void deleteApprentice(Integer[] item) {
+        apprenticeDao.deleteApprentice(item);
+    }
+
+  
+   
+
 }

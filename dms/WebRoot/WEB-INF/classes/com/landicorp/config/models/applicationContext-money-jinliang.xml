@@ -14,10 +14,14 @@
 	<bean id="apprenticeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.landicorp.moneytree.dao.IApprenticeDao"></property>
 	</bean>
+	<bean id="numgroupDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.moneytree.dao.INumgroupDao"></property>
+	</bean>
 	
 	
 	<!-- service -->
 	<bean id="apprenticeService" class="com.landicorp.moneytree.service.impl.ApprenticeServiceImpl" />
+	<bean id="numgroupService" class="com.landicorp.moneytree.service.impl.NumgroupServiceImpl" />
 
 	<!-- struts2 action -->
 	
@@ -28,5 +32,20 @@
 		scope="prototype" />
 	<bean id="apprenticeUpdateAction" class="com.landicorp.moneytree.action.apprentice.ApprenticeUpdateAction"
 		scope="prototype" />
+	<bean id="apprenticeDeleteAction" class="com.landicorp.moneytree.action.apprentice.ApprenticeDeleteAction"
+		scope="prototype" />
 	
+	<!-- 收数 action -->
+	<bean id="chargeNumberAction" class="com.landicorp.moneytree.action.chargeNumber.ChargeNumberAction"
+		scope="prototype" />
+		
+	<!-- 号码群组action -->
+	<bean id="numgroupSearchAction" class="com.landicorp.moneytree.action.numgroup.NumgroupSearchAction"
+		scope="prototype" />
+	<bean id="numgroupInsertAction" class="com.landicorp.moneytree.action.numgroup.NumgroupInsertAction"
+		scope="prototype" />
+	<bean id="numgroupUpdateAction" class="com.landicorp.moneytree.action.numgroup.NumgroupUpdateAction"
+		scope="prototype" />
+	<bean id="numgroupDeleteAction" class="com.landicorp.moneytree.action.numgroup.NumgroupDeleteAction"
+		scope="prototype" />
 </beans>

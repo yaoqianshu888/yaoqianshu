@@ -38,7 +38,7 @@
 
 		<!-- 摇钱树 -->
 		<typeAlias alias="apprentice" type="com.landicorp.moneytree.entities.Apprentice" />
-		
+		<typeAlias alias="numgroup" type="com.landicorp.moneytree.entities.Numgroup" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/landicorp/core/dao/sql.xml" />

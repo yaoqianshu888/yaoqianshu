@@ -53,19 +53,18 @@
 		}
 		var param = $("#deleteForm").serialize();
 		ldDialog.confirm("你确定要删除这些项吗？", function() {
-			var url = "${basePath}moneyJinliang/documentSearch!deleteDocument.action?" + param;
+			var url = "${basePath}moneyJinliang/apprenticeDelete!deleteApprentice.action?" + param;
 			$.ajax({
 				type : "POST",
 				url : url,
-				dataType : "text",
-				success : function(result) {
-					var res = JSON.parse(result);
-					if (res.code == 1) {
+				dataType : "json",
+				success : function(res) {
+					if (res[0].code == 1) {
 						ldDialog.tips("处理完成");
 						var curPageNum = $("input[name='pager.curPageNum']").val();
-						loadData(curPageNum);
+						document.pagerForm.submit();
 					} else {
-						ldDialog.alert(res.reason);
+						ldDialog.alert(res[0].reason);
 					}
 				},
 				error : function() {
@@ -111,9 +110,12 @@
 									<table border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td>
-												<ld:check mark="documentInsert">
+												<ld:check mark="apprenticeInsert">
 													<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
 												</ld:check>
+												<ld:check mark="apprenticeDelete">
+													<input type="button" value="删除" class="ldBtnGray"
+													onclick="deleteItems();" /></ld:check>
 											</td>
 										</tr>
 									</table>
@@ -129,9 +131,10 @@
 			
 			
 			<div class="yhlist2">
-				<form method="post" name="statusForm" id="statusForm">
+				<form method="post" name="deleteForm" id="deleteForm">
 					<table id="contentTable" width="100%" border="0" cellspacing="1" cellpadding="0" class="ld-datagrid">
 						<tr>
+							<th>选择</th>
 							<th>序号</th>
 							<th>下家名称</th>
 							<th>字倍数</th>
@@ -143,6 +146,9 @@
 						
 						<c:forEach items="${apprenticeList }" var="item" varStatus="status">
 						<tr>
+							<td>
+								<input type="checkbox" name="delete" id="delete" value="${item.id}" />			
+							</td>
 							<td><c:out value="${status.count}" /></td>
 							<td>${ item.apprenticeName} </td>
 							<td><span style="font-weight:bold;">${ item.wordTimes}</span></td>
@@ -156,6 +162,7 @@
 								<ld:check mark="apprenticeUpdate">
 									<input type="button" value="编辑" class="ldBtnLink" onclick="editItem(${item.id});" />&nbsp;
 								</ld:check>
+								
 							</td>
 						</tr>
 						</c:forEach>
@@ -168,11 +175,7 @@
 				<div class="toolbarL">
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
-							<td>
-								<ld:check mark="documentInsert">
-									<input type="button" class="ldBtnGray" value="新增" onclick="addItem();" />
-								</ld:check>
-							</td>
+							
 						</tr>
 					</table>
 				</div>

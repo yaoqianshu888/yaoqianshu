@@ -12,4 +12,5 @@ public interface IApprenticeService extends IBaseService<Apprentice, Integer> {
     public List<Apprentice> getApprenticeListByApprentice(     //按条件得到下家
              Apprentice apprentice,
              Pager pager);
+    public void deleteApprentice(Integer[] item);   //逻辑删除下家
 }
