@@ -40,6 +40,20 @@
 		<action name="numgroupDelete" class="numgroupDeleteAction">
 			<result name="success" type="redirect">/moneyJinliang/numgroupSearch!searchNumgroupByInfo.action</result>
 		</action>
+		
+		<!--期数 -->
+		<action name="periodSearch" class="periodSearchAction">
+			<result name="detail">/WEB-INF/moneyTree/period/periodDetail.jsp</result>
+			<result name="success">/WEB-INF/moneyTree/period/periodSearch.jsp</result>
+		</action>
+		<action name="periodInsert" class="periodInsertAction">
+			<result name="input">/WEB-INF/moneyTree/period/periodInsert.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="periodUpdate" class="periodUpdateAction">
+			<result name="input">/WEB-INF/moneyTree/period/periodUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
 	</package>
 </struts>
 

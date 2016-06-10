@@ -14,7 +14,7 @@ public class History extends BaseEntity {
     private Numgroup numgroup;  //群组号码id
     private Date createTime;  //生成时间
     private Date lastModifyTime;  //最后修改时间
-    private Integer clickNo;//当前点击号
+    private String clickNo;//当前点击号
     public Integer getId() {
         return id;
     }
@@ -63,11 +63,12 @@ public class History extends BaseEntity {
     public void setLastModifyTime(Date lastModifyTime) {
         this.lastModifyTime = lastModifyTime;
     }
-    public Integer getClickNo() {
+    public String getClickNo() {
         return clickNo;
     }
-    public void setClickNo(Integer clickNo) {
+    public void setClickNo(String clickNo) {
         this.clickNo = clickNo;
     }
+  
     
 }

@@ -1,21 +1,89 @@
 package com.landicorp.moneytree.action.chargeNumber;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.ServletActionContext;
 
 
 
 import com.landicorp.core.action.BaseActionSupport;
 import com.landicorp.moneytree.entities.Apprentice;
+import com.landicorp.moneytree.entities.History;
 import com.landicorp.moneytree.entities.Numgroup;
+import com.landicorp.moneytree.entities.Period;
 import com.landicorp.moneytree.service.IApprenticeService;
+import com.landicorp.moneytree.service.IHistoryService;
 import com.landicorp.moneytree.service.INumgroupService;
+import com.landicorp.moneytree.service.IPeriodService;
 
 public class ChargeNumberAction extends BaseActionSupport {
     private Apprentice apprentice;
     private List<Apprentice> apprenticeList;
     private List<Numgroup> numgroupList;
     private INumgroupService numgroupService;
+    private Period prePeriod;
+    private Period nowPeriod;
+    private IPeriodService periodService;
+    private History history;
+    private IHistoryService historyService;
+    private String insertOk; //插入数据成功
     
+    
+    public String getInsertOk() {
+        return insertOk;
+    }
+
+    public void setInsertOk(String insertOk) {
+        this.insertOk = insertOk;
+    }
+
+    public History getHistory() {
+        return history;
+    }
+
+    public void setHistory(History history) {
+        this.history = history;
+    }
+
+    public IHistoryService getHistoryService() {
+        return historyService;
+    }
+
+    public void setHistoryService(IHistoryService historyService) {
+        this.historyService = historyService;
+    }
+
+    public Period getPrePeriod() {
+        return prePeriod;
+    }
+
+    public void setPrePeriod(Period prePeriod) {
+        this.prePeriod = prePeriod;
+    }
+
+    public Period getNowPeriod() {
+        return nowPeriod;
+    }
+
+    public void setNowPeriod(Period nowPeriod) {
+        this.nowPeriod = nowPeriod;
+    }
+
+    public IPeriodService getPeriodService() {
+        return periodService;
+    }
+
+    public void setPeriodService(IPeriodService periodService) {
+        this.periodService = periodService;
+    }
+
     public List<Numgroup> getNumgroupList() {
         return numgroupList;
     }
@@ -68,6 +136,10 @@ public class ChargeNumberAction extends BaseActionSupport {
         numgroup.setUser(getSessionUser());
         numgroupList=numgroupService.getAllNumgroupNoPager(numgroup);
         
+        //得到上一期和当前期
+        prePeriod=periodService.getPrePeriod();
+        nowPeriod=periodService.getNowPeriod();
+        
         return SUCCESS;
     }
     
@@ -75,6 +147,72 @@ public class ChargeNumberAction extends BaseActionSupport {
      
         apprentice.setUser(getSessionUser());
         apprenticeList=apprenticeService.getApprenticeListByApprentice(apprentice, getPager());
+        
+        Numgroup numgroup=new Numgroup();
+        numgroup.setUser(getSessionUser());
+        numgroupList=numgroupService.getAllNumgroupNoPager(numgroup);
+        
+        //得到上一期和当前期
+        prePeriod=periodService.getPrePeriod();
+        nowPeriod=periodService.getNowPeriod();
+        
+        return SUCCESS;
+    }
+    
+    public String submitNumber() throws IOException{
+        HttpServletRequest request=ServletActionContext.getRequest();
+        request.setCharacterEncoding("UTF-8"); 
+        
+        String UUid=UUID.randomUUID().toString();//生产唯一的当前点击数
+        nowPeriod=new Period();
+        prePeriod=periodService.getPrePeriod();
+        apprentice=new Apprentice();
+        apprentice.setUser(getSessionUser());
+        
+        apprenticeList=apprenticeService.getApprenticeListByApprentice(apprentice, getPager());
+        
+        Numgroup numgroup=new Numgroup();
+        numgroup.setUser(getSessionUser());
+        numgroupList=numgroupService.getAllNumgroupNoPager(numgroup);
+        
+        //存历史记录
+        Map<String,String[]> map = request.getParameterMap();
+        for(Entry<String, String[]> me : map.entrySet()){
+            String name = me.getKey();
+            String [] v = me.getValue();
+            if(name.equals("apprentice.id")){
+                apprentice.setId(Integer.valueOf(v[0]));
+            }else if(name.equals("nowPeriod.id")){
+                nowPeriod=periodService.getById(Integer.valueOf(v[0]));
+            }
+        }
+        
+        insertOk="2";//无输入数据时
+        
+        for(Entry<String, String[]> me : map.entrySet()){
+            String name = me.getKey();
+            String [] v = me.getValue();
+            
+            if(!v[0].equals("") && !name.equals("apprentice.id") && !name.equals("nowPeriod.id")){
+                System.out.println(name);
+                System.out.println(v[0]);
+                history=new History();
+                history.setUser(getSessionUser());
+                history.setPeriod(nowPeriod);
+                history.setApprentice(apprentice);
+                history.setChargeNumber(v[0]);
+                Numgroup numgroup1=new Numgroup();
+                numgroup1.setId(Integer.valueOf(name));
+                history.setNumgroup(numgroup1);
+                history.setCreateTime(new Date());
+                history.setLastModifyTime(new Date());
+                history.setClickNo(UUid);
+                historyService.add(history);
+                
+                insertOk="1";  //提交成功
+            }
+            
+        }
         
         return SUCCESS;
     }

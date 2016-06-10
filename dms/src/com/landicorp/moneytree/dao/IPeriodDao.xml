@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 命名空间 -->
+<mapper namespace="com.landicorp.moneytree.dao.IPeriodDao">
+	<resultMap id="period" type="period">
+		<result property="id" column="id" />
+		<result property="period" column="period" />
+		<result property="lotteryResult" column="lottery_result" />
+		<result property="chargeNumber" column="charge_number" />
+		<result property="lotteryTime" column="lottery_time" />
+		<result property="isNow" column="is_now" />
+	</resultMap>
+	<sql id="keyColumns">period,lottery_result,charge_number,lottery_time,is_now</sql>
+	<sql id="valueColumns">#{period, jdbcType=VARCHAR},#{lotteryResult, jdbcType=VARCHAR},#{chargeNumber,jdbcType=VARCHAR},#{lotteryTime,jdbcType=TIMESTAMP},
+		#{isNow,jdbcType=NUMERIC}
+	</sql>
+	
+	<sql id="whereColumns">
+			<if
+				test="period!=null and period.period!=null and period.period!=''">
+				and t1.period=#{period.period}
+			</if>
+	</sql>
+	
+	<insert id="save" parameterType="period">
+		insert into t_moneytree_period
+		(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<!-- 配置Mysql主键自动增长 -->
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="period">
+		update t_moneytree_period
+		<set>
+			<if test="period!=null">period=#{period},</if>
+			<if test="lotteryResult!=null">lottery_result=#{lotteryResult},</if>
+			<if test="chargeNumber!=null">charge_number=#{chargeNumber},</if>
+			<if test="lotteryTime!=null">lottery_time=#{lotteryTime},</if>
+			<if test="isNow!=null">is_now=#{isNow}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<update id="setPrePreiod" >
+		update t_moneytree_period
+		set is_now=2
+		where is_now=1
+	</update>
+	<update id="setHisPreiod" >
+		update t_moneytree_period
+		set is_now=3
+		where is_now=2
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from t_moneytree_period where
+		id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="getById" parameterType="int" resultMap="period">
+		select *
+		from
+		t_moneytree_period
+		where id=#{id} 
+	</select>
+	
+	<select id="getPrePeriod" resultMap="period">
+		select *
+		from
+		t_moneytree_period
+		where is_now=2 
+	</select>
+	
+	<select id="getNowPeriod" resultMap="period">
+		select *
+		from
+		t_moneytree_period
+		where is_now=1 
+	</select>
+	
+	<select id="getPeriodListByPeriod" parameterType="map"
+		resultMap="period">
+		select * from t_moneytree_period t1
+		<where>
+			<include refid="whereColumns" />
+			 
+		</where>		
+		order by t1.ID desc
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getPeriodCountByPeriod" parameterType="map" resultType="int">
+		select count(*) from t_moneytree_period t1
+		<where>
+			<include refid="whereColumns" />
+		</where>		
+	</select>
+	<select id="getAllPeriod" resultMap="period" parameterType="map">
+		SELECT
+		*
+		FROM t_moneytree_period 
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+	
+	<select id="getAllPeriodCount" resultType="int" parameterType="map">
+		select count(*) from t_moneytree_period 
+	</select>
+	
+</mapper>

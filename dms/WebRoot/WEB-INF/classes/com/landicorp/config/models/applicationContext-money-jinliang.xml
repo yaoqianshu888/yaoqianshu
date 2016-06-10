@@ -17,11 +17,19 @@
 	<bean id="numgroupDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.landicorp.moneytree.dao.INumgroupDao"></property>
 	</bean>
-	
+	<bean id="periodDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.moneytree.dao.IPeriodDao"></property>
+	</bean>
+	<bean id="historyDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.moneytree.dao.IHistoryDao"></property>
+	</bean>
 	
 	<!-- service -->
 	<bean id="apprenticeService" class="com.landicorp.moneytree.service.impl.ApprenticeServiceImpl" />
 	<bean id="numgroupService" class="com.landicorp.moneytree.service.impl.NumgroupServiceImpl" />
+	<bean id="periodService" class="com.landicorp.moneytree.service.impl.PeriodServiceImpl" />
+	<bean id="historyService" class="com.landicorp.moneytree.service.impl.HistoryServiceImpl" />
+	
 
 	<!-- struts2 action -->
 	
@@ -47,5 +55,13 @@
 	<bean id="numgroupUpdateAction" class="com.landicorp.moneytree.action.numgroup.NumgroupUpdateAction"
 		scope="prototype" />
 	<bean id="numgroupDeleteAction" class="com.landicorp.moneytree.action.numgroup.NumgroupDeleteAction"
+		scope="prototype" />
+		
+	<!-- 期数action -->
+	<bean id="periodSearchAction" class="com.landicorp.moneytree.action.period.PeriodSearchAction"
+		scope="prototype" />
+	<bean id="periodInsertAction" class="com.landicorp.moneytree.action.period.PeriodInsertAction"
+		scope="prototype" />
+	<bean id="periodUpdateAction" class="com.landicorp.moneytree.action.period.PeriodUpdateAction"
 		scope="prototype" />
 </beans>
