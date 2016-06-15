@@ -18,4 +18,7 @@ public interface IHistoryDao extends IMyBatisDao<History, Integer> {
             @Param("pager") Pager pager);
         
     public int getHistoryCountByHistory(@Param("history") History history); 
+    public List<History> getAllHistoryByApIdAndPeId(@Param("history") History history); 
+    public List<History> getAllHistoryByClickNo(@Param("history") History history); 
+    public void deleteByClickNo(String[] item);  //根据当前点击号删除历史记录
 }

@@ -31,6 +31,21 @@
 		document.subForm.submit();
 	}
 	
+	function showDetail(id,apprenticeName){
+		ldDialog.openMedium("${basePath}moneyJinliang/chargeNumber!showDetail.action?apprentice.id="+id,
+			"明细查询("+apprenticeName+")     当前期:  "+${prePeriod.period }, 
+			function(window) {
+				var returnValue = window.returnValue;
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					return true;
+				} else {//有返回值 处理一些事
+					ldDialog.tips("处理成功！");
+					document.pagerForm.submit();
+					return true;
+				}
+		});
+	}
+	
 </script>
 <style >
 .ldPager div.skip{right:70%}
@@ -69,7 +84,7 @@
 				<c:forEach items="${apprenticeList }" var="item" varStatus="status">
 					<tr>
 						<td><input type="button" value="${ item.apprenticeName}" class="ldBtnGray" onclick="chooseApprentice(${item.id},'${item.apprenticeName}')"/></td>
-						<td><input type="button" value="明细查询" class="ldBtnGray"/></td>
+						<td><input type="button" value="明细查询" class="ldBtnGray" onclick="showDetail(${item.id},'${item.apprenticeName}')"/></td>
 					</tr>
 				</c:forEach>
 				</table>

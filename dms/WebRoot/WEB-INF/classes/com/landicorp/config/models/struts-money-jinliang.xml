@@ -22,6 +22,16 @@
 		<!--收数管理 -->
 		<action name="chargeNumber" class="chargeNumberAction">
 			<result name="success">/WEB-INF/moneyTree/chargeNumber/chargeNumber.jsp</result>
+			<result name="detail">/WEB-INF/moneyTree/chargeNumber/numberDetail.jsp</result>
+		</action>
+		<action name="chargeDetail" class="chargeDetailAction">
+			<result name="success">/WEB-INF/moneyTree/chargeNumber/chargeDetail.jsp</result>
+		</action>
+		<action name="chargeUpdate" class="chargeUpdateAction">
+			<result name="input">/WEB-INF/moneyTree/chargeNumber/numberUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="chargeDelete" class="chargeDeleteAction">
 		</action>
 		
 		<!--号码群组 -->

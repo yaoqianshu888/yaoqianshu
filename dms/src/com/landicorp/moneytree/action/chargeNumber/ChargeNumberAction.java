@@ -1,6 +1,7 @@
 package com.landicorp.moneytree.action.chargeNumber;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,17 @@ public class ChargeNumberAction extends BaseActionSupport {
     private History history;
     private IHistoryService historyService;
     private String insertOk; //插入数据成功
+    private List<List<History>> histories;
     
     
+    public List<List<History>> getHistories() {
+        return histories;
+    }
+
+    public void setHistories(List<List<History>> histories) {
+        this.histories = histories;
+    }
+
     public String getInsertOk() {
         return insertOk;
     }
@@ -194,8 +204,7 @@ public class ChargeNumberAction extends BaseActionSupport {
             String [] v = me.getValue();
             
             if(!v[0].equals("") && !name.equals("apprentice.id") && !name.equals("nowPeriod.id")){
-                System.out.println(name);
-                System.out.println(v[0]);
+               
                 history=new History();
                 history.setUser(getSessionUser());
                 history.setPeriod(nowPeriod);
@@ -215,5 +224,40 @@ public class ChargeNumberAction extends BaseActionSupport {
         }
         
         return SUCCESS;
+    }
+    
+    public String showDetail(){
+        nowPeriod=periodService.getNowPeriod();
+        history=new History();
+        history.setApprentice(apprentice);
+        history.setPeriod(nowPeriod);
+        List<History> historyList=historyService.getAllHistoryByApIdAndPeId(history);
+        histories=new ArrayList<List<History>>();
+        
+        if(historyList.size()>0){
+            History temHistory=historyList.get(0);   //临时存放进行对比
+            List<History> histories2=new ArrayList<History>();  //存放每组相同点击号
+            for(int i=0;i<historyList.size();i++){
+                if(temHistory.getClickNo().equals(historyList.get(i).getClickNo())){
+                    Numgroup tempNumgroup=numgroupService.getById(historyList.get(i).getNumgroup().getId());  //得到群组信息
+                    historyList.get(i).setNumgroup(tempNumgroup);
+                    histories2.add(historyList.get(i));
+                }else{
+                    histories.add(histories2);
+                    temHistory=historyList.get(i);
+                    histories2=new ArrayList<History>();
+                    
+                    Numgroup tempNumgroup=numgroupService.getById(historyList.get(i).getNumgroup().getId());  //得到群组信息
+                    historyList.get(i).setNumgroup(tempNumgroup);
+                    histories2.add(historyList.get(i));
+                }
+                
+                if(i==historyList.size()-1){   //当为最后一个数时，直接添加
+                    histories.add(histories2);
+                }
+            }
+        }
+        
+        return "detail";
     }
 }

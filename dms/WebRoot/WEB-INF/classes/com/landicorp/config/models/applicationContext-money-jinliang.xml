@@ -46,6 +46,12 @@
 	<!-- 收数 action -->
 	<bean id="chargeNumberAction" class="com.landicorp.moneytree.action.chargeNumber.ChargeNumberAction"
 		scope="prototype" />
+	<bean id="chargeDetailAction" class="com.landicorp.moneytree.action.chargeNumber.ChargeDetailAction"
+		scope="prototype" />
+	<bean id="chargeUpdateAction" class="com.landicorp.moneytree.action.chargeNumber.ChargeUpdateAction"
+		scope="prototype" />
+	<bean id="chargeDeleteAction" class="com.landicorp.moneytree.action.chargeNumber.ChargeDeleteAction"
+		scope="prototype" />
 		
 	<!-- 号码群组action -->
 	<bean id="numgroupSearchAction" class="com.landicorp.moneytree.action.numgroup.NumgroupSearchAction"

@@ -89,6 +89,16 @@
 			#{item}
 		</foreach>
 	</delete>
+	
+	<delete id="deleteByClickNo" parameterType="string">
+		delete from t_moneytree_history where
+		click_no in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			'${item}'
+		</foreach>
+	</delete>
+	
 	<select id="getById" parameterType="int" resultMap="history">
 		select *
 		from
@@ -121,8 +131,21 @@
 		<include refid="Sql.pager" />
 	</select>
 	
+	<select id="getAllHistoryByClickNo" resultMap="history" parameterType="map">
+		SELECT
+		*
+		FROM t_moneytree_history 
+		where click_no='${history.clickNo}'
+		ORDER BY ID DESC
+		
+	</select>
+	
 	<select id="getAllHistoryCount" resultType="int" parameterType="map">
 		select count(*) from t_moneytree_history 
+	</select>
+	
+	<select id="getAllHistoryByApIdAndPeId" resultMap="history" parameterType="map">
+		select * from t_moneytree_history where period_id=#{history.period.id} and apprentice_id=#{history.apprentice.id} ORDER BY ID DESC
 	</select>
 	
 </mapper>

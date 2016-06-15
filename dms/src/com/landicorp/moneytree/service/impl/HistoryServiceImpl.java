@@ -64,4 +64,19 @@ public class HistoryServiceImpl extends AbstractBaseServiceImpl<History, Integer
         return historyDao;
     }
 
+    @Override
+    public List<History> getAllHistoryByApIdAndPeId(History history) {
+        return historyDao.getAllHistoryByApIdAndPeId(history);
+    }
+
+    @Override
+    public List<History> getAllHistoryByClickNo(History history) {
+        return historyDao.getAllHistoryByClickNo(history);
+    }
+
+    @Override
+    public void deleteByClickNo(String[] item) {
+        historyDao.deleteByClickNo(item);
+    }
+
 }
