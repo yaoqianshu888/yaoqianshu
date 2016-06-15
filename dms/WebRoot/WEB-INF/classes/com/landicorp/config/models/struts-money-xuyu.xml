@@ -3,6 +3,14 @@
 <struts>
 	
 	<package name="moneyXuyu" extends="myDefault" namespace="/moneyXuyu">
+		<!-- 英葵分析 -->
+		<action name="analysisSearch" class="analysisSearchAction">
+			<result name="success">/WEB-INF/moneyTree/analysis/analysisSearch.jsp</result>
+		</action>
+		<!-- 历史记录 -->
+		<action name="historySearch" class="historySearchAction">
+			<result name="success">/WEB-INF/moneyTree/history/historySearch.jsp</result>
+		</action>
 		
 	</package>
 </struts>

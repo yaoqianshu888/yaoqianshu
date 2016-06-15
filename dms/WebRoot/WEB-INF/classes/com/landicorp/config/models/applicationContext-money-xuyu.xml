@@ -11,9 +11,22 @@
 	<!-- initTask -->
 	
 	<!-- dao -->
+	<bean id="analysisDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.moneytree.dao.IAnalysisDao"></property>
+	</bean>
 	
 	<!-- service -->
+	<bean id="analysisService" class="com.landicorp.moneytree.service.impl.AnalysisServiceImpl" />
 
 	<!-- struts2 action -->
+	
+	<!-- 英葵分析 action -->
+	<bean id="analysisSearchAction" class="com.landicorp.moneytree.action.analysis.AnalysisSearchAction"
+		scope="prototype" />
+		
+	<!-- 历史记录 action -->
+	<bean id="historySearchAction" class="com.landicorp.moneytree.action.history.HistorySearchAction"
+		scope="prototype" />
+		
 
 </beans>
