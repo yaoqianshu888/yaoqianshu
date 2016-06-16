@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
-	
+
 	<package name="moneyXuyu" extends="myDefault" namespace="/moneyXuyu">
+	
 		<!-- 英葵分析 -->
 		<action name="analysisSearch" class="analysisSearchAction">
-			<result name="success">/WEB-INF/moneyTree/analysis/analysisSearch.jsp</result>
-		</action>
-		<!-- 历史记录 -->
-		<action name="historySearch" class="historySearchAction">
-			<result name="success">/WEB-INF/moneyTree/history/historySearch.jsp</result>
+			<result name="success">/WEB-INF/moneyTree/analysis/analysisSearch.jsp
+			</result>
 		</action>
 		
+		<!-- 历史记录 -->
+		<action name="historySearch" class="historySearchAction">
+			<result name="success">/WEB-INF/moneyTree/history/historySearch.jsp
+			</result>
+		</action>
+		
+		<!-- 吃数管理 -->
+		<action name="eatSearch" class="eatSearchAction">
+			<result name="detail">/WEB-INF/moneyTree/eat/eatDetail.jsp</result>
+			<result name="success">/WEB-INF/moneyTree/eat/eatSearch.jsp</result>
+		</action>
+		<action name="eatInsert" class="eatInsertAction">
+			<result name="input">/WEB-INF/moneyTree/eat/eatInsert.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="eatUpdate" class="eatUpdateAction">
+			<result name="input">/WEB-INF/moneyTree/eat/eatUpdate.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+		</action>
+		<action name="eatDelete" class="eatDeleteAction">
+			<result name="success" type="redirect">/moneyJinliang/eatSearch!searchEatByInfo.action
+			</result>
+		</action>
+
 	</package>
 </struts>
 

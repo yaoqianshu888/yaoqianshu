@@ -4,33 +4,6 @@
 <html>
 <head>
 <%@include file="/headDeclare.jsp"%>
-<script type="text/javascript">
-	if ('${insertOk }' == '1') {
-		ldDialog.alert("提交成功!");
-	} else if ('${insertOk }' == '2') {
-		ldDialog.alert("未填写数据!");
-	}
-
-	function searchApprentice(curPageNum) {
-		$('#pagenum').val(curPageNum);
-		$('#apprenticeForm').action = "${basePath}moneyJinliang/chargeNumber!searchApprenticeByInfo.action";
-		$('#apprenticeForm').submit();
-
-	}
-
-	function chooseApprentice(id, apprenticeName) {
-		$("#apprentice\\.id").val(id);
-		$("#choseName").html(apprenticeName);
-	}
-
-	function checkSubmit() {
-		if ($("#apprentice\\.id").val() == '') {
-			ldDialog.alert("请先选择下家！");
-			return false;
-		}
-		document.subForm.submit();
-	}
-</script>
 <style>
 .ldPager div.skip {
 	right: 70%

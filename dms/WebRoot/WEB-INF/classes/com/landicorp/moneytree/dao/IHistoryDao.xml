@@ -117,6 +117,7 @@
 		order by t1.ID desc
 		<include refid="Sql.pager" />
 	</select>
+	
 	<select id="getHistoryCountByHistory" parameterType="map" resultType="int">
 		select count(*) from t_moneytree_history t1
 		<where>
@@ -127,7 +128,7 @@
 		SELECT
 		*
 		FROM t_moneytree_history 
-		ORDER BY ID DESC
+		ORDER BY CREATE_TIME DESC
 		<include refid="Sql.pager" />
 	</select>
 	

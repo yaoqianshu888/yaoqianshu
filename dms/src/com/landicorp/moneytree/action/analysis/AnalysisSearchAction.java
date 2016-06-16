@@ -334,6 +334,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			totalReportedMoney += tempReported;
 		}
 
+		// TODO 上家参数应从数据库中获取
 		// 开奖号码上报金额*倍数+上报总金额*返点-上报总金额
 		return reportedCharge[resultNum - 1] * 48 + totalReportedMoney * 0 - totalReportedMoney;
 	}

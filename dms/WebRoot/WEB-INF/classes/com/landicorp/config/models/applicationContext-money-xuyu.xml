@@ -9,24 +9,45 @@
 
 
 	<!-- initTask -->
-	
+
 	<!-- dao -->
 	<bean id="analysisDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.landicorp.moneytree.dao.IAnalysisDao"></property>
 	</bean>
-	
+	<bean id="eatDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.moneytree.dao.IEatDao"></property>
+	</bean>
+
 	<!-- service -->
-	<bean id="analysisService" class="com.landicorp.moneytree.service.impl.AnalysisServiceImpl" />
+	<bean id="analysisService"
+		class="com.landicorp.moneytree.service.impl.AnalysisServiceImpl" />
+	<bean id="eatService" class="com.landicorp.moneytree.service.impl.EatServiceImpl" />
 
 	<!-- struts2 action -->
-	
+
 	<!-- 英葵分析 action -->
-	<bean id="analysisSearchAction" class="com.landicorp.moneytree.action.analysis.AnalysisSearchAction"
+	<bean id="analysisSearchAction"
+		class="com.landicorp.moneytree.action.analysis.AnalysisSearchAction"
 		scope="prototype" />
-		
+
+	<!-- 吃数值管理 action -->
+	<bean id="eatInsertAction"
+		class="com.landicorp.moneytree.action.eat.EatInsertAction"
+		scope="prototype" />
+	<bean id="eatSearchAction"
+		class="com.landicorp.moneytree.action.eat.EatSearchAction"
+		scope="prototype" />
+	<bean id="eatUpdateAction"
+		class="com.landicorp.moneytree.action.eat.EatUpdateAction"
+		scope="prototype" />
+	<bean id="eatDeleteAction"
+		class="com.landicorp.moneytree.action.eat.EatDeleteAction"
+		scope="prototype" />
+
 	<!-- 历史记录 action -->
-	<bean id="historySearchAction" class="com.landicorp.moneytree.action.history.HistorySearchAction"
+	<bean id="historySearchAction"
+		class="com.landicorp.moneytree.action.history.HistorySearchAction"
 		scope="prototype" />
-		
+
 
 </beans>

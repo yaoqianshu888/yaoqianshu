@@ -14,6 +14,7 @@ public interface IHistoryService extends IBaseService<History, Integer> {
                     History history,
                     Pager pager);
     public List<History> getAllHistoryByApIdAndPeId(History history); 
+    
     public List<History> getAllHistoryByClickNo(History history); 
     public void deleteByClickNo(String[] item);  //根据当前点击号删除历史记录
 }
