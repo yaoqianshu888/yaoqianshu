@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.moneytree.dao.IEatDao">
+	<resultMap id="eat" type="eat">
+		<result property="id" column="id" />
+		<result property="eatValue" column="eat_value" />
+		<result property="user.id" column="user_id" />
+		<result property="status" column="status" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="creator.id" column="CREATOR" />
+		<result property="lastModifyTime" column="LAST_MODIFY_TIME" />
+		<result property="lastModifier.id" column="LAST_MODIFIER" />
+		<result property="memo" column="MEMO" />
+		<association property="creator" column="creator"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+		<association property="lastModifier" column="LAST_MODIFIER"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+		<association property="user" column="user"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+	</resultMap>
+	<sql id="keyColumns">eat_value,user_id,status,CREATE_TIME,
+		CREATOR,LAST_MODIFY_TIME,LAST_MODIFIER,MEMO
+	</sql>
+	<sql id="valueColumns">#{eatValue, jdbcType=NUMERIC},#{user.id,
+		jdbcType=NUMERIC},
+		#{status,jdbcType=NUMERIC},#{createTime,jdbcType=TIMESTAMP},
+		#{creator.id,jdbcType=NUMERIC},#{lastModifyTime,jdbcType=TIMESTAMP},#{lastModifier.id,jdbcType=NUMERIC},
+		#{memo, jdbcType=VARCHAR}
+	</sql>
+
+	<sql id="whereColumns">
+		<if test="eat!=null and eat.eatValue!=null and eat.eatValue !=''">
+			and t1.eat_value like '%${eat.eatValue}%'
+		</if>
+		and t1.user_id=#{eat.user.id} and t1.status=1
+	</sql>
+
+	<insert id="save" parameterType="eat">
+		insert into t_moneytree_eat
+		(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<!-- 配置Mysql主键自动增长 -->
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="eat">
+		update t_moneytree_eat
+		<set>
+			<if test="eatValue!=null">eat_value=#{eatValue},</if>
+			<if test="user!=null and user.id!=null">user_id=#{user.id},</if>
+			<if test="status!=null">status=#{status},</if>
+			<if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+			<if test="creator!=null and creator.id!=null">
+				CREATOR=#{creator.id},
+			</if>
+			<if test="lastModifyTime!=null">
+				LAST_MODIFY_TIME=#{lastModifyTime},
+			</if>
+			<if test="lastModifier!=null and lastModifier.id!=null">
+				LAST_MODIFIER=#{lastModifier.id},
+			</if>
+			<if test="memo!=null">MEMO=#{memo}</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<!-- 逻辑删除 -->
+
+	<update id="deleteEat" parameterType="int">
+		update t_moneytree_eat
+		set status=2
+		where id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- 物理删除 -->
+	
+	<delete id="delete" parameterType="int">
+		delete from t_moneytree_eat where
+		id in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="getById" parameterType="int" resultMap="eat">
+		select *
+		from
+		t_moneytree_eat
+		where id=#{id}
+
+	</select>
+
+	<select id="getEatListByEat" parameterType="map" resultMap="eat">
+		select * from t_moneytree_eat t1
+		<where>
+			<include refid="whereColumns" />
+
+		</where>
+		order by t1.ID desc
+		<include refid="Sql.pager" />
+	</select>
+	<select id="getEatCountByEat" parameterType="map" resultType="int">
+		select count(*) from t_moneytree_eat t1
+		<where>
+			<include refid="whereColumns" />
+		</where>
+	</select>
+	<select id="getAllEat" resultMap="eat" parameterType="map">
+		SELECT
+		*
+		FROM t_moneytree_eat where user_id=#{eat.user.id}
+		and status=1
+		ORDER BY ID DESC
+		<include refid="Sql.pager" />
+	</select>
+
+	<select id="getAllEatCount" resultType="int" parameterType="map">
+		select count(*) from t_moneytree_eat where
+		user_id=#{eat.user.id} and
+		status=1
+	</select>
+
+</mapper>

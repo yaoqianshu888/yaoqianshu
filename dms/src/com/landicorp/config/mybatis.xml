@@ -38,10 +38,15 @@
 
 		<!-- 摇钱树 -->
 		<typeAlias alias="apprentice" type="com.landicorp.moneytree.entities.Apprentice" />
+		<typeAlias alias="eat" type="com.landicorp.moneytree.entities.Eat" />
 		<typeAlias alias="numgroup" type="com.landicorp.moneytree.entities.Numgroup" />
 		<typeAlias alias="period" type="com.landicorp.moneytree.entities.Period" />
 		<typeAlias alias="history" type="com.landicorp.moneytree.entities.History" />
+<<<<<<< HEAD
 		<typeAlias alias="userExtra" type="com.landicorp.moneytree.entities.UserExtra" />
+=======
+		<typeAlias alias="chargeRecord" type="com.landicorp.moneytree.entities.ChargeRecord" />
+>>>>>>> c04349bba4af8e3f19b471f6315b7665126bea40
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/landicorp/core/dao/sql.xml" />
