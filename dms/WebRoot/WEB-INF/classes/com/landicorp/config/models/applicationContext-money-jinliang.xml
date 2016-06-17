@@ -23,13 +23,16 @@
 	<bean id="historyDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.landicorp.moneytree.dao.IHistoryDao"></property>
 	</bean>
+	<bean id="userExtraDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.landicorp.moneytree.dao.IUserExtraDao"></property>
+	</bean>
 	
 	<!-- service -->
 	<bean id="apprenticeService" class="com.landicorp.moneytree.service.impl.ApprenticeServiceImpl" />
 	<bean id="numgroupService" class="com.landicorp.moneytree.service.impl.NumgroupServiceImpl" />
 	<bean id="periodService" class="com.landicorp.moneytree.service.impl.PeriodServiceImpl" />
 	<bean id="historyService" class="com.landicorp.moneytree.service.impl.HistoryServiceImpl" />
-	
+	<bean id="userExtraService" class="com.landicorp.moneytree.service.impl.UserExtraServiceImpl" />
 
 	<!-- struts2 action -->
 	
@@ -69,5 +72,9 @@
 	<bean id="periodInsertAction" class="com.landicorp.moneytree.action.period.PeriodInsertAction"
 		scope="prototype" />
 	<bean id="periodUpdateAction" class="com.landicorp.moneytree.action.period.PeriodUpdateAction"
+		scope="prototype" />
+		
+	<!-- 吃数与上家返点倍数action -->
+	<bean id="userExtraInsertAction" class="com.landicorp.moneytree.action.userExtra.UserExtraInsertAction"
 		scope="prototype" />
 </beans>

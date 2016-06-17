@@ -24,10 +24,10 @@
         <!-- type=self 必须有且仅能有一个 -->
         <server type="self" baseUrl="http://127.0.0.1:8080/dms/" standbyUrl="http://127.0.0.1:8080/dms/"/>
         <!-- type=resource 必须有且仅能有一个 -->
-        <server type="resource" baseUrl="http://127.0.0.1:8183/easypayupload/" standbyUrl="http://127.0.0.1:8901/easypayupload/" />
+        <server type="resource" baseUrl="http://127.0.0.1:8080/dms/" standbyUrl="http://127.0.0.1:8080/dms/" />
         <!-- <server type="resource" baseUrl="http://127.0.0.1/Upload/" /> -->
         <!-- type=file 必须有且仅能有一个 -->
-        <server type="file" baseUrl="http://127.0.0.1:8183/easypayupload/" />
+        <server type="file" baseUrl="http://127.0.0.1:8080/dms/" />
         <!-- type=other 可以没有或不限多个 -->
         <!-- <server type="other" baseUrl="http://127.0.0.2:8080/core/" />
         <server type="other" baseUrl="http://127.0.0.3:8080/core/" /> 58.56.23.89-->

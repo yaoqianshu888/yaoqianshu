@@ -64,6 +64,13 @@
 			<result name="input">/WEB-INF/moneyTree/period/periodUpdate.jsp</result>
 			<result name="success">/WEB-INF/core/success.jsp</result>
 		</action>
+		
+		<!-- 吃数与上家返点倍数与到期时间action -->
+		<action name="userExtraInsert" class="userExtraInsertAction">
+			<result name="input">/WEB-INF/moneyTree/userExtra/setNumLimit.jsp</result>
+			<result name="success">/WEB-INF/core/success.jsp</result>
+			<result name="rebatetimes">/WEB-INF/moneyTree/userExtra/rebateTimesUpdate.jsp</result>
+		</action>
 	</package>
 </struts>
 

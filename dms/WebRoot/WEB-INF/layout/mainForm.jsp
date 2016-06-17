@@ -24,6 +24,27 @@
 <script type="text/javascript" src="${basePath}core/js/index.js"></script>
 <script type="text/javascript" src="${basePath}core/js/ui.js"></script>
 <script type="text/javascript">
+	$(function() {
+		var url = "${basePath}moneyJinliang/userExtraInsert!isExpire.action";
+		$.ajax({
+			type : "post",
+			url : url,
+			dataType : "json",
+			success : function(res) {
+				if(res[0].code == 1){
+					$("#scrollobj").show();
+					ldDialog.unmask();
+				}else{
+					
+					ldDialog.unmask();
+				}
+			},
+			error : function() {
+			}
+		});
+
+	});
+	
 	function logout() {
 		top.location.href = "${basePath}core/userLogin!logout.action?actionName=userLogin&nameSpace=/core&method=logoutControl";
 	}
@@ -32,6 +53,14 @@
 				"修改密码", function(window) {
 				}, 300, 300);
 	}
+	function scroll(obj) {
+		var tmp = (obj.scrollLeft)++;
+		//当滚动条到达右边顶端时
+		if (obj.scrollLeft==tmp) obj.innerHTML += obj.innerHTML;
+		//当滚动条滚动了初始内容的宽度时滚动条回到最左端
+		if (obj.scrollLeft>=obj.firstChild.offsetWidth) obj.scrollLeft=0;
+	}
+	setInterval("scroll(document.getElementById('scrollobj'))",20);
 </script>
 </head>
 <body style="overflow: hidden;">
@@ -40,7 +69,9 @@
 		<tr style="height: 70px;">
 			<td>
 				<div>
-					<div class="headerbg">
+					<div class="headerbg"><DIV id="scrollobj" style="white-space:nowrap;overflow:hidden;width:300px;float:left;color:red;margin-left:25%;margin-top:20px;font-size:20px;display:none">
+											即将到期，请联系管理员进行缴费！
+										  </DIV> 
 						<div class="header-l">
 							<div class="headerfun">
 								<span class="userinfo">${sessionUser.userName} </span>

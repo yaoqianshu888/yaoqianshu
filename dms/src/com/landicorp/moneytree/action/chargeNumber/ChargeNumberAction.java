@@ -178,9 +178,7 @@ public class ChargeNumberAction extends BaseActionSupport {
         prePeriod=periodService.getPrePeriod();
         apprentice=new Apprentice();
         apprentice.setUser(getSessionUser());
-        
         apprenticeList=apprenticeService.getApprenticeListByApprentice(apprentice, getPager());
-        
         Numgroup numgroup=new Numgroup();
         numgroup.setUser(getSessionUser());
         numgroupList=numgroupService.getAllNumgroupNoPager(numgroup);

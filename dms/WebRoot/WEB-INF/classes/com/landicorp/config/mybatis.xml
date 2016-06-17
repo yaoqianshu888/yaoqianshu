@@ -41,6 +41,7 @@
 		<typeAlias alias="numgroup" type="com.landicorp.moneytree.entities.Numgroup" />
 		<typeAlias alias="period" type="com.landicorp.moneytree.entities.Period" />
 		<typeAlias alias="history" type="com.landicorp.moneytree.entities.History" />
+		<typeAlias alias="userExtra" type="com.landicorp.moneytree.entities.UserExtra" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/landicorp/core/dao/sql.xml" />

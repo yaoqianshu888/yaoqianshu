@@ -3,6 +3,15 @@
 <%@include file="/headDeclare.jsp"%>
 <head>
 <script type="text/javascript">
+
+	function setLimit(id){
+		ldDialog
+				.openMini(
+						"${basePath}moneyJinliang/userExtraInsert!prepare.action?user.id="
+								+ id, "吃数上限设置", function(window) {
+						});
+	}
+	
 	function resetPassword(id) {
 		ldDialog.confirm(
 						"确定重置密码吗？",
@@ -136,7 +145,10 @@
 						html += "<input type='button' value='编辑' class='ldBtnLink' onclick='editItem("+item.id+");' />&nbsp;";
 					</ld:check>
 					<ld:check mark="userPasswordReset">
-						html += "<input type='button' value='密码重置' class='ldBtnLink' onclick='resetPassword("+item.id+");' />";
+						html += "<input type='button' value='密码重置' class='ldBtnLink' onclick='resetPassword("+item.id+");' />&nbsp;";
+					</ld:check>
+					<ld:check mark="userLimit">
+						html += "<input type='button' value='设置吃数上限与到期时间' class='ldBtnLink' onclick='setLimit("+item.id+");' />";
 					</ld:check>
 						html += "</td>";
 					

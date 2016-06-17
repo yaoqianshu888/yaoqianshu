@@ -30,8 +30,7 @@
 					var loginTime = new Date(user.loginTime);
 					$("#loginTime").text(loginTime.format("yyyy-MM-dd HH:mm:ss"));
 					$("#lastLoginIP").text(user.lastLoginIP);
-					var lastLoginTime = new Date(user.lastLoginTime);
-					$("#lastLoginTime").text(lastLoginTime.format("yyyy-MM-dd HH:mm:ss"));
+					
 					ldDialog.unmask();
 				}else{
 					ldDialog.alert(res.reason);
@@ -41,7 +40,40 @@
 			error : function() {
 			}
 		});
+		
+		var url = "${basePath}moneyJinliang/userExtraInsert!getRebateAndTimes.action";
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "json",
+			success : function(res) {
+				$("#lastLoginTime").text(res[0].lastLoginTime);
+				$("#rebate").text(res[0].rebate);
+				$("#times").text(res[0].times);
+			},
+			error : function() {
+				
+			}
+		});
+		
 	});
+	
+	function setRebateAndTimes(){
+		ldDialog.openMini(
+			"${basePath}moneyJinliang/userExtraInsert!toSetRebateTimes.action?",
+			"设置上家返点与倍数",
+			function(window) {
+				var returnValue = window.returnValue;
+					if (returnValue == undefined) {//无返回值 直接关闭 
+						return true;
+					} else {//有返回值 处理一些事
+						ldDialog.tips("处理成功！");
+						
+						document.location.reload();
+						return true;
+					}
+			});
+	}
 </script>
 </head>
 <body>
@@ -49,7 +81,8 @@
 		<div id="rightcontent1" class="welcome"
 			style="float:none;min-height: 505px;">
 			<div class="member-page-title">
-				<h2>个人信息</h2>
+				<h2>个人信息</h2><input type="button" value="设置上家返点倍数" class="ldBtnBlue" onclick="setRebateAndTimes();" />
+				
 			</div>
 			<div class="yhlist2">
 				<table width="100%" border="0" cellspacing="1" cellpadding="0">
@@ -73,6 +106,16 @@
 					<tr>
 						<td width="100" class="right yhItem1">上次登录时间：</td>
 						<td class="left yhItem2" id="lastLoginTime">
+						</td>
+					</tr>
+					<tr>
+						<td width="100" class="right yhItem1">上家返点：</td>
+						<td class="left yhItem2" id="rebate">
+						</td>
+					</tr>
+					<tr>
+						<td width="100" class="right yhItem1">上家倍数：</td>
+						<td class="left yhItem2" id="times">
 						</td>
 					</tr>
 				</table>
