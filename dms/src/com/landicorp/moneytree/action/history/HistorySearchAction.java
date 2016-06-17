@@ -159,4 +159,5 @@ public class HistorySearchAction extends BaseActionSupport {
 
 		return SUCCESS;
 	}
+	
 }

@@ -4,6 +4,31 @@
 <html>
 <head>
 <%@include file="/headDeclare.jsp"%>
+<script type="text/javascript">
+function showItem(id) {
+	ldDialog.openMini(
+		"${basePath}moneyJinliang/chargeDetail!detail.action?history.clickNo=" + id,
+		"收数详情", 
+		function(window) {
+	});
+}
+function editItem(id) {
+	ldDialog.openMini(
+	"${basePath}moneyJinliang/chargeUpdate!prepare.action?history.clickNo="+ id,
+	"修改收数",
+	function(window) {
+		var returnValue = window.returnValue;
+			if (returnValue == undefined) {//无返回值 直接关闭 
+				return true;
+			} else {//有返回值 处理一些事
+				ldDialog.tips("处理成功！");
+				var curPageNum = $("input[name='pager.curPageNum']").val();
+				document.searchForm.submit();
+				return true;
+			}
+	});
+}
+</script>
 </head>
 <body>
 	<div id="rightcontent">
@@ -55,7 +80,6 @@
 
 								<c:forEach items="${histories }" var="item" varStatus="status">
 									<tr>
-										
 										<td><c:out value="${status.count}" /></td>
 										<td>${item[0].period.period}</td>
 										<td>${item[0].apprentice.apprenticeName}</td>
@@ -85,6 +109,7 @@
 								</c:forEach>
 							</table>
 						</div><!-- yhlist3 end -->
+						<!-- toolbarR end -->
 					</div>
 				</div>
 			</div>
