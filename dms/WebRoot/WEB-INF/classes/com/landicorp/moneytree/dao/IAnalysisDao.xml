@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 -->
+<mapper namespace="com.landicorp.moneytree.dao.IAnalysisDao">
+	<resultMap id="chargeRecord" type="chargeRecord">
+		<result property="id" column="id" />
+		<result property="chargeMoney" column="charge_number" />
+		<result property="chargeNumber" column="group_num" />
+		<result property="groupId" column="numgroup_id" />
+		<result property="apprenticeId" column="apprentice_id" />
+	</resultMap>
+
+	<sql id="whereColumns_period">
+		<if test="userId!=null and periodId!=null">
+			and h.user_id=#{userId} and h.period_id=#{periodId}
+		</if>
+	</sql>
+	<sql id="whereColumns_apprentice">
+		<if test="userId!=null and periodId!=null">
+			and h.user_id=#{userId} and h.period_id=#{periodId}
+		</if>
+		<if test="apprenticeId!=null">
+			and h.apprentice_id=#{apprenticeId}
+		</if>
+	</sql>
+
+
+	<select id="getPeriodChargeRecord" resultType="chargeRecord"
+		parameterType="map">
+		select charge_number as chargeMoney,group_num as chargeNumber,numgroup_id as groupId ,apprentice_id as apprenticeId from t_moneytree_history h left join
+		 t_moneytree_numgroup g on h.numgroup_id=g.id
+		<where>
+			<include refid="whereColumns_period" />
+		</where>
+	</select>
+	<select id="getApprenticeChargeRecord" resultType="chargeRecord"
+		parameterType="map">
+		select charge_number as chargeMoney,group_num as chargeNumber,numgroup_id as groupId ,apprentice_id as apprenticeId from t_moneytree_history h left join
+		 t_moneytree_numgroup g on h.numgroup_id=g.id
+		<where>
+			<include refid="whereColumns_apprentice" />
+		</where>
+	</select>
+
+</mapper>

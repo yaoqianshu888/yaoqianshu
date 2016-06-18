@@ -1,11 +1,11 @@
 package com.landicorp.moneytree.action.analysis;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +18,17 @@ import org.apache.struts2.ServletActionContext;
 
 import com.landicorp.core.action.BaseActionSupport;
 import com.landicorp.core.entities.User;
-import com.landicorp.moneytree.entities.AnalysisIRecord;
+import com.landicorp.moneytree.entities.AnalysisRecord;
 import com.landicorp.moneytree.entities.Apprentice;
 import com.landicorp.moneytree.entities.ChargeRecord;
+import com.landicorp.moneytree.entities.Eat;
 import com.landicorp.moneytree.entities.Period;
+import com.landicorp.moneytree.entities.UserExtra;
 import com.landicorp.moneytree.service.IAnalysisService;
 import com.landicorp.moneytree.service.IApprenticeService;
+import com.landicorp.moneytree.service.IEatService;
 import com.landicorp.moneytree.service.IPeriodService;
+import com.landicorp.moneytree.service.IUserExtraService;
 
 public class AnalysisSearchAction extends BaseActionSupport {
 	private ChargeRecord chargeRecord;
@@ -32,9 +36,22 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	private IAnalysisService analysisService;
 
 	private Period nowPeriod;
+	private Period prePeriod;
 	private IPeriodService periodService;
 
 	private IApprenticeService apprenticeService;
+
+	/**
+	 * 用户其他参数
+	 */
+	private UserExtra userExtra;
+	private IUserExtraService userExtraService;
+
+	/**
+	 * 用户常用吃数
+	 */
+	private List<Eat> eatList;
+	private IEatService eatService;
 
 	/**
 	 * 总的收数情况，每个号码分别购买了多少
@@ -58,7 +75,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	/**
 	 * 英葵情况记录
 	 */
-	private AnalysisIRecord analysisIRecord;
+	private List<AnalysisRecord> analysisRecordList;
 
 	public ChargeRecord getChargeRecord() {
 		return chargeRecord;
@@ -90,6 +107,14 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 	public void setNowPeriod(Period nowPeriod) {
 		this.nowPeriod = nowPeriod;
+	}
+
+	public Period getPrePeriod() {
+		return prePeriod;
+	}
+
+	public void setPrePeriod(Period prePeriod) {
+		this.prePeriod = prePeriod;
 	}
 
 	public IPeriodService getPeriodService() {
@@ -140,85 +165,176 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		this.eatValue = eatValue;
 	}
 
-	public AnalysisIRecord getAnalysisIRecord() {
-		return analysisIRecord;
+	public UserExtra getUserExtra() {
+		return userExtra;
 	}
 
-	public void setAnalysisIRecord(AnalysisIRecord analysisIRecord) {
-		this.analysisIRecord = analysisIRecord;
+	public void setUserExtra(UserExtra userExtra) {
+		this.userExtra = userExtra;
+	}
+
+	public IUserExtraService getUserExtraService() {
+		return userExtraService;
+	}
+
+	public void setUserExtraService(IUserExtraService userExtraService) {
+		this.userExtraService = userExtraService;
+	}
+
+	public List<Eat> getEatList() {
+		return eatList;
+	}
+
+	public void setEatList(List<Eat> eatList) {
+		this.eatList = eatList;
+	}
+
+	public IEatService getEatService() {
+		return eatService;
+	}
+
+	public void setEatService(IEatService eatService) {
+		this.eatService = eatService;
+	}
+
+	public List<AnalysisRecord> getAnalysisRecordList() {
+		return analysisRecordList;
+	}
+
+	public void setAnalysisRecordList(List<AnalysisRecord> analysisRecordList) {
+		this.analysisRecordList = analysisRecordList;
 	}
 
 	public String getAnalysis() throws IOException {
 
 		nowPeriod = new Period();
-		nowPeriod = periodService.getNowPeriod();
+		prePeriod = new Period();
+		//得到上一期和当前期
+        prePeriod=periodService.getPrePeriod();
+        nowPeriod=periodService.getNowPeriod();
 
 		chargeRecord = new ChargeRecord();
 		chargeRecordList = new ArrayList<ChargeRecord>();
-		chargeRecordList.clear();
+		analysisRecordList = new ArrayList<AnalysisRecord>();
+
+		// 获取用户常用吃数、吃数限制等参数
+		getUserExtraInfo();
+
+		// 获取用户输入想要分析的吃数值，并加入到eatList的末尾
+		getUserInputEatValue();
 
 		// 总统计，总体收数情况
 		analysisTotal();
 
-		// 上报数统计
-		analysisReported();
+		for (int i = 0; i < eatList.size(); i++) {
+			// 根据吃数值，进行上报数统计
+			analysisReported(eatList.get(i).getEatValue());
 
-		// 假设每个号码为中奖号码时的英葵情况，计算，存储结果
-		profitSituation = new ArrayList<ChargeRecord>();
+			// 假设每个号码为中奖号码时的英葵情况，计算，存储结果
+			profitSituation = new ArrayList<ChargeRecord>();
 
-		for (int i = 0; i < 49; i++) {
-			ChargeRecord tempRecord = new ChargeRecord();
+			for (int j = 0; j < 49; j++) {
+				ChargeRecord tempRecord = new ChargeRecord();
 
-			tempRecord.setChargeNumber((i + 1) + "");
-			tempRecord.setChargeMoney(calculateMoney(i + 1) + "");
-			profitSituation.add(tempRecord);
+				tempRecord.setChargeNumber((j + 1) + "");
+				tempRecord.setChargeMoney(calculateMoney(j + 1) + "");
+				profitSituation.add(tempRecord);
+			}
+
+			Comparator<ChargeRecord> comparator = new Comparator<ChargeRecord>() {
+				public int compare(ChargeRecord s1, ChargeRecord s2) {
+					int num1 = Integer.valueOf(s1.getChargeMoney());
+					int num2 = Integer.valueOf(s2.getChargeMoney());
+
+					// 先排年龄
+					if (num1 != num2) {
+						return num1 - num2;
+					} else {
+						return Integer.valueOf(s1.getChargeNumber()) - Integer.valueOf(s2.getChargeNumber());
+					}
+				}
+			};
+			Collections.sort(profitSituation, comparator);
+
+			calculateAnalysis();
 		}
 
-		Comparator<ChargeRecord> comparator = new Comparator<ChargeRecord>() {
-			public int compare(ChargeRecord s1, ChargeRecord s2) {
-				int num1 = Integer.valueOf(s1.getChargeMoney());
-				int num2 = Integer.valueOf(s2.getChargeMoney());
+		return SUCCESS;
+	}
 
-				// 先排年龄
-				if (num1 != num2) {
-					return num1 - num2;
-				} else {
-					return Integer.valueOf(s1.getChargeNumber()) - Integer.valueOf(s2.getChargeNumber());
+	private void getUserInputEatValue() {
+		// 吃数的值
+		eatValue = 0;
+		HttpServletRequest request = ServletActionContext.getRequest();
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		// 获取参数
+		Map<String, String[]> map = request.getParameterMap();
+		for (Entry<String, String[]> me : map.entrySet()) {
+			String name = me.getKey();
+			String[] v = me.getValue();
+			if (name.equals("eatValue")) {
+				if (!v[0].equals("") && v[0] != null) {
+
+					eatValue = Integer.valueOf(v[0]);
 				}
 			}
-		};
-		Collections.sort(profitSituation, comparator);
+		}
 
-		calculateAnalysis();
+		// 检测该用户吃数数值的权限
+		if (!checkEatCompetence(eatValue)) {
+			// 如果不具备权限，进行提示
+			eatValue = 0;
+		}
+		// 将用户输入的分析值加入到吃数值list中
+		Eat eat = new Eat();
+		eat.setEatValue(eatValue);
+		eatList.add(eat);
+	}
 
-		return SUCCESS;
+	/**
+	 * 获取用户的吃数上限，常用吃数
+	 */
+	private void getUserExtraInfo() {
+		User user = new User();
+		user = getSessionUser();
+		userExtra = userExtraService.getByUserId(user.getId());
+		Eat eat = new Eat();
+		eat.setUser(getSessionUser());
+		// TODO 默认吃数值 取出一页，10条记录
+		eatList = eatService.getEatListByEat(eat, getPager());
+
 	}
 
 	/**
 	 * 计算英葵情况
 	 */
 	private void calculateAnalysis() {
-		analysisIRecord = new AnalysisIRecord(0, 0, 0, 0, 0, 0, 0);
-		analysisIRecord.setLoseMaxValue(Integer.valueOf(profitSituation.get(0).getChargeMoney()));
-		analysisIRecord.setLoseMaxNum(Integer.valueOf(profitSituation.get(0).getChargeNumber()));
-		analysisIRecord.setWinMaxValue(Integer.valueOf(profitSituation.get(48).getChargeMoney()));
-		analysisIRecord.setWinMaxNum(Integer.valueOf(profitSituation.get(48).getChargeNumber()));
+		AnalysisRecord analysisRecord = new AnalysisRecord(0, 0, 0, 0, 0, 0, 0);
+		analysisRecord.setLoseMaxValue(Integer.valueOf(profitSituation.get(0).getChargeMoney()));
+		analysisRecord.setLoseMaxNum(Integer.valueOf(profitSituation.get(0).getChargeNumber()));
+		analysisRecord.setWinMaxValue(Integer.valueOf(profitSituation.get(48).getChargeMoney()));
+		analysisRecord.setWinMaxNum(Integer.valueOf(profitSituation.get(48).getChargeNumber()));
 
 		for (ChargeRecord chargeRecord : profitSituation) {
 			int tempMoney = Integer.valueOf(chargeRecord.getChargeMoney());
 			if (tempMoney > 0) {
 				// 赚钱个数增加1
-				analysisIRecord.setWinCount(analysisIRecord.getWinCount() + 1);
+				analysisRecord.setWinCount(analysisRecord.getWinCount() + 1);
 			} else {
 				// 亏钱个数增加1
-				analysisIRecord.setLoseCount(analysisIRecord.getLoseCount() + 1);
+				analysisRecord.setLoseCount(analysisRecord.getLoseCount() + 1);
 			}
 		}
-		float tempProbabibity = (analysisIRecord.getWinCount() / 49.0f) * 100;
+		float tempProbabibity = (analysisRecord.getWinCount() / 49.0f) * 100;
 		BigDecimal bd = new BigDecimal((double) tempProbabibity);
 		bd = bd.setScale(2, 4);
 		tempProbabibity = bd.floatValue();
-		analysisIRecord.setWinProbability(tempProbabibity);
+		analysisRecord.setWinProbability(tempProbabibity);
+		analysisRecordList.add(analysisRecord);
 	}
 
 	/**
@@ -254,32 +370,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * 
 	 * @throws IOException
 	 */
-	private void analysisReported() throws IOException {
-		// 吃数的值
-		eatValue = 0;
-
+	private void analysisReported(Integer eatValue) throws IOException {
 		reportedCharge = new int[49];
-
-		HttpServletRequest request = ServletActionContext.getRequest();
-		request.setCharacterEncoding("UTF-8");
-		// 获取参数
-		Map<String, String[]> map = request.getParameterMap();
-		for (Entry<String, String[]> me : map.entrySet()) {
-			String name = me.getKey();
-			String[] v = me.getValue();
-			if (name.equals("eatValue")) {
-				if (!v[0].equals("") && v[0] != null) {
-
-					eatValue = Integer.valueOf(v[0]);
-				}
-			}
-		}
-
-		// 检测该用户吃数数值的权限
-		if (!checkEatCompetence(eatValue)) {
-			// 如果不具备权限，进行提示
-
-		}
 
 		// 计算上报情况
 		for (int i = 0; i < totalCharge.length; i++) {
@@ -313,7 +405,6 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		// 计算总的收数
 		for (int i : totalCharge) {
-			// TODO totalCharge总的收数情况是否已获取，null?
 			totalChargeMoney += i;
 		}
 
@@ -334,9 +425,9 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			totalReportedMoney += tempReported;
 		}
 
-		// TODO 上家参数应从数据库中获取
 		// 开奖号码上报金额*倍数+上报总金额*返点-上报总金额
-		return reportedCharge[resultNum - 1] * 48 + totalReportedMoney * 0 - totalReportedMoney;
+		return reportedCharge[resultNum - 1] * Integer.valueOf(userExtra.getTimes())
+				+ totalReportedMoney * Integer.valueOf(userExtra.getRebate()) - totalReportedMoney;
 	}
 
 	/**
@@ -425,8 +516,11 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * @return
 	 */
 	private boolean checkEatCompetence(int eatValue) {
-		// TODO 检查用户是否具有该吃数的权限
-		return true;
+		if (Integer.valueOf(userExtra.getNumLimit()) >= eatValue) {
+			// 用户具有该吃数的权限
+			return true;
+		}
+		return false;
 	}
 
 }

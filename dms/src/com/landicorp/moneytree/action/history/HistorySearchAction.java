@@ -24,6 +24,7 @@ public class HistorySearchAction extends BaseActionSupport {
 	private IHistoryService historyService;
 
 	private Period nowPeriod;
+	private Period prePeriod;
 	private IPeriodService periodService;
 
 	private List<List<History>> histories;
@@ -51,6 +52,14 @@ public class HistorySearchAction extends BaseActionSupport {
 
 	public void setNowPeriod(Period nowPeriod) {
 		this.nowPeriod = nowPeriod;
+	}
+
+	public Period getPrePeriod() {
+		return prePeriod;
+	}
+
+	public void setPrePeriod(Period prePeriod) {
+		this.prePeriod = prePeriod;
 	}
 
 	public IPeriodService getPeriodService() {
@@ -118,6 +127,10 @@ public class HistorySearchAction extends BaseActionSupport {
 				}
 			}
 		}
+		
+		//得到上一期和当前期
+        prePeriod=periodService.getPrePeriod();
+        nowPeriod=periodService.getNowPeriod();
 	}
 
 	/**
@@ -126,38 +139,11 @@ public class HistorySearchAction extends BaseActionSupport {
 	 * @return
 	 */
 	public String getHistoryByHistory() {
-		Period tempPeriod = new Period();
-		Apprentice tempApprentice = new Apprentice();
-		history = new History();
-
-		HttpServletRequest request = ServletActionContext.getRequest();
-		try {
-			request.setCharacterEncoding("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		// 获取参数
-		Map<String, String[]> map = request.getParameterMap();
-		for (Entry<String, String[]> me : map.entrySet()) {
-			String name = me.getKey();
-			String[] v = me.getValue();
-			if (v[0].equals("") || v[0] == null) {
-				continue;
-			}
-			if (name.equals("periodValue")) {
-				tempPeriod.setPeriod(v[0]);
-				history.setPeriod(tempPeriod);
-			}
-			if (name.equals("apprenticeName")) {
-				tempApprentice.setApprenticeName(v[0]);
-				history.setApprentice(tempApprentice);
-			}
-		}
 
 		List<History> historyList = historyService.getHistoryListByHistory(history, getPager());
 		getAllHistories(historyList);
 
 		return SUCCESS;
 	}
-	
+
 }

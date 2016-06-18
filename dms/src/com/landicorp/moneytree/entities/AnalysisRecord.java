@@ -8,7 +8,7 @@ import com.landicorp.core.entities.base.BaseEntity;
  * @author lixuyu
  *
  */
-public class AnalysisIRecord extends BaseEntity {
+public class AnalysisRecord extends BaseEntity {
 
 	private int winCount;// 赚钱个数
 	private int loseCount;// 亏钱个数
@@ -18,7 +18,7 @@ public class AnalysisIRecord extends BaseEntity {
 	private int loseMaxNum;// 亏钱最大值的号码
 	private float winProbability;// 赚钱概率
 
-	public AnalysisIRecord(int winCount, int loseCount, int winMaxValue, int winMaxNum, int loseMax, int loseMaxNum,
+	public AnalysisRecord(int winCount, int loseCount, int winMaxValue, int winMaxNum, int loseMax, int loseMaxNum,
 			float winProbability) {
 		super();
 		this.winCount = winCount;

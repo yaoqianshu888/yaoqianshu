@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 命名空间 -->
+<mapper namespace="com.landicorp.moneytree.dao.IUserExtraDao">
+	<resultMap id="userExtra" type="userExtra">
+		<result property="id" column="id" />
+		<result property="rebate" column="rebate" />
+		<result property="times" column="times" />
+		<result property="numLimit" column="num_limit" />
+		<result property="user.id" column="user_id" />
+		<result property="finishTime" column="finish_time" />
+		<association property="user" column="user"
+			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
+	</resultMap>
+	<sql id="keyColumns">rebate,times,num_limit,user_id,finish_time</sql>
+	<sql id="valueColumns">#{rebate, jdbcType=VARCHAR},#{times, jdbcType=VARCHAR},#{numLimit,jdbcType=VARCHAR},#{user.id,jdbcType=NUMERIC},#{finishTime,jdbcType=TIMESTAMP}
+	</sql>
+	
+	
+	<insert id="save" parameterType="userExtra">
+		insert into t_moneytree_user_extra
+		(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<!-- 配置Mysql主键自动增长 -->
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="userExtra">
+		update t_moneytree_user_extra
+		<set>
+			<if test="rebate!=null">rebate=#{rebate},</if>
+			<if test="times!=null">times=#{times},</if>
+			<if test="numLimit!=null">num_limit=#{numLimit},</if>
+			<if test="finishTime!=null">finish_time=#{finishTime},</if>
+		</set>
+		where user_id=#{user.id}
+	</update>
+	
+	
+	<select id="getById" parameterType="int" resultMap="userExtra">
+		select *
+		from
+		t_moneytree_user_extra
+		where id=#{id} 
+            
+	</select>
+	
+	<select id="getByUserId" parameterType="int" resultMap="userExtra">
+		select *
+		from
+		t_moneytree_user_extra
+		where user_id=#{id}
+            
+	</select>
+	
+</mapper>
