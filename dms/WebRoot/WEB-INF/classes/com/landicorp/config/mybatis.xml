@@ -44,7 +44,6 @@
 		<typeAlias alias="history" type="com.landicorp.moneytree.entities.History" />
 		<typeAlias alias="userExtra" type="com.landicorp.moneytree.entities.UserExtra" />
 		<typeAlias alias="chargeRecord" type="com.landicorp.moneytree.entities.ChargeRecord" />
-
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/landicorp/core/dao/sql.xml" />

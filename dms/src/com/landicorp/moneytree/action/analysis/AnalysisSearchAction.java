@@ -258,7 +258,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 			calculateAnalysis();
 		}
-
+		
 		return SUCCESS;
 	}
 

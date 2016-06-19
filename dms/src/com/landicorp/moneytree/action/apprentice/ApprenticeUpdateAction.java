@@ -42,11 +42,12 @@ public class ApprenticeUpdateAction extends BaseActionSupport {
         String returnValue="";
         try {
             Apprentice insertPrDoc=apprenticeService.getById(apprentice.getId());
+            
             insertPrDoc.setApprenticeName(apprentice.getApprenticeName());
             insertPrDoc.setMemo(apprentice.getMemo());
-            insertPrDoc.setWordRebate(apprentice.getWordRebate());
+            insertPrDoc.setWordRebate(Double.parseDouble(apprentice.getWordRebate())*0.01+"");
             insertPrDoc.setWordTimes(apprentice.getWordTimes());
-            insertPrDoc.setZodiacRebate(apprentice.getZodiacRebate());
+            insertPrDoc.setZodiacRebate(Double.parseDouble(apprentice.getZodiacRebate())*0.01+"");
             insertPrDoc.setZodiacTimes(apprentice.getZodiacTimes());
             insertPrDoc.setLastModifier(getSessionUser());
             insertPrDoc.setLastModifyTime(new Date());

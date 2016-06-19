@@ -40,6 +40,8 @@ public class ApprenticeInsertAction extends BaseActionSupport {
         int code=0;
         String returnValue="";
         try {
+            apprentice.setWordRebate(Double.parseDouble(apprentice.getWordRebate())*0.01+"");
+            apprentice.setZodiacRebate(Double.parseDouble(apprentice.getZodiacRebate())*0.01+"");
             apprentice.setStatus(1);
             apprentice.setUser(getSessionUser());
             apprentice.setCreateTime(new Date());
