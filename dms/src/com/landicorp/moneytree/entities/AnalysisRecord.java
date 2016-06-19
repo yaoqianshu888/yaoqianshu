@@ -12,20 +12,20 @@ public class AnalysisRecord extends BaseEntity {
 
 	private int winCount;// 赚钱个数
 	private int loseCount;// 亏钱个数
-	private int winMaxValue;// 赚钱最大值
+	private float winMaxValue;// 赚钱最大值
 	private int winMaxNum;// 赚钱最大值的号码
-	private int loseMaxValue;// 亏钱最大值
+	private float loseMaxValue;// 亏钱最大值
 	private int loseMaxNum;// 亏钱最大值的号码
 	private float winProbability;// 赚钱概率
 
-	public AnalysisRecord(int winCount, int loseCount, int winMaxValue, int winMaxNum, int loseMax, int loseMaxNum,
-			float winProbability) {
+	public AnalysisRecord(int winCount, int loseCount, float winMaxValue, int winMaxNum, float loseMaxValue,
+			int loseMaxNum, float winProbability) {
 		super();
 		this.winCount = winCount;
 		this.loseCount = loseCount;
 		this.winMaxValue = winMaxValue;
 		this.winMaxNum = winMaxNum;
-		this.loseMaxValue = loseMax;
+		this.loseMaxValue = loseMaxValue;
 		this.loseMaxNum = loseMaxNum;
 		this.winProbability = winProbability;
 	}
@@ -46,11 +46,11 @@ public class AnalysisRecord extends BaseEntity {
 		this.loseCount = loseCount;
 	}
 
-	public int getWinMaxValue() {
+	public float getWinMaxValue() {
 		return winMaxValue;
 	}
 
-	public void setWinMaxValue(int winMaxValue) {
+	public void setWinMaxValue(float winMaxValue) {
 		this.winMaxValue = winMaxValue;
 	}
 
@@ -62,11 +62,11 @@ public class AnalysisRecord extends BaseEntity {
 		this.winMaxNum = winMaxNum;
 	}
 
-	public int getLoseMaxValue() {
+	public float getLoseMaxValue() {
 		return loseMaxValue;
 	}
 
-	public void setLoseMaxValue(int loseMaxValue) {
+	public void setLoseMaxValue(float loseMaxValue) {
 		this.loseMaxValue = loseMaxValue;
 	}
 
