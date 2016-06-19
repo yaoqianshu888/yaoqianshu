@@ -426,7 +426,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		// 开奖号码上报金额*倍数+上报总金额*返点-上报总金额
 		return reportedCharge[resultNum - 1] * Float.valueOf(userExtra.getTimes())
-				+ totalReportedMoney * Float.valueOf(userExtra.getRebate()) - totalReportedMoney;
+				+ totalReportedMoney * Float.valueOf(userExtra.getRebate())*0.01f - totalReportedMoney;
 	}
 
 	/**
@@ -482,12 +482,12 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				// 如果是生肖,用生肖的返点
 
 				rebateResult += Float.valueOf(chargeRecord.getChargeMoney())
-						* Float.valueOf(apprentice.getZodiacRebate());
+						* Float.valueOf(apprentice.getZodiacRebate())*0.01;
 			} else {
 				// 如果是字,用字的返点
 
 				rebateResult += Float.valueOf(chargeRecord.getChargeMoney())
-						* Float.valueOf(apprentice.getWordRebate());
+						* Float.valueOf(apprentice.getWordRebate())*0.01;
 			}
 
 			// 统计中奖金额。遍历一组记录中的号码是否中奖
