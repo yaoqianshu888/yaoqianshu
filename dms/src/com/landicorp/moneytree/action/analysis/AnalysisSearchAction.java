@@ -57,11 +57,11 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * 总的收数情况，每个号码分别购买了多少
 	 */
 
-	private int[] totalCharge;
+	private float[] totalCharge;
 	/**
 	 * 上报数的统计情况，每个号码上报多少
 	 */
-	private int[] reportedCharge;
+	private float[] reportedCharge;
 
 	/**
 	 * 假设每个号码为中奖号码时的英葵情况
@@ -133,19 +133,19 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		this.apprenticeService = apprenticeService;
 	}
 
-	public int[] getTotalCharge() {
+	public float[] getTotalCharge() {
 		return totalCharge;
 	}
 
-	public void setTotalCharge(int[] totalCharge) {
+	public void setTotalCharge(float[] totalCharge) {
 		this.totalCharge = totalCharge;
 	}
 
-	public int[] getReportedCharge() {
+	public float[] getReportedCharge() {
 		return reportedCharge;
 	}
 
-	public void setReportedCharge(int[] reportedCharge) {
+	public void setReportedCharge(float[] reportedCharge) {
 		this.reportedCharge = reportedCharge;
 	}
 
@@ -205,13 +205,13 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		this.analysisRecordList = analysisRecordList;
 	}
 
-	public String getAnalysis() throws IOException {
+	public String getAnalysis() throws Exception {
 
 		nowPeriod = new Period();
 		prePeriod = new Period();
-		//得到上一期和当前期
-        prePeriod=periodService.getPrePeriod();
-        nowPeriod=periodService.getNowPeriod();
+		// 得到上一期和当前期
+		prePeriod = periodService.getPrePeriod();
+		nowPeriod = periodService.getNowPeriod();
 
 		chargeRecord = new ChargeRecord();
 		chargeRecordList = new ArrayList<ChargeRecord>();
@@ -228,7 +228,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		for (int i = 0; i < eatList.size(); i++) {
 			// 根据吃数值，进行上报数统计
-			analysisReported(eatList.get(i).getEatValue());
+			analysisReported((float) eatList.get(i).getEatValue());
 
 			// 假设每个号码为中奖号码时的英葵情况，计算，存储结果
 			profitSituation = new ArrayList<ChargeRecord>();
@@ -243,12 +243,12 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 			Comparator<ChargeRecord> comparator = new Comparator<ChargeRecord>() {
 				public int compare(ChargeRecord s1, ChargeRecord s2) {
-					int num1 = Integer.valueOf(s1.getChargeMoney());
-					int num2 = Integer.valueOf(s2.getChargeMoney());
+					float num1 = Float.valueOf(s1.getChargeMoney());
+					float num2 = Float.valueOf(s2.getChargeMoney());
 
 					// 先排年龄
 					if (num1 != num2) {
-						return num1 - num2;
+						return (int) (num1 - num2);
 					} else {
 						return Integer.valueOf(s1.getChargeNumber()) - Integer.valueOf(s2.getChargeNumber());
 					}
@@ -262,7 +262,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		return SUCCESS;
 	}
 
-	private void getUserInputEatValue() {
+	private void getUserInputEatValue() throws Exception {
 		// 吃数的值
 		eatValue = 0;
 		HttpServletRequest request = ServletActionContext.getRequest();
@@ -298,7 +298,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	/**
 	 * 获取用户的吃数上限，常用吃数
 	 */
-	private void getUserExtraInfo() {
+	private void getUserExtraInfo() throws Exception {
 		User user = new User();
 		user = getSessionUser();
 		userExtra = userExtraService.getByUserId(user.getId());
@@ -312,15 +312,15 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	/**
 	 * 计算英葵情况
 	 */
-	private void calculateAnalysis() {
+	private void calculateAnalysis() throws Exception {
 		AnalysisRecord analysisRecord = new AnalysisRecord(0, 0, 0, 0, 0, 0, 0);
-		analysisRecord.setLoseMaxValue(Integer.valueOf(profitSituation.get(0).getChargeMoney()));
+		analysisRecord.setLoseMaxValue(Float.valueOf(profitSituation.get(0).getChargeMoney()));
 		analysisRecord.setLoseMaxNum(Integer.valueOf(profitSituation.get(0).getChargeNumber()));
-		analysisRecord.setWinMaxValue(Integer.valueOf(profitSituation.get(48).getChargeMoney()));
+		analysisRecord.setWinMaxValue(Float.valueOf(profitSituation.get(48).getChargeMoney()));
 		analysisRecord.setWinMaxNum(Integer.valueOf(profitSituation.get(48).getChargeNumber()));
 
 		for (ChargeRecord chargeRecord : profitSituation) {
-			int tempMoney = Integer.valueOf(chargeRecord.getChargeMoney());
+			float tempMoney = Float.valueOf(chargeRecord.getChargeMoney());
 			if (tempMoney > 0) {
 				// 赚钱个数增加1
 				analysisRecord.setWinCount(analysisRecord.getWinCount() + 1);
@@ -340,21 +340,20 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	/**
 	 * 总统计，总体收数情况
 	 */
-	private void analysisTotal() {
+	private void analysisTotal() throws Exception {
 		User user = getSessionUser();
 
 		try {
 			// 获取当前期所有收数记录
 			chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(), Integer.valueOf(nowPeriod.getId()));
 		} catch (NullPointerException e) {
-
 			e.printStackTrace();
 		}
 
-		totalCharge = new int[49];
+		totalCharge = new float[49];
 
 		for (ChargeRecord chargeRecord : chargeRecordList) {
-			int money = Integer.valueOf(chargeRecord.getChargeMoney());
+			float money = Float.valueOf(chargeRecord.getChargeMoney());
 			String[] temp = chargeRecord.getChargeNumber().split(",");
 
 			for (int i = 0; i < temp.length; i++) {
@@ -370,8 +369,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * 
 	 * @throws IOException
 	 */
-	private void analysisReported(Integer eatValue) throws IOException {
-		reportedCharge = new int[49];
+	private void analysisReported(Float eatValue) throws Exception {
+		reportedCharge = new float[49];
 
 		// 计算上报情况
 		for (int i = 0; i < totalCharge.length; i++) {
@@ -393,18 +392,18 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 *            开奖结果号码
 	 * @return
 	 */
-	public int calculateMoney(int resultNum) {
+	public float calculateMoney(int resultNum) throws Exception {
 		// 上报英葵
-		int reportedMoney = 0;
+		float reportedMoney = 0;
 		// 总的收数数
-		int totalChargeMoney = 0;
+		float totalChargeMoney = 0;
 		// 下家英葵
-		int apprenticeMoney = 0;
+		float apprenticeMoney = 0;
 
 		reportedMoney = calculateReportedMoney(resultNum);
 
 		// 计算总的收数
-		for (int i : totalCharge) {
+		for (float i : totalCharge) {
 			totalChargeMoney += i;
 		}
 
@@ -419,15 +418,15 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * 
 	 * @param resultNum
 	 */
-	private int calculateReportedMoney(int resultNum) {
-		int totalReportedMoney = 0;
-		for (int tempReported : reportedCharge) {
+	private float calculateReportedMoney(int resultNum) throws Exception {
+		float totalReportedMoney = 0;
+		for (float tempReported : reportedCharge) {
 			totalReportedMoney += tempReported;
 		}
 
 		// 开奖号码上报金额*倍数+上报总金额*返点-上报总金额
-		return reportedCharge[resultNum - 1] * Integer.valueOf(userExtra.getTimes())
-				+ totalReportedMoney * Integer.valueOf(userExtra.getRebate()) - totalReportedMoney;
+		return reportedCharge[resultNum - 1] * Float.valueOf(userExtra.getTimes())
+				+ totalReportedMoney * Float.valueOf(userExtra.getRebate()) - totalReportedMoney;
 	}
 
 	/**
@@ -436,8 +435,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * @param resultNum
 	 * @return
 	 */
-	private int calculateAllApprenticeMoney(int resultNum) {
-		int result = 0;
+	private float calculateAllApprenticeMoney(Integer resultNum) throws Exception {
+		float result = 0;
 
 		// 获得本期有购买的所有下家
 		Set<Integer> allApprenticeId = new HashSet<Integer>();
@@ -455,11 +454,11 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		return result;
 	}
 
-	private int calculateOneApprenticeMoney(int apprenticeId, int resultNum) {
+	private float calculateOneApprenticeMoney(Integer apprenticeId, Integer resultNum) throws Exception {
 		// 中奖金额
-		int timesResult = 0;
+		float timesResult = 0;
 		// 返点金额
-		int rebateResult = 0;
+		float rebateResult = 0;
 
 		// 根据下家id获取下家信息
 		Apprentice apprentice = new Apprentice();
@@ -476,19 +475,19 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			// 一个记录的所有号码
 			String[] tempCharge = chargeRecord.getChargeNumber().split(",");
 			// itemChargeMoney是一个号码的购买金额，chargeRecord.getChargeMoney()是一个群组的金额
-			int itemChargeMoney = Integer.valueOf(chargeRecord.getChargeMoney()) / tempCharge.length;
+			float itemChargeMoney = Float.valueOf(chargeRecord.getChargeMoney()) / tempCharge.length;
 
 			// 统计返点金额。无论是否中奖均有返点
 			if (chargeRecord.getGroupId() >= 50 && chargeRecord.getGroupId() <= 61) {
 				// 如果是生肖,用生肖的返点
 
-				rebateResult += Integer.valueOf(chargeRecord.getChargeMoney())
-						* Integer.valueOf(apprentice.getZodiacRebate()) * 0.01;
+				rebateResult += Float.valueOf(chargeRecord.getChargeMoney())
+						* Float.valueOf(apprentice.getZodiacRebate());
 			} else {
 				// 如果是字,用字的返点
 
-				rebateResult += Integer.valueOf(chargeRecord.getChargeMoney())
-						* Integer.valueOf(apprentice.getWordRebate()) * 0.01;
+				rebateResult += Float.valueOf(chargeRecord.getChargeMoney())
+						* Float.valueOf(apprentice.getWordRebate());
 			}
 
 			// 统计中奖金额。遍历一组记录中的号码是否中奖
@@ -496,10 +495,10 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				if (tempChargeItem.equals(resultNum + "")) {
 					if (chargeRecord.getGroupId() >= 50 && chargeRecord.getGroupId() <= 61) {
 						// 如果是生肖,用生肖的倍数
-						timesResult += itemChargeMoney * Integer.valueOf(apprentice.getZodiacTimes());
+						timesResult += itemChargeMoney * Float.valueOf(apprentice.getZodiacTimes());
 					} else {
 						// 如果是字,用字的倍数
-						timesResult += itemChargeMoney * Integer.valueOf(apprentice.getWordTimes());
+						timesResult += itemChargeMoney * Float.valueOf(apprentice.getWordTimes());
 					}
 				}
 			}
@@ -515,8 +514,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * @param eatValue
 	 * @return
 	 */
-	private boolean checkEatCompetence(int eatValue) {
-		if (Integer.valueOf(userExtra.getNumLimit()) >= eatValue) {
+	private boolean checkEatCompetence(float eatValue) throws Exception {
+		if (Float.valueOf(userExtra.getNumLimit()) >= eatValue) {
 			// 用户具有该吃数的权限
 			return true;
 		}
