@@ -113,7 +113,6 @@ public class UserExtraInsertAction extends BaseActionSupport {
         String reason="";
         int code=0;
         String returnValue="";
-        userExtra.setRebate(Double.parseDouble(userExtra.getRebate())*0.01+"");
         try {
             UserExtra userExtra1=userExtraService.getByUserId(user.getId());
             if(userExtra1==null){
