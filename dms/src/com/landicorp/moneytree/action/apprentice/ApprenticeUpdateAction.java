@@ -45,9 +45,9 @@ public class ApprenticeUpdateAction extends BaseActionSupport {
             
             insertPrDoc.setApprenticeName(apprentice.getApprenticeName());
             insertPrDoc.setMemo(apprentice.getMemo());
-            insertPrDoc.setWordRebate(Double.parseDouble(apprentice.getWordRebate())*0.01+"");
+            insertPrDoc.setWordRebate(apprentice.getWordRebate());
             insertPrDoc.setWordTimes(apprentice.getWordTimes());
-            insertPrDoc.setZodiacRebate(Double.parseDouble(apprentice.getZodiacRebate())*0.01+"");
+            insertPrDoc.setZodiacRebate(apprentice.getZodiacRebate());
             insertPrDoc.setZodiacTimes(apprentice.getZodiacTimes());
             insertPrDoc.setLastModifier(getSessionUser());
             insertPrDoc.setLastModifyTime(new Date());
