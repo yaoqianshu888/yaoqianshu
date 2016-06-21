@@ -482,12 +482,12 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				// 如果是生肖,用生肖的返点
 
 				rebateResult += Float.valueOf(chargeRecord.getChargeMoney())
-						* Float.valueOf(apprentice.getZodiacRebate())*0.01;
+						* Float.valueOf(apprentice.getZodiacRebate())*0.01f;
 			} else {
 				// 如果是字,用字的返点
 
 				rebateResult += Float.valueOf(chargeRecord.getChargeMoney())
-						* Float.valueOf(apprentice.getWordRebate())*0.01;
+						* Float.valueOf(apprentice.getWordRebate())*0.01f;
 			}
 
 			// 统计中奖金额。遍历一组记录中的号码是否中奖
