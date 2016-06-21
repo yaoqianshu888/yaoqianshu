@@ -110,7 +110,7 @@
 					</tr>
 					<tr>
 						<td width="100" class="right yhItem1">上家返点：</td>
-						<td class="left yhItem2" id="rebate">
+						<td class="left yhItem2" ><span id="rebate"></span>%
 						</td>
 					</tr>
 					<tr>

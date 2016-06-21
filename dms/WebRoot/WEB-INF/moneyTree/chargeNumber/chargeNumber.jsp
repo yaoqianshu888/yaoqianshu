@@ -28,6 +28,17 @@
 			ldDialog.alert("请先选择下家！");
 			return false;
 		}
+		var isNo=0;
+		$("input:gt(1)").each(function(){
+			if ($(this).val()!='' && !isDecimal($(this).val())) {
+				isNo=1;  //出错
+			}
+		});
+		if(isNo==1){
+			ldDialog.alert("金额输入有误！");
+			return false;
+		}
+		
 		document.subForm.submit();
 	}
 	
@@ -71,12 +82,20 @@
 	  }
   	setInterval(GetRTime,0);
 	
+	//回车提交表单
+	document.onkeydown = function(evt){
+   　	 var evt = window.event?window.event:evt;
+    　	if (evt.keyCode==13) {
+          checkSubmit();
+    	　}
+   }
+
 </script>
 <style >
 .ldPager div.skip{right:70%}
 </style>
 </head>
-<body>
+<body onkeydown="keyDown(event);">
 	<div id="rightcontent">
 		<div id="rightcontent1">
 			<div class="yhlist">
@@ -373,6 +392,4 @@
 		</div>
 	</div>
 </body>
-
 </html>
-

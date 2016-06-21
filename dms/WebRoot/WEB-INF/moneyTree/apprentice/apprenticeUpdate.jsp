@@ -84,7 +84,7 @@
 					</td>
 					<td>
 						<input type="text" name="apprentice.wordRebate" id="apprentice.wordRebate" 
-							value="${apprentice.wordRebate}" class="ldText" maxlength="30" />
+							value="${apprentice.wordRebate}" class="ldText" maxlength="30" /> %
 					</td>
 				</tr>
 				<tr>
@@ -102,7 +102,7 @@
 					</td>
 					<td>
 						<input type="text" name="apprentice.zodiacRebate" id="apprentice.zodiacRebate" 
-							value="${apprentice.zodiacRebate}" class="ldText" maxlength="30" />
+							value="${apprentice.zodiacRebate}" class="ldText" maxlength="30" /> %
 					</td>
 				</tr>
 				<tr>
