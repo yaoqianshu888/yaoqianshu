@@ -287,6 +287,8 @@
 					<td>${totalCharge[47] }</td>
 				</tr>
 			</table>
+			<br/>
+			<h1>收数总金额：${totalChargeMoney}</h1>
 		</div>
 		<!-- 总收数情况表 end -->
 
@@ -444,6 +446,8 @@
 					<td>${reportedCharge[47] }</td>
 				</tr>
 			</table>
+			<br/>
+			<h1>上报总金额：${totalReportedMoney}</h1>
 		</div>
 		<!-- 上报情况表 end -->
 

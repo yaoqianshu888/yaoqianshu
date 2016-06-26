@@ -20,6 +20,7 @@ import com.landicorp.core.action.BaseActionSupport;
 import com.landicorp.core.entities.User;
 import com.landicorp.moneytree.entities.AnalysisRecord;
 import com.landicorp.moneytree.entities.Apprentice;
+import com.landicorp.moneytree.entities.ApprenticeData;
 import com.landicorp.moneytree.entities.ChargeRecord;
 import com.landicorp.moneytree.entities.Eat;
 import com.landicorp.moneytree.entities.Period;
@@ -76,6 +77,15 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * 英葵情况记录
 	 */
 	private List<AnalysisRecord> analysisRecordList;
+
+	/**
+	 * 下家英葵情况
+	 */
+	private List<ApprenticeData> apprenticeDataList;
+
+	private float totalReportedMoney;
+
+	private float totalChargeMoney;
 
 	public ChargeRecord getChargeRecord() {
 		return chargeRecord;
@@ -205,6 +215,30 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		this.analysisRecordList = analysisRecordList;
 	}
 
+	public List<ApprenticeData> getApprenticeDataList() {
+		return apprenticeDataList;
+	}
+
+	public void setApprenticeDataList(List<ApprenticeData> apprenticeDataList) {
+		this.apprenticeDataList = apprenticeDataList;
+	}
+
+	public float getTotalReportedMoney() {
+		return totalReportedMoney;
+	}
+
+	public void setTotalReportedMoney(float totalReportedMoney) {
+		this.totalReportedMoney = totalReportedMoney;
+	}
+
+	public float getTotalChargeMoney() {
+		return totalChargeMoney;
+	}
+
+	public void setTotalChargeMoney(float totalChargeMoney) {
+		this.totalChargeMoney = totalChargeMoney;
+	}
+
 	public String getAnalysis() throws Exception {
 
 		nowPeriod = new Period();
@@ -235,9 +269,12 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 			for (int j = 0; j < 49; j++) {
 				ChargeRecord tempRecord = new ChargeRecord();
-
+				if (j == 23) {
+					System.out.println("");
+				}
 				tempRecord.setChargeNumber((j + 1) + "");
 				tempRecord.setChargeMoney(calculateMoney(j + 1) + "");
+
 				profitSituation.add(tempRecord);
 			}
 
@@ -262,7 +299,37 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		return SUCCESS;
 	}
 
-	private void getUserInputEatValue() throws Exception {
+	public String getApprenticeAnalysis() {
+
+		nowPeriod = new Period();
+		prePeriod = new Period();
+		// 得到上一期和当前期
+		prePeriod = periodService.getPrePeriod();
+		nowPeriod = periodService.getNowPeriod();
+
+		User user = getSessionUser();
+
+		try {
+			// 获取当前期所有收数记录
+			chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(), Integer.valueOf(nowPeriod.getId()));
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			calculateAllApprenticeMoney(Integer.valueOf(prePeriod.getLotteryResult()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "apprenticeData";
+	}
+
+	/**
+	 * 获取用户输入的吃数值
+	 */
+	private void getUserInputEatValue() {
 		// 吃数的值
 		eatValue = 0;
 		HttpServletRequest request = ServletActionContext.getRequest();
@@ -301,7 +368,11 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	private void getUserExtraInfo() throws Exception {
 		User user = new User();
 		user = getSessionUser();
-		userExtra = userExtraService.getByUserId(user.getId());
+		try {
+			userExtra = userExtraService.getByUserId(user.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Eat eat = new Eat();
 		eat.setUser(getSessionUser());
 		// TODO 默认吃数值 取出一页，10条记录
@@ -312,7 +383,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	/**
 	 * 计算英葵情况
 	 */
-	private void calculateAnalysis() throws Exception {
+	private void calculateAnalysis() {
 		AnalysisRecord analysisRecord = new AnalysisRecord(0, 0, 0, 0, 0, 0, 0);
 		analysisRecord.setLoseMaxValue(Float.valueOf(profitSituation.get(0).getChargeMoney()));
 		analysisRecord.setLoseMaxNum(Integer.valueOf(profitSituation.get(0).getChargeNumber()));
@@ -340,7 +411,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	/**
 	 * 总统计，总体收数情况
 	 */
-	private void analysisTotal() throws Exception {
+	private void analysisTotal() {
 		User user = getSessionUser();
 
 		try {
@@ -369,7 +440,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * 
 	 * @throws IOException
 	 */
-	private void analysisReported(Float eatValue) throws Exception {
+	private void analysisReported(Float eatValue) {
 		reportedCharge = new float[49];
 
 		// 计算上报情况
@@ -392,11 +463,11 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 *            开奖结果号码
 	 * @return
 	 */
-	public float calculateMoney(int resultNum) throws Exception {
+	public float calculateMoney(int resultNum) {
 		// 上报英葵
 		float reportedMoney = 0;
 		// 总的收数数
-		float totalChargeMoney = 0;
+		totalChargeMoney = 0;
 		// 下家英葵
 		float apprenticeMoney = 0;
 
@@ -407,10 +478,15 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			totalChargeMoney += i;
 		}
 
-		apprenticeMoney = calculateAllApprenticeMoney(resultNum);
+		try {
+			apprenticeMoney = calculateAllApprenticeMoney(resultNum);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		// 上报结算金额+总的收数-下家结算金额
-		return reportedMoney + totalChargeMoney - apprenticeMoney;
+		// 上报结算金额-下家结算金额
+		return reportedMoney - apprenticeMoney;
 	}
 
 	/**
@@ -418,15 +494,15 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * 
 	 * @param resultNum
 	 */
-	private float calculateReportedMoney(int resultNum) throws Exception {
-		float totalReportedMoney = 0;
+	private float calculateReportedMoney(int resultNum) {
+		totalReportedMoney = 0;
 		for (float tempReported : reportedCharge) {
 			totalReportedMoney += tempReported;
 		}
 
 		// 开奖号码上报金额*倍数+上报总金额*返点-上报总金额
 		return reportedCharge[resultNum - 1] * Float.valueOf(userExtra.getTimes())
-				+ totalReportedMoney * Float.valueOf(userExtra.getRebate())*0.01f - totalReportedMoney;
+				+ totalReportedMoney * Float.valueOf(userExtra.getRebate()) * 0.01f - totalReportedMoney;
 	}
 
 	/**
@@ -438,6 +514,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	private float calculateAllApprenticeMoney(Integer resultNum) throws Exception {
 		float result = 0;
 
+		apprenticeDataList = new ArrayList<ApprenticeData>();
+
 		// 获得本期有购买的所有下家
 		Set<Integer> allApprenticeId = new HashSet<Integer>();
 
@@ -447,18 +525,19 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		// 计算出应给每个下家的金额,并计算总金额
 		for (Integer itemId : allApprenticeId) {
-
 			result += calculateOneApprenticeMoney(itemId, resultNum);
 		}
 
 		return result;
 	}
 
-	private float calculateOneApprenticeMoney(Integer apprenticeId, Integer resultNum) throws Exception {
+	private float calculateOneApprenticeMoney(Integer apprenticeId, Integer resultNum) {
 		// 中奖金额
 		float timesResult = 0;
 		// 返点金额
 		float rebateResult = 0;
+
+		float buyMoney = 0.0f;
 
 		// 根据下家id获取下家信息
 		Apprentice apprentice = new Apprentice();
@@ -472,6 +551,9 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		// 遍历一个下家本期所有的购买记录
 		for (ChargeRecord chargeRecord : oneApprenticeChargeList) {
+			// 记录下家下注的钱
+			buyMoney += Float.valueOf(chargeRecord.getChargeMoney());
+
 			// 一个记录的所有号码
 			String[] tempCharge = chargeRecord.getChargeNumber().split(",");
 			// itemChargeMoney是一个号码的购买金额，chargeRecord.getChargeMoney()是一个群组的金额
@@ -482,12 +564,12 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				// 如果是生肖,用生肖的返点
 
 				rebateResult += Float.valueOf(chargeRecord.getChargeMoney())
-						* Float.valueOf(apprentice.getZodiacRebate())*0.01f;
+						* Float.valueOf(apprentice.getZodiacRebate()) * 0.01f;
 			} else {
 				// 如果是字,用字的返点
 
-				rebateResult += Float.valueOf(chargeRecord.getChargeMoney())
-						* Float.valueOf(apprentice.getWordRebate())*0.01f;
+				rebateResult += Float.valueOf(chargeRecord.getChargeMoney()) * Float.valueOf(apprentice.getWordRebate())
+						* 0.01f;
 			}
 
 			// 统计中奖金额。遍历一组记录中的号码是否中奖
@@ -504,8 +586,19 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			}
 
 		}
+
+		ApprenticeData data = new ApprenticeData();
+		data.setApprenticeId(apprenticeId);
+		data.setApprenticeName(apprentice.apprenticeName);
+		data.setBuyMoney(buyMoney);
+		data.setWinTimesMoney(timesResult);
+		data.setWinRebateMoney(rebateResult);
+		data.setPayMoney(timesResult + rebateResult - buyMoney);
+
+		apprenticeDataList.add(data);
+
 		// 给下家的金额=中奖金额+返点金额
-		return timesResult + rebateResult;
+		return (timesResult + rebateResult - buyMoney);
 	}
 
 	/**
@@ -514,7 +607,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * @param eatValue
 	 * @return
 	 */
-	private boolean checkEatCompetence(float eatValue) throws Exception {
+	private boolean checkEatCompetence(float eatValue) {
 		if (Float.valueOf(userExtra.getNumLimit()) >= eatValue) {
 			// 用户具有该吃数的权限
 			return true;
