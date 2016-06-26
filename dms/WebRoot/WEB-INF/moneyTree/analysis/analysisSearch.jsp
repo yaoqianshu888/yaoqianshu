@@ -80,10 +80,6 @@
 
 
 					<c:forEach items="${analysisRecordList }" var="item" varStatus="status">
-
-=======
-					<c:forEach items="${analysisRecordList }" var="item" varStatus="status">
->>>>>>> 2c8e5a5c53413c4feadff35446a4b7f68c1bcf64
 						<tr>
 							<td><c:out value="${eatList[status.index].eatValue}"></c:out></td>
 							<td><c:out value="${item.winProbability }%"></c:out></td>
