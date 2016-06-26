@@ -29,7 +29,7 @@
 			return false;
 		}
 		var isNo=0;
-		$("input:gt(1)").each(function(){
+		$("input:[type='text']").each(function(){
 			if ($(this).val()!='' && !isDecimal($(this).val())) {
 				isNo=1;  //出错
 			}
