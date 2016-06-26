@@ -76,9 +76,6 @@
 						<td style="font-weight: bold">亏钱最大值</td>
 						<td style="font-weight: bold">最亏钱号码</td>
 					</tr>
-<<<<<<< HEAD
-
-
 					<c:forEach items="${analysisRecordList }" var="item" varStatus="status">
 						<tr>
 							<td><c:out value="${eatList[status.index].eatValue}"></c:out></td>
