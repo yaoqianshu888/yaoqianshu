@@ -152,9 +152,9 @@
 							<td><c:out value="${status.count}" /></td>
 							<td>${ item.apprenticeName} </td>
 							<td><span style="font-weight:bold;">${ item.wordTimes}</span></td>
-							<td><span style="font-weight:bold;">${ item.wordRebate}</span></td>
+							<td><span style="font-weight:bold;">${ item.wordRebate} %</span></td>
 							<td><span style="font-weight:bold;">${ item.zodiacTimes}</span></td>
-							<td><span style="font-weight:bold;">${ item.zodiacRebate}</span></td>
+							<td><span style="font-weight:bold;">${ item.zodiacRebate} %</span></td>
 							<td>
 								<ld:check mark="apprenticeDetail">
 									<input type="button" value="详情" class="ldBtnLink" onclick="showItem(${item.id});" />&nbsp;

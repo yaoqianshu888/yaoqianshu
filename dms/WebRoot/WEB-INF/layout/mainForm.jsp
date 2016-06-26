@@ -28,14 +28,16 @@
 		var url = "${basePath}moneyJinliang/userExtraInsert!isExpire.action";
 		$.ajax({
 			type : "post",
+			async: false,
 			url : url,
 			dataType : "json",
 			success : function(res) {
 				if(res[0].code == 1){
 					$("#scrollobj").show();
+					setInterval("scroll(document.getElementById('scrollobj'))",20);
 					ldDialog.unmask();
 				}else{
-					
+					$("#scrollobj").hide();
 					ldDialog.unmask();
 				}
 			},
@@ -60,7 +62,8 @@
 		//当滚动条滚动了初始内容的宽度时滚动条回到最左端
 		if (obj.scrollLeft>=obj.firstChild.offsetWidth) obj.scrollLeft=0;
 	}
-	setInterval("scroll(document.getElementById('scrollobj'))",20);
+	
+	
 </script>
 </head>
 <body style="overflow: hidden;">
@@ -69,7 +72,7 @@
 		<tr style="height: 70px;">
 			<td>
 				<div>
-					<div class="headerbg"><DIV id="scrollobj" style="white-space:nowrap;overflow:hidden;width:300px;float:left;color:red;margin-left:25%;margin-top:20px;font-size:20px;display:none">
+					<div class="headerbg"><DIV id="scrollobj" style="white-space:nowrap;overflow:hidden;width:300px;float:left;color:red;margin-left:25%;margin-top:20px;font-size:20px;">
 											即将到期，请联系管理员进行缴费！
 										  </DIV> 
 						<div class="header-l">

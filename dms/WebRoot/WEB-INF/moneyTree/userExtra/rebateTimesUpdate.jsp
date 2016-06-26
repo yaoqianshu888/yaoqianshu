@@ -54,7 +54,7 @@
 					</td>
 					<td>
 						<input type="text" name="userExtra.rebate" id="userExtra.rebate" 
-							value="${userExtra.rebate}" class="ldText" maxlength="30" />
+							value="${userExtra.rebate}" class="ldText" maxlength="30" /> %
 					</td>
 				</tr>
 				<tr>
