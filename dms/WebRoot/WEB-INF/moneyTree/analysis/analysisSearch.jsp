@@ -76,9 +76,13 @@
 						<td style="font-weight: bold">亏钱最大值</td>
 						<td style="font-weight: bold">最亏钱号码</td>
 					</tr>
+<<<<<<< HEAD
 	<c:forEach items="${analysisRecordList }" var="item" varStatus="status">
 
 
+=======
+					<c:forEach items="${analysisRecordList }" var="item" varStatus="status">
+>>>>>>> f84d8a20567ff4341ae8765a71089330d9e143d5
 						<tr>
 							<td><c:out value="${eatList[status.index].eatValue}"></c:out></td>
 							<td><c:out value="${item.winProbability }%"></c:out></td>
@@ -289,6 +293,8 @@
 					<td>${totalCharge[47] }</td>
 				</tr>
 			</table>
+			<br/>
+			<h1>收数总金额：${totalChargeMoney}</h1>
 		</div>
 		<!-- 总收数情况表 end -->
 
@@ -446,6 +452,8 @@
 					<td>${reportedCharge[47] }</td>
 				</tr>
 			</table>
+			<br/>
+			<h1>上报总金额：${totalReportedMoney}</h1>
 		</div>
 		<!-- 上报情况表 end -->
 
