@@ -41,7 +41,7 @@
 				<div class="conditionsbox">
 					<div id="conditionsbox">
 						<div class="yhlist1">
-							<div style="margin-left:8%"><span style="color:#ffb800;font-weight:bold">上一期:</span>第 <span style="color:#ffb800;font-weight:bold">${prePeriod.period }</span> 期开奖号码：<span style="color:#ffb800;font-weight:bold">${prePeriod.lotteryResult }</span>  <span style="margin-left:8%">下期：<span style="color:#ffb800;font-weight:bold;color:red;margin-right:8%;font-size:22px">${nowPeriod.period } </span>开奖时间：<span style="color:#ffb800;font-weight:bold"><f:formatDate value="${ nowPeriod.lotteryTime}" pattern="yyyy-MM-dd  HH:mm" /></span></span>    <span style="margin-left:8%">剩余投注时间：<span style="color:#ffb800;font-weight:bold"><span id="day">0</span> 天  <span id="hour">00</span>:<span id="min">00</span>:<span id="sec">00</span></span></span></div>
+							<div style="margin-left:8%"><span style="color:#ffb800;font-weight:bold">上一期:</span>第 <span style="color:#ffb800;font-weight:bold">${prePeriod.period }</span> 期开奖号码：<span style="color:#ffb800;font-weight:bold">${prePeriod.lotteryResult }</span>  <span style="margin-left:8%">下期：<span style="color:#ffb800;font-weight:bold;color:red;margin-right:8%;font-size:22px">第${nowPeriod.period }期</span>开奖时间：<span style="color:#ffb800;font-weight:bold"><f:formatDate value="${ nowPeriod.lotteryTime}" pattern="yyyy-MM-dd  HH:mm" /></span></span>    <span style="margin-left:8%">剩余投注时间：<span style="color:#ffb800;font-weight:bold"><span id="day">0</span> 天  <span id="hour">00</span>:<span id="min">00</span>:<span id="sec">00</span></span></span></div>
 						</div>
 					</div>
 
@@ -49,6 +49,20 @@
 			</div>
 		</div>
 		<div style="width: 44%; float: left; margin-left: 10px">
+			<form action="${basePath}moneyXuyu/analysisSearch!getApprenticeAnalysis.action" method="post">
+				<!-- 只允许输入数字 -->
+				<input name="periodValue" class="ldText"
+				style="width: 100px; margin-left: 10px; IME-MODE: disabled;"
+				onkeyup="this.value=this.value.replace(/\D/g,'')"
+				onafterpaste="this.value=this.value.replace(/\D/g,'')"
+				maxlength="5" size="14" id="periodValue" value="" type="text" /> 
+				请输入查询期数,下期未开奖不能查询
+				<input id="searchBtn" type="submit" class="ldBtnBlue" value="分析" />
+					
+			</form>
+			<br />
+			<h2 style="color: red;">当前查询期数：${periodValue }</h2>
+			<br />
 			<div style="margin-bottom: 5px">
 				<table id="contentTable" width="100%" border="0" cellspacing="1"
 					cellpadding="0" class="ld-datagrid">

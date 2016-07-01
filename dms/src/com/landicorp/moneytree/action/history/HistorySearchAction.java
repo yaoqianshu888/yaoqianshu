@@ -1,20 +1,15 @@
 package com.landicorp.moneytree.action.history;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
 
 import com.landicorp.core.action.BaseActionSupport;
+import com.landicorp.core.web.pager.Pager;
 import com.landicorp.moneytree.entities.Apprentice;
 import com.landicorp.moneytree.entities.History;
 import com.landicorp.moneytree.entities.Numgroup;
 import com.landicorp.moneytree.entities.Period;
+import com.landicorp.moneytree.service.IApprenticeService;
 import com.landicorp.moneytree.service.IHistoryService;
 import com.landicorp.moneytree.service.INumgroupService;
 import com.landicorp.moneytree.service.IPeriodService;
@@ -26,6 +21,8 @@ public class HistorySearchAction extends BaseActionSupport {
 	private Period nowPeriod;
 	private Period prePeriod;
 	private IPeriodService periodService;
+
+	private IApprenticeService apprenticeService;
 
 	private List<List<History>> histories;
 	private INumgroupService numgroupService;
@@ -70,6 +67,14 @@ public class HistorySearchAction extends BaseActionSupport {
 		this.periodService = periodService;
 	}
 
+	public IApprenticeService getApprenticeService() {
+		return apprenticeService;
+	}
+
+	public void setApprenticeService(IApprenticeService apprenticeService) {
+		this.apprenticeService = apprenticeService;
+	}
+
 	public List<List<History>> getHistories() {
 		return histories;
 	}
@@ -94,7 +99,7 @@ public class HistorySearchAction extends BaseActionSupport {
 	public String getAllHistory() {
 
 		history = new History();
-
+		getPager().setPageSize(20);
 		List<History> historyList = historyService.getAllHistory(history, getPager());
 		getAllHistories(historyList);
 
@@ -111,6 +116,12 @@ public class HistorySearchAction extends BaseActionSupport {
 				if (temHistory.getClickNo().equals(historyList.get(i).getClickNo())) {
 					Numgroup tempNumgroup = numgroupService.getById(historyList.get(i).getNumgroup().getId()); // 得到群组信息
 					historyList.get(i).setNumgroup(tempNumgroup);
+					if (i == 0) {
+						Period period = periodService.getById(historyList.get(i).getPeriod().getId());
+						historyList.get(i).setPeriod(period);
+						Apprentice apprentice = apprenticeService.getById(historyList.get(i).getApprentice().getId());
+						historyList.get(i).setApprentice(apprentice);
+					}
 					histories2.add(historyList.get(i));
 				} else {
 					histories.add(histories2);
@@ -119,6 +130,11 @@ public class HistorySearchAction extends BaseActionSupport {
 
 					Numgroup tempNumgroup = numgroupService.getById(historyList.get(i).getNumgroup().getId()); // 得到群组信息
 					historyList.get(i).setNumgroup(tempNumgroup);
+					Period period = periodService.getById(historyList.get(i).getPeriod().getId());
+					historyList.get(i).setPeriod(period);
+					Apprentice apprentice = apprenticeService.getById(historyList.get(i).getApprentice().getId());
+					historyList.get(i).setApprentice(apprentice);
+
 					histories2.add(historyList.get(i));
 				}
 
@@ -127,10 +143,10 @@ public class HistorySearchAction extends BaseActionSupport {
 				}
 			}
 		}
-		
-		//得到上一期和当前期
-        prePeriod=periodService.getPrePeriod();
-        nowPeriod=periodService.getNowPeriod();
+
+		// 得到上一期和当前期
+		prePeriod = periodService.getPrePeriod();
+		nowPeriod = periodService.getNowPeriod();
 	}
 
 	/**
@@ -139,6 +155,31 @@ public class HistorySearchAction extends BaseActionSupport {
 	 * @return
 	 */
 	public String getHistoryByHistory() {
+
+		if (!"".equals(history.getApprentice().getApprenticeName())) {
+			List<Apprentice> apprenticeList = new ArrayList<Apprentice>();
+			Apprentice apprentice = new Apprentice();
+			apprentice.setUser(getSessionUser());
+			apprentice.setApprenticeName(history.getApprentice().getApprenticeName());
+			apprenticeList = apprenticeService.getApprenticeListByApprentice(apprentice, null);
+			if (apprenticeList.size() != 0) {
+				history.setApprentice(apprenticeList.get(0));
+			} else {
+				return SUCCESS;
+			}
+		}
+		if (!"".equals(history.getPeriod().getPeriod())) {
+			List<Period> periodList = new ArrayList<Period>();
+			Period period = new Period();
+			period.setPeriod(history.getPeriod().getPeriod());
+			periodList = periodService.getPeriodListByPeriod(period, null);
+			if (periodList.size() != 0) {
+				history.setPeriod(periodList.get(0));
+			} else {
+				return SUCCESS;
+			}
+		}
+		getPager().setPageSize(20);
 
 		List<History> historyList = historyService.getHistoryListByHistory(history, getPager());
 		getAllHistories(historyList);

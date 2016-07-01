@@ -6,7 +6,7 @@
 <%@include file="/headDeclare.jsp"%>
 <script type="text/javascript">
 	function checkSubmit() {
-		if (!checkData(true, 'period.period', "期数", 2, 30)) {
+		if (!checkData(true, 'period.period', "期数", 1, 4)) {
 			return false;
 		}
 		if($("#period\\.lotteryTime").val()==""){

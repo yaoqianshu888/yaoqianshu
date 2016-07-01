@@ -73,6 +73,11 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * 吃数的金额
 	 */
 	private int eatValue;
+
+	/**
+	 * 查询的期数
+	 */
+	private int periodValue;
 	/**
 	 * 英葵情况记录
 	 */
@@ -175,6 +180,14 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		this.eatValue = eatValue;
 	}
 
+	public int getPeriodValue() {
+		return periodValue;
+	}
+
+	public void setPeriodValue(int periodValue) {
+		this.periodValue = periodValue;
+	}
+
 	public UserExtra getUserExtra() {
 		return userExtra;
 	}
@@ -241,6 +254,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 	public String getAnalysis() throws Exception {
 
+		Period period = new Period();
+		
 		nowPeriod = new Period();
 		prePeriod = new Period();
 		// 得到上一期和当前期
@@ -258,7 +273,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		getUserInputEatValue();
 
 		// 总统计，总体收数情况
-		analysisTotal();
+		period = analysisTotal();
 
 		for (int i = 0; i < eatList.size(); i++) {
 			// 根据吃数值，进行上报数统计
@@ -273,7 +288,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 					System.out.println("");
 				}
 				tempRecord.setChargeNumber((j + 1) + "");
-				tempRecord.setChargeMoney(calculateMoney(j + 1) + "");
+				tempRecord.setChargeMoney(calculateMoney((j + 1),period) + "");
 
 				profitSituation.add(tempRecord);
 			}
@@ -300,6 +315,27 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	}
 
 	public String getApprenticeAnalysis() {
+		Period period = new Period();
+		
+		periodValue = 0;
+
+		HttpServletRequest request = ServletActionContext.getRequest();
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		// 获取参数
+		Map<String, String[]> map = request.getParameterMap();
+		for (Entry<String, String[]> me : map.entrySet()) {
+			String name = me.getKey();
+			String[] v = me.getValue();
+			if (name.equals("periodValue")) {
+				if (!v[0].equals("") && v[0] != null) {
+					periodValue = Integer.valueOf(v[0]);
+				}
+			}
+		}
 
 		nowPeriod = new Period();
 		prePeriod = new Period();
@@ -310,16 +346,45 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		User user = getSessionUser();
 
 		try {
-			// 获取当前期所有收数记录
-			chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(), Integer.valueOf(nowPeriod.getId()));
+
+			if (periodValue != 0 && !nowPeriod.getPeriod().equals(periodValue + "")) {
+				// 如果用户输入了期数，并且用户输入的不是当前期
+				Period searchPeriod = new Period();
+				List<Period> searchPeriodList = new ArrayList<Period>();
+				searchPeriod.setPeriod(periodValue + "");
+				searchPeriodList = periodService.getPeriodListByPeriod(searchPeriod, getPager());
+				if (searchPeriodList.size() != 0) {
+					period = searchPeriodList.get(0);
+					
+					// 并且输入的期数正确，则查询出用户输入期数的所有收数记录
+					chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
+							Integer.valueOf(period.getId()));
+				} else {
+					
+					period = prePeriod;
+					//用户输入为空或不合法，默认查询上一期
+					periodValue = Integer.valueOf(prePeriod.getPeriod());
+					// 获取上期所有收数记录
+					chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
+							Integer.valueOf(period.getId()));
+				}
+			} else {
+				period = prePeriod;
+				
+				//用户输入为空或不合法，默认查询上一期
+				periodValue = Integer.valueOf(prePeriod.getPeriod());
+				// 获取当前期所有收数记录
+				chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
+						Integer.valueOf(period.getId()));
+			}
+
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 
 		try {
-			calculateAllApprenticeMoney(Integer.valueOf(prePeriod.getLotteryResult()));
+			calculateAllApprenticeMoney(Integer.valueOf(period.getLotteryResult()),period);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -411,12 +476,62 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	/**
 	 * 总统计，总体收数情况
 	 */
-	private void analysisTotal() {
+	private Period analysisTotal() {
 		User user = getSessionUser();
+		
+		Period period = new Period();
+		periodValue = 0;
+
+		HttpServletRequest request = ServletActionContext.getRequest();
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		// 获取参数
+		Map<String, String[]> map = request.getParameterMap();
+		for (Entry<String, String[]> me : map.entrySet()) {
+			String name = me.getKey();
+			String[] v = me.getValue();
+			if (name.equals("periodValue")) {
+				if (!v[0].equals("") && v[0] != null) {
+					periodValue = Integer.valueOf(v[0]);
+				}
+			}
+		}
+		
 
 		try {
-			// 获取当前期所有收数记录
-			chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(), Integer.valueOf(nowPeriod.getId()));
+			
+			if (periodValue != 0) {
+				// 如果用户输入了期数
+				Period searchPeriod = new Period();
+				List<Period> searchPeriodList = new ArrayList<Period>();
+				searchPeriod.setPeriod(periodValue + "");
+				searchPeriodList = periodService.getPeriodListByPeriod(searchPeriod, getPager());
+				if (searchPeriodList.size() != 0) {
+					//TODO 
+					period = searchPeriodList.get(0);
+					// 并且输入的期数正确，则查询出用户输入期数的所有收数记录
+					chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
+							Integer.valueOf(period.getId()));
+				} else {
+					period = nowPeriod;
+					//用户输入为空或不合法，默认分析当前期
+					periodValue = Integer.valueOf(nowPeriod.getPeriod());
+					// 获取本期所有收数记录
+					chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
+							Integer.valueOf(period.getId()));
+				}
+			} else {
+				period = nowPeriod;
+				//用户输入为空或不合法，默认分析当前期
+				periodValue = Integer.valueOf(nowPeriod.getPeriod());
+				// 获取当前期所有收数记录
+				chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(), Integer.valueOf(period.getId()));
+
+			}
+			
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -433,6 +548,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			}
 
 		}
+		
+		return period;
 	}
 
 	/**
@@ -463,7 +580,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 *            开奖结果号码
 	 * @return
 	 */
-	public float calculateMoney(int resultNum) {
+	public float calculateMoney(int resultNum,Period period) {
 		// 上报英葵
 		float reportedMoney = 0;
 		// 总的收数数
@@ -479,7 +596,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		}
 
 		try {
-			apprenticeMoney = calculateAllApprenticeMoney(resultNum);
+			apprenticeMoney = calculateAllApprenticeMoney(resultNum,period);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -511,7 +628,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * @param resultNum
 	 * @return
 	 */
-	private float calculateAllApprenticeMoney(Integer resultNum) throws Exception {
+	private float calculateAllApprenticeMoney(Integer resultNum,Period period) throws Exception {
 		float result = 0;
 
 		apprenticeDataList = new ArrayList<ApprenticeData>();
@@ -525,13 +642,13 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		// 计算出应给每个下家的金额,并计算总金额
 		for (Integer itemId : allApprenticeId) {
-			result += calculateOneApprenticeMoney(itemId, resultNum);
+			result += calculateOneApprenticeMoney(itemId, resultNum,period);
 		}
 
 		return result;
 	}
 
-	private float calculateOneApprenticeMoney(Integer apprenticeId, Integer resultNum) {
+	private float calculateOneApprenticeMoney(Integer apprenticeId, Integer resultNum,Period period) {
 		// 中奖金额
 		float timesResult = 0;
 		// 返点金额
@@ -547,7 +664,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		List<ChargeRecord> oneApprenticeChargeList = new ArrayList<ChargeRecord>();
 
 		oneApprenticeChargeList = analysisService.getApprenticeChargeRecord(getSessionUser().getId(),
-				Integer.valueOf(nowPeriod.getId()), apprenticeId);
+				Integer.valueOf(period.getId()), apprenticeId);
 
 		// 遍历一个下家本期所有的购买记录
 		for (ChargeRecord chargeRecord : oneApprenticeChargeList) {

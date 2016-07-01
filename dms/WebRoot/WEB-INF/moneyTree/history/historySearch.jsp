@@ -23,7 +23,7 @@
                         } else {//有返回值 处理一些事
                             ldDialog.tips("处理成功！");
                             var curPageNum = $("input[name='pager.curPageNum']").val();
-                            document.deleteForm.submit();
+                            document.pagerForm.submit();
                             return true;
                         }
                     });
@@ -85,7 +85,7 @@
                                 <div class="conditionsitem">
                                     <div class="conditionsitemL">下家名称：</div>
                                     <div class="conditionsitemR">
-                                        <input name="history.apprentice.apprenticeName" class="ldText" style="width: 144px" id="apprenticeName" value="" />
+                                        <input name="history.apprentice.apprenticeName" class="ldText" style="width: 144px" id="apprenticeName" value="${history.apprentice.apprenticeName}" />
                                     </div>
                                 </div>
                                 <table border="0" cellspacing="0" cellpadding="0">
@@ -105,7 +105,7 @@
 
 
         <div class="yhlist2">
-            <form method="post" name="deleteForm" id="deleteForm">
+            <form method="post" name="deleteForm" id="deleteForm" >
                 <table id="contentTable" width="100%" border="0" cellspacing="1" cellpadding="0" class="ld-datagrid">
                     <tr>
                         <th>序号</th>
@@ -163,8 +163,8 @@
                 <div class="ldPager">
                     <form action="${basePath}moneyXuyu/historySearch!getHistoryByHistory.action"
                           method="post" name="pagerForm">
-                        <input name="history.period.period" class="ldText" style="width:144px" id="history.period.period"
-                                               value="${history.period.period}" type="hidden"/>
+                        <input name="history.period.period" class="ldText" style="width:144px" id="history.period.period" value="${history.period.period}" type="hidden"/>
+                        <input name="history.apprentice.apprenticeName" class="ldText" style="width: 144px" id="apprenticeName" value="${history.apprentice.apprenticeName}" type="hidden" />
                         <ld:pager type="form" action="pagerForm" />
                     </form>
                 </div>
