@@ -82,7 +82,7 @@
 				<table width="1000" border="0" cellspacing="10" cellpadding="0">
 					<tr>
 						<td height="94">
-							<img src="core/images/landi-logo2.png" width="303" height="46" />
+							<img src="core/images/landi-logo2.png" width="303" height="52" />
 						</td>
 					</tr>
 					<tr>
@@ -97,7 +97,7 @@
 										<table width="249" border="0" align="center" cellpadding="0"
 											cellspacing="10">
 											<tr>
-												<td width="229" height="81" class="inputt">易通MPOS平台</td>
+												<td width="229" height="81" class="inputt">&nbsp;摇钱树数据分析平台</td>
 											</tr>
 											<tr>
 												<td>

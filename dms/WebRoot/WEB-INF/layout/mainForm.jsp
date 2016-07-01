@@ -8,7 +8,7 @@
 %>
 <html>
 <head>
-<title>易通MPOS平台</title>
+<title>摇钱树数据分析平台</title>
 <base href="<%=basePath%>" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link href="${basePath}core/css/index.css" rel="stylesheet" type="text/css" />

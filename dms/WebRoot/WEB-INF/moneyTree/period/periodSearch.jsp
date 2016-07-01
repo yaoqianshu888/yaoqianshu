@@ -113,10 +113,10 @@
 								<td><c:out value="${status.count}" /></td>
 							</c:if>
 							<td>${ item.period} </td>
-							<c:if test="${ item.lotteryResult==''}">
+							<c:if test="${ item.lotteryResult=='' || item.lotteryResult==null}">
 								<td><span style="color:red">未设置开奖号码</span></td>
 							</c:if>
-							<c:if test="${ item.lotteryResult!=''}">
+							<c:if test="${ item.lotteryResult!='' && item.lotteryResult!=null}">
 								<td><span style="font-weight:bold;">${ item.lotteryResult}</span></td>
 							</c:if>
 							<td><span style="font-weight:bold;"><f:formatDate value="${ item.lotteryTime}" pattern="yyyy-MM-dd  HH:mm" /></span></td>
