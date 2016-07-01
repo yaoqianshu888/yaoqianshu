@@ -328,7 +328,7 @@
 			</div>
 
 			<div style="width:24%;float:left;margin-left:5px">
-				<table id="contentTable" width="100%" border="0" cellspacing="1" cellpadding="0" class="ld-datagrid">
+				<!-- <table id="contentTable" width="100%" border="0" cellspacing="1" cellpadding="0" class="ld-datagrid">
 					<tr>
 						<td>吃数分析</td>
 						<td>吃500</td>
@@ -354,7 +354,7 @@
 						<td>-2345/23</td>
 					</tr>
 				</table>
-				
+				 -->
 				<table style="margin-top:8px;" width="100%" border="0" cellspacing="1" cellpadding="0" class="ld-datagrid">
 					<tr>
 						<td>组合</td>

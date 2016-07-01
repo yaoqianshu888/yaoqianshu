@@ -158,7 +158,7 @@
 		<tr style="height: 30px;">
 			<td>
 				<div id="footer" class="footer">
-					<div class="footertxt">版权所有联迪商用设备有限公司</div>
+					<div class="footertxt">版权所有摇钱树</div>
 				</div>
 			</td>
 		</tr>
