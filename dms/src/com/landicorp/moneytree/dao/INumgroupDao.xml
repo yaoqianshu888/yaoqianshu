@@ -106,7 +106,7 @@
 	<select id="getAllNumgroupNoPager" resultMap="numgroup" parameterType="map">
 		SELECT
 		*
-		FROM t_moneytree_numgroup where (id between 62 and 66 or (user_id=#{numgroup.user.id} and status=1 and id>66))
+		FROM t_moneytree_numgroup where user_id=#{numgroup.user.id} and status=1 and id>66
 		ORDER BY ID DESC
 	</select>
 	
