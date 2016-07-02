@@ -10,6 +10,8 @@
 			</result>
 			<result name="apprenticeData">/WEB-INF/moneyTree/analysis/apprenticeAnalysis.jsp
 			</result>
+			<result name="userSetting">/WEB-INF/moneyTree/analysis/userSetting.jsp
+			</result>
 		</action>
 
 		<!-- 历史记录 -->

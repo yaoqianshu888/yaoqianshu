@@ -267,7 +267,9 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		analysisRecordList = new ArrayList<AnalysisRecord>();
 
 		// 获取用户常用吃数、吃数限制等参数
-		getUserExtraInfo();
+		if( getUserExtraInfo()!=null){
+			return "userSetting";
+		}
 
 		// 获取用户输入想要分析的吃数值，并加入到eatList的末尾
 		getUserInputEatValue();
@@ -430,7 +432,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	/**
 	 * 获取用户的吃数上限，常用吃数
 	 */
-	private void getUserExtraInfo() throws Exception {
+	private String getUserExtraInfo() throws Exception {
 		User user = new User();
 		user = getSessionUser();
 		try {
@@ -442,6 +444,12 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		eat.setUser(getSessionUser());
 		// TODO 默认吃数值 取出一页，10条记录
 		eatList = eatService.getEatListByEat(eat, getPager());
+		if ("".equals(userExtra.getTimes()) || "".equals(userExtra.getRebate())) {
+			return "userSetting";
+		}else{
+			return null;
+		}
+		
 
 	}
 
