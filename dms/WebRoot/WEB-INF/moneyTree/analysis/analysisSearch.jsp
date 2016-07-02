@@ -107,7 +107,7 @@
 							class="ld-datagrid">
 							<tr>
 								<td style="font-weight: bold">赚钱号码</td>
-								<td style="font-weight: bold">英葵情况</td>
+								<td style="font-weight: bold">盈亏情况</td>
 							</tr>
 							<c:forEach items="${profitSituation}" var="item"
 								varStatus="status">
@@ -126,7 +126,7 @@
 							class="ld-datagrid">
 							<tr>
 								<td style="font-weight: bold">亏钱号码</td>
-								<td style="font-weight: bold">英葵情况</td>
+								<td style="font-weight: bold">盈亏情况</td>
 							</tr>
 							<c:forEach items="${profitSituation}" var="item"
 								varStatus="status">
