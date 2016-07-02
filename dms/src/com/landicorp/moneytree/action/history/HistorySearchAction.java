@@ -100,7 +100,10 @@ public class HistorySearchAction extends BaseActionSupport {
 
 		history = new History();
 		getPager().setPageSize(20);
-		List<History> historyList = historyService.getAllHistory(history, getPager());
+		
+		history.setUser(getSessionUser());
+		
+		List<History> historyList = historyService.getHistoryListByHistory(history, getPager());
 		getAllHistories(historyList);
 
 		return SUCCESS;
@@ -180,6 +183,8 @@ public class HistorySearchAction extends BaseActionSupport {
 			}
 		}
 		getPager().setPageSize(20);
+		
+		history.setUser(getSessionUser());
 
 		List<History> historyList = historyService.getHistoryListByHistory(history, getPager());
 		getAllHistories(historyList);
