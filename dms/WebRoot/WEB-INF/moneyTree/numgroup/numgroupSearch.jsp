@@ -156,7 +156,9 @@
 							<td>${ item.memo}</td>
 							<td>
 								<ld:check mark="numgroupUpdate">
-									<input type="button" value="编辑" class="ldBtnLink" onclick="editItem(${item.id});" />&nbsp;
+									<c:if test="${ item.user.id!=null && item.user.id!=''}">
+										<input type="button" value="编辑" class="ldBtnLink" onclick="editItem(${item.id});" />&nbsp;
+									</c:if>
 								</ld:check>
 								<ld:check mark="numgroupDetail">
 									<input type="button" value="号码详情" class="ldBtnLink" onclick="showItem(${item.id});" />&nbsp;
