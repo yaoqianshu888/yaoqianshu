@@ -144,9 +144,12 @@
 						
 						<c:forEach items="${numgroupList }" var="item" varStatus="status">
 						<tr>
-							<td>
-								<input type="checkbox" name="delete" id="delete" value="${item.id}" />			
-							</td>
+							<c:if test="${ item.user.id==null || item.user.id==''}">
+								<td></td>
+							</c:if>
+							<c:if test="${ item.user.id!=null && item.user.id!=''}">
+								<td><input type="checkbox" name="delete" id="delete" value="${item.id}" /></td>
+							</c:if>
 							<td><c:out value="${status.count}" /></td>
 							<td>${ item.groupName} </td>
 							<td><f:formatDate value="${ item.createTime}" pattern="yyyy-MM-dd  HH:mm:ss" /></td>

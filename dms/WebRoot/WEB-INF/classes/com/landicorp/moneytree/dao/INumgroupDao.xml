@@ -25,7 +25,7 @@
 				test="numgroup!=null and numgroup.groupName!=null and numgroup.groupName!=''">
 				and t1.group_name like '%${numgroup.groupName}%'
 			</if>
-			and t1.user_id=#{numgroup.user.id} and t1.status=1 and t1.id>66
+			and (t1.id between 62 and 66 or (t1.user_id=#{numgroup.user.id} and t1.status=1 and t1.id>66))
 	</sql>
 	
 	<insert id="save" parameterType="numgroup">
@@ -99,19 +99,19 @@
 	<select id="getAllNumgroup" resultMap="numgroup" parameterType="map">
 		SELECT
 		*
-		FROM t_moneytree_numgroup where user_id=#{numgroup.user.id} and status=1 and id>66
+		FROM t_moneytree_numgroup where (id between 62 and 66 or (user_id=#{numgroup.user.id} and status=1 and id>66))
 		ORDER BY ID DESC
 		<include refid="Sql.pager" />
 	</select>
 	<select id="getAllNumgroupNoPager" resultMap="numgroup" parameterType="map">
 		SELECT
 		*
-		FROM t_moneytree_numgroup where user_id=#{numgroup.user.id} and status=1 and id>66
+		FROM t_moneytree_numgroup where (id between 62 and 66 or (user_id=#{numgroup.user.id} and status=1 and id>66))
 		ORDER BY ID DESC
 	</select>
 	
 	<select id="getAllNumgroupCount" resultType="int" parameterType="map">
-		select count(*) from t_moneytree_numgroup where user_id=#{numgroup.user.id} and status=1 and id>66
+		select count(*) from t_moneytree_numgroup where (id between 62 and 66 or (user_id=#{numgroup.user.id} and status=1 and id>66))
 	</select>
 	
 </mapper>
