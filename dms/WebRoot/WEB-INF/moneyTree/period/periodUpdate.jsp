@@ -66,9 +66,9 @@
 					<td>
 						<input name="period.lotteryTime" type="text" id="period.lotteryTime"
 												class="ldDateTime input138"
-												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})"
+												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
 												value="<f:formatDate value="${period.lotteryTime}"
-														pattern="yyyy-MM-dd HH:mm" />" />
+														pattern="yyyy-MM-dd HH:mm:ss" />" />
 					</td>
 				</tr>
 				<tr>

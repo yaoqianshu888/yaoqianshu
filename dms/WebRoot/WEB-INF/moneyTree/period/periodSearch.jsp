@@ -119,7 +119,7 @@
 							<c:if test="${ item.lotteryResult!='' && item.lotteryResult!=null}">
 								<td><span style="font-weight:bold;">${ item.lotteryResult}</span></td>
 							</c:if>
-							<td><span style="font-weight:bold;"><f:formatDate value="${ item.lotteryTime}" pattern="yyyy-MM-dd  HH:mm" /></span></td>
+							<td><span style="font-weight:bold;"><f:formatDate value="${ item.lotteryTime}" pattern="yyyy-MM-dd  HH:mm:ss" /></span></td>
 							<td>
 								<ld:check mark="apprenticeUpdate">
 									<input type="button" value="编辑" class="ldBtnLink" onclick="editItem(${item.id});" />&nbsp;
