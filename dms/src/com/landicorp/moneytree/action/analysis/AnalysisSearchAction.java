@@ -252,10 +252,10 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		this.totalChargeMoney = totalChargeMoney;
 	}
 
-	public String getAnalysis() throws Exception {
+	public String getAnalysis() {
 
 		Period period = new Period();
-		
+
 		nowPeriod = new Period();
 		prePeriod = new Period();
 		// 得到上一期和当前期
@@ -267,50 +267,66 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		analysisRecordList = new ArrayList<AnalysisRecord>();
 
 		// 获取用户常用吃数、吃数限制等参数
-		if( getUserExtraInfo()!=null){
-			return "userSetting";
+		try {
+			if (getUserExtraInfo() != null) {
+				return "userSetting";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SUCCESS;
 		}
 
-		// 获取用户输入想要分析的吃数值，并加入到eatList的末尾
-		getUserInputEatValue();
+		try {
+			// 获取用户输入想要分析的吃数值，并加入到eatList的末尾
+			getUserInputEatValue();
 
-		// 总统计，总体收数情况
-		period = analysisTotal();
+			// 总统计，总体收数情况
+			period = analysisTotal();
 
-		for (int i = 0; i < eatList.size(); i++) {
-			// 根据吃数值，进行上报数统计
-			analysisReported((float) eatList.get(i).getEatValue());
+			for (int i = 0; i < eatList.size(); i++) {
+				// 根据吃数值，进行上报数统计
+				analysisReported((float) eatList.get(i).getEatValue());
 
-			// 假设每个号码为中奖号码时的英葵情况，计算，存储结果
-			profitSituation = new ArrayList<ChargeRecord>();
+				// 假设每个号码为中奖号码时的英葵情况，计算，存储结果
+				profitSituation = new ArrayList<ChargeRecord>();
 
-			for (int j = 0; j < 49; j++) {
-				ChargeRecord tempRecord = new ChargeRecord();
-				if (j == 23) {
-					System.out.println("");
-				}
-				tempRecord.setChargeNumber((j + 1) + "");
-				tempRecord.setChargeMoney(calculateMoney((j + 1),period) + "");
-
-				profitSituation.add(tempRecord);
-			}
-
-			Comparator<ChargeRecord> comparator = new Comparator<ChargeRecord>() {
-				public int compare(ChargeRecord s1, ChargeRecord s2) {
-					float num1 = Float.valueOf(s1.getChargeMoney());
-					float num2 = Float.valueOf(s2.getChargeMoney());
-
-					// 先排年龄
-					if (num1 != num2) {
-						return (int) (num1 - num2);
-					} else {
-						return Integer.valueOf(s1.getChargeNumber()) - Integer.valueOf(s2.getChargeNumber());
+				for (int j = 0; j < 49; j++) {
+					ChargeRecord tempRecord = new ChargeRecord();
+					if (j == 23) {
+						System.out.println("");
 					}
-				}
-			};
-			Collections.sort(profitSituation, comparator);
+					tempRecord.setChargeNumber((j + 1) + "");
+					tempRecord.setChargeMoney(calculateMoney((j + 1), period) + "");
 
-			calculateAnalysis();
+					profitSituation.add(tempRecord);
+				}
+
+				Comparator<ChargeRecord> comparator = new Comparator<ChargeRecord>() {
+					public int compare(ChargeRecord s1, ChargeRecord s2) {
+						float num1 = 0.0f;
+						float num2 = 0.0f;
+
+						if (s1.getChargeMoney() != null || !"".equals(s1.getChargeMoney())) {
+							num1 = Float.valueOf(s1.getChargeMoney());
+						} else if (s2.getChargeMoney() != null || !"".equals(s2.getChargeMoney())) {
+							num2 = Float.valueOf(s2.getChargeMoney());
+						}
+
+						// 先排年龄
+						if (num1 != num2) {
+							return (int) (num1 - num2);
+						} else {
+							return Integer.valueOf(s1.getChargeNumber()) - Integer.valueOf(s2.getChargeNumber());
+						}
+					}
+				};
+				Collections.sort(profitSituation, comparator);
+
+				calculateAnalysis();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SUCCESS;
 		}
 
 		return SUCCESS;
@@ -318,7 +334,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 	public String getApprenticeAnalysis() {
 		Period period = new Period();
-		
+
 		periodValue = 0;
 
 		HttpServletRequest request = ServletActionContext.getRequest();
@@ -357,14 +373,14 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				searchPeriodList = periodService.getPeriodListByPeriod(searchPeriod, getPager());
 				if (searchPeriodList.size() != 0) {
 					period = searchPeriodList.get(0);
-					
+
 					// 并且输入的期数正确，则查询出用户输入期数的所有收数记录
 					chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
 							Integer.valueOf(period.getId()));
 				} else {
-					
+
 					period = prePeriod;
-					//用户输入为空或不合法，默认查询上一期
+					// 用户输入为空或不合法，默认查询上一期
 					periodValue = Integer.valueOf(prePeriod.getPeriod());
 					// 获取上期所有收数记录
 					chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
@@ -372,22 +388,23 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				}
 			} else {
 				period = prePeriod;
-				
-				//用户输入为空或不合法，默认查询上一期
+
+				// 用户输入为空或不合法，默认查询上一期
 				periodValue = Integer.valueOf(prePeriod.getPeriod());
 				// 获取当前期所有收数记录
-				chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
-						Integer.valueOf(period.getId()));
+				chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(), Integer.valueOf(period.getId()));
 			}
 
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			return "apprenticeData";
 		}
 
 		try {
-			calculateAllApprenticeMoney(Integer.valueOf(period.getLotteryResult()),period);
+			calculateAllApprenticeMoney(Integer.valueOf(period.getLotteryResult()), period);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return "apprenticeData";
 		}
 
 		return "apprenticeData";
@@ -446,10 +463,9 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		eatList = eatService.getEatListByEat(eat, getPager());
 		if ("".equals(userExtra.getTimes()) || "".equals(userExtra.getRebate())) {
 			return "userSetting";
-		}else{
+		} else {
 			return null;
 		}
-		
 
 	}
 
@@ -458,8 +474,10 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 */
 	private void calculateAnalysis() {
 		AnalysisRecord analysisRecord = new AnalysisRecord(0, 0, 0, 0, 0, 0, 0);
+		
 		analysisRecord.setLoseMaxValue(Float.valueOf(profitSituation.get(0).getChargeMoney()));
 		analysisRecord.setLoseMaxNum(Integer.valueOf(profitSituation.get(0).getChargeNumber()));
+		
 		analysisRecord.setWinMaxValue(Float.valueOf(profitSituation.get(48).getChargeMoney()));
 		analysisRecord.setWinMaxNum(Integer.valueOf(profitSituation.get(48).getChargeNumber()));
 
@@ -486,7 +504,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 */
 	private Period analysisTotal() {
 		User user = getSessionUser();
-		
+
 		Period period = new Period();
 		periodValue = 0;
 
@@ -507,10 +525,9 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				}
 			}
 		}
-		
 
 		try {
-			
+
 			if (periodValue != 0) {
 				// 如果用户输入了期数
 				Period searchPeriod = new Period();
@@ -518,14 +535,14 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				searchPeriod.setPeriod(periodValue + "");
 				searchPeriodList = periodService.getPeriodListByPeriod(searchPeriod, getPager());
 				if (searchPeriodList.size() != 0) {
-					//TODO 
+					// TODO
 					period = searchPeriodList.get(0);
 					// 并且输入的期数正确，则查询出用户输入期数的所有收数记录
 					chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
 							Integer.valueOf(period.getId()));
 				} else {
 					period = nowPeriod;
-					//用户输入为空或不合法，默认分析当前期
+					// 用户输入为空或不合法，默认分析当前期
 					periodValue = Integer.valueOf(nowPeriod.getPeriod());
 					// 获取本期所有收数记录
 					chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(),
@@ -533,13 +550,13 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				}
 			} else {
 				period = nowPeriod;
-				//用户输入为空或不合法，默认分析当前期
+				// 用户输入为空或不合法，默认分析当前期
 				periodValue = Integer.valueOf(nowPeriod.getPeriod());
 				// 获取当前期所有收数记录
 				chargeRecordList = analysisService.getPeriodChargeRecord(user.getId(), Integer.valueOf(period.getId()));
 
 			}
-			
+
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -547,7 +564,10 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		totalCharge = new float[49];
 
 		for (ChargeRecord chargeRecord : chargeRecordList) {
-			float money = Float.valueOf(chargeRecord.getChargeMoney());
+			float money = 0.0f;
+			if (chargeRecord.getChargeMoney() != null || !"".equals(chargeRecord.getChargeMoney())) {
+				money = Float.valueOf(chargeRecord.getChargeMoney());
+			}
 			String[] temp = chargeRecord.getChargeNumber().split(",");
 
 			for (int i = 0; i < temp.length; i++) {
@@ -556,7 +576,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			}
 
 		}
-		
+
 		return period;
 	}
 
@@ -588,7 +608,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 *            开奖结果号码
 	 * @return
 	 */
-	public float calculateMoney(int resultNum,Period period) {
+	public float calculateMoney(int resultNum, Period period) {
 		// 上报英葵
 		float reportedMoney = 0;
 		// 总的收数数
@@ -604,7 +624,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		}
 
 		try {
-			apprenticeMoney = calculateAllApprenticeMoney(resultNum,period);
+			apprenticeMoney = calculateAllApprenticeMoney(resultNum, period);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -636,7 +656,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * @param resultNum
 	 * @return
 	 */
-	private float calculateAllApprenticeMoney(Integer resultNum,Period period) throws Exception {
+	private float calculateAllApprenticeMoney(Integer resultNum, Period period) throws Exception {
 		float result = 0;
 
 		apprenticeDataList = new ArrayList<ApprenticeData>();
@@ -650,13 +670,13 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		// 计算出应给每个下家的金额,并计算总金额
 		for (Integer itemId : allApprenticeId) {
-			result += calculateOneApprenticeMoney(itemId, resultNum,period);
+			result += calculateOneApprenticeMoney(itemId, resultNum, period);
 		}
 
 		return result;
 	}
 
-	private float calculateOneApprenticeMoney(Integer apprenticeId, Integer resultNum,Period period) {
+	private float calculateOneApprenticeMoney(Integer apprenticeId, Integer resultNum, Period period) {
 		// 中奖金额
 		float timesResult = 0;
 		// 返点金额
@@ -676,25 +696,29 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		// 遍历一个下家本期所有的购买记录
 		for (ChargeRecord chargeRecord : oneApprenticeChargeList) {
+			float chargeMoney = 0.0f;
+
+			if (chargeRecord.getChargeMoney() != null || !"".equals(chargeRecord.getChargeMoney())) {
+				chargeMoney = Float.valueOf(chargeRecord.getChargeMoney());
+			}
 			// 记录下家下注的钱
-			buyMoney += Float.valueOf(chargeRecord.getChargeMoney());
+			buyMoney += chargeMoney;
 
 			// 一个记录的所有号码
 			String[] tempCharge = chargeRecord.getChargeNumber().split(",");
+
 			// itemChargeMoney是一个号码的购买金额，chargeRecord.getChargeMoney()是一个群组的金额
-			float itemChargeMoney = Float.valueOf(chargeRecord.getChargeMoney()) / tempCharge.length;
+			float itemChargeMoney = chargeMoney / tempCharge.length;
 
 			// 统计返点金额。无论是否中奖均有返点
 			if (chargeRecord.getGroupId() >= 50 && chargeRecord.getGroupId() <= 61) {
 				// 如果是生肖,用生肖的返点
 
-				rebateResult += Float.valueOf(chargeRecord.getChargeMoney())
-						* Float.valueOf(apprentice.getZodiacRebate()) * 0.01f;
+				rebateResult += chargeMoney * Float.valueOf(apprentice.getZodiacRebate()) * 0.01f;
 			} else {
 				// 如果是字,用字的返点
 
-				rebateResult += Float.valueOf(chargeRecord.getChargeMoney()) * Float.valueOf(apprentice.getWordRebate())
-						* 0.01f;
+				rebateResult += chargeMoney * Float.valueOf(apprentice.getWordRebate()) * 0.01f;
 			}
 
 			// 统计中奖金额。遍历一组记录中的号码是否中奖
