@@ -306,9 +306,9 @@ public class AnalysisSearchAction extends BaseActionSupport {
 						float num1 = 0.0f;
 						float num2 = 0.0f;
 
-						if (s1.getChargeMoney() != null || !"".equals(s1.getChargeMoney())) {
+						if (!s1.getChargeMoney().isEmpty() && s1.getChargeMoney() != null && !"".equals(s1.getChargeMoney())) {
 							num1 = Float.valueOf(s1.getChargeMoney());
-						} else if (s2.getChargeMoney() != null || !"".equals(s2.getChargeMoney())) {
+						} else if (!s2.getChargeMoney().isEmpty() && s2.getChargeMoney() != null && !"".equals(s2.getChargeMoney())) {
 							num2 = Float.valueOf(s2.getChargeMoney());
 						}
 
@@ -565,7 +565,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		for (ChargeRecord chargeRecord : chargeRecordList) {
 			float money = 0.0f;
-			if (chargeRecord.getChargeMoney() != null || !"".equals(chargeRecord.getChargeMoney())) {
+			if (!chargeRecord.getChargeMoney().isEmpty() && chargeRecord.getChargeMoney() != null && !"".equals(chargeRecord.getChargeMoney())) {
 				money = Float.valueOf(chargeRecord.getChargeMoney());
 			}
 			String[] temp = chargeRecord.getChargeNumber().split(",");
@@ -698,7 +698,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		for (ChargeRecord chargeRecord : oneApprenticeChargeList) {
 			float chargeMoney = 0.0f;
 
-			if (chargeRecord.getChargeMoney() != null || !"".equals(chargeRecord.getChargeMoney())) {
+			if (!chargeRecord.getChargeMoney().isEmpty() && chargeRecord.getChargeMoney() != null && !"".equals(chargeRecord.getChargeMoney())) {
 				chargeMoney = Float.valueOf(chargeRecord.getChargeMoney());
 			}
 			// 记录下家下注的钱
