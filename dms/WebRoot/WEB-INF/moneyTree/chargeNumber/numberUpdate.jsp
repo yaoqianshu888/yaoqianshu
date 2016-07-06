@@ -6,7 +6,16 @@
 <%@include file="/headDeclare.jsp"%>
 <script type="text/javascript">
 	function checkSubmit() {
-		
+		var isNo=0;
+		$("input:[type='text']").each(function(){
+			if ($(this).val()=='' || !isDecimal($(this).val())) {
+				isNo=1;  //出错
+			}
+		});
+		if(isNo==1){
+			ldDialog.alert("金额输入有误或者不能为空值！");
+			return false;
+		}
 		submitForm();
 	}
 	function submitForm(){
