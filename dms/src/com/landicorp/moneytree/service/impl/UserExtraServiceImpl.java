@@ -50,4 +50,9 @@ public class UserExtraServiceImpl extends AbstractBaseServiceImpl<UserExtra, Int
         return userExtraDao;
     }
 
+    @Override
+    public List<UserExtra> getByFinishTime() {
+        return userExtraDao.getByFinishTime();
+    }
+
 }

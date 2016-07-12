@@ -10,6 +10,7 @@
 
 	<!-- initTask -->
 	
+	
 	<!-- dao -->
 	<bean id="apprenticeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.landicorp.moneytree.dao.IApprenticeDao"></property>
@@ -77,4 +78,12 @@
 	<!-- 吃数与上家返点倍数action -->
 	<bean id="userExtraInsertAction" class="com.landicorp.moneytree.action.userExtra.UserExtraInsertAction"
 		scope="prototype" />
+		
+	<!-- 注放ApplicationContext实例 -->
+	<bean id="springContextHolder" class="com.landicorp.moneytree.util.SpringContextHolder"
+		lazy-init="false" />
+	
+	
+
+	
 </beans>

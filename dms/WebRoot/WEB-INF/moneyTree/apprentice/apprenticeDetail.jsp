@@ -17,6 +17,79 @@
 			
 			<tr>
 				<td width="70" class="right evenTrBgColor">
+					主生肖倍数：
+				</td>
+				<td>${ apprentice.mainZodiacTimes}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					主生肖返点：
+				</td>
+				<td>${ apprentice.mainZodiacRebate} %</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					红波倍数：
+				</td>
+				<td>${ apprentice.redTimes}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					红波返点：
+				</td>
+				<td>${ apprentice.redRebate} %</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					绿波倍数：
+				</td>
+				<td>${ apprentice.greenTimes}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					绿波返点：
+				</td>
+				<td>${ apprentice.greenRebate} %</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					蓝波倍数：
+				</td>
+				<td>${ apprentice.blueTimes}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					蓝波返点：
+				</td>
+				<td>${ apprentice.blueRebate} %</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					单数倍数：
+				</td>
+				<td>${ apprentice.oddTimes}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					单数返点：
+				</td>
+				<td>${ apprentice.oddRebate} %</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					双数倍数：
+				</td>
+				<td>${ apprentice.evenTimes}</td>
+			</tr>
+			<tr>
+				<td width="70" class="right evenTrBgColor">
+					双数返点：
+				</td>
+				<td>${ apprentice.evenRebate} %</td>
+			</tr>
+			
+			<tr>
+				<td width="70" class="right evenTrBgColor">
 					创建人：
 				</td>
 				<td>${ apprentice.creator.userName}</td>

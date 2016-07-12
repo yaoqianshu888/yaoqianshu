@@ -17,6 +17,20 @@
 		<result property="wordTimes" column="word_times" />
 		<result property="zodiacRebate" column="zodiac_rebate" />
 		<result property="zodiacTimes" column="zodiac_times" />
+		
+		<result property="mainZodiacRebate" column="main_zodiac_rebate" />
+		<result property="mainZodiacTimes" column="main_zodiac_times" />
+		<result property="redRebate" column="red_rebate" />
+		<result property="redTimes" column="red_times" />
+		<result property="greenRebate" column="green_rebate" />
+		<result property="greenTimes" column="green_times" />
+		<result property="blueRebate" column="blue_rebate" />
+		<result property="blueTimes" column="blue_times" />
+		<result property="oddRebate" column="odd_rebate" />
+		<result property="oddTimes" column="odd_times" />
+		<result property="evenRebate" column="even_rebate" />
+		<result property="evenTimes" column="even_times" />
+		
 		<association property="creator" column="creator"
 			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
 		<association property="lastModifier" column="LAST_MODIFIER"
@@ -25,12 +39,17 @@
 			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
 	</resultMap>
 	<sql id="keyColumns">apprentice_name,user_id,status,word_rebate,CREATE_TIME,
-		CREATOR,LAST_MODIFY_TIME,LAST_MODIFIER,MEMO,word_times,zodiac_rebate,zodiac_times</sql>
+		CREATOR,LAST_MODIFY_TIME,LAST_MODIFIER,MEMO,word_times,zodiac_rebate,zodiac_times,main_zodiac_rebate,main_zodiac_times
+		,red_rebate,red_times,green_rebate,green_times,blue_rebate,blue_times,odd_rebate,odd_times,even_rebate,even_times
+		</sql>
 	<sql id="valueColumns">#{apprenticeName, jdbcType=VARCHAR},#{user.id,
 		jdbcType=NUMERIC},
 		#{status,jdbcType=NUMERIC},#{wordRebate, jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
 		#{creator.id,jdbcType=NUMERIC},#{lastModifyTime,jdbcType=TIMESTAMP},#{lastModifier.id,jdbcType=NUMERIC},
-		#{memo, jdbcType=VARCHAR},#{wordTimes, jdbcType=VARCHAR},#{zodiacRebate, jdbcType=VARCHAR},#{zodiacTimes, jdbcType=VARCHAR}
+		#{memo, jdbcType=VARCHAR},#{wordTimes, jdbcType=VARCHAR},#{zodiacRebate, jdbcType=VARCHAR},#{zodiacTimes, jdbcType=VARCHAR},
+		#{mainZodiacRebate, jdbcType=VARCHAR},#{mainZodiacTimes, jdbcType=VARCHAR},#{redRebate, jdbcType=VARCHAR},#{redTimes, jdbcType=VARCHAR}
+		,#{greenRebate, jdbcType=VARCHAR},#{greenTimes, jdbcType=VARCHAR},#{blueRebate, jdbcType=VARCHAR},#{blueTimes, jdbcType=VARCHAR}
+		,#{oddRebate, jdbcType=VARCHAR},#{oddTimes, jdbcType=VARCHAR},#{evenRebate, jdbcType=VARCHAR},#{evenTimes, jdbcType=VARCHAR}
 	</sql>
 	
 	<sql id="whereColumns">
@@ -74,6 +93,20 @@
 			<if test="wordTimes!=null">word_times=#{wordTimes},</if>
 			<if test="zodiacRebate!=null">zodiac_rebate=#{zodiacRebate},</if>
 			<if test="zodiacTimes!=null">zodiac_times=#{zodiacTimes},</if>
+			
+			<if test="mainZodiacRebate!=null">main_zodiac_rebate=#{mainZodiacRebate},</if>
+			<if test="mainZodiacTimes!=null">main_zodiac_times=#{mainZodiacTimes},</if>
+			<if test="redRebate!=null">red_rebate=#{redRebate},</if>
+			<if test="redTimes!=null">red_times=#{redTimes},</if>
+			<if test="greenRebate!=null">green_rebate=#{greenRebate},</if>
+			<if test="greenTimes!=null">green_times=#{greenTimes},</if>
+			<if test="blueRebate!=null">blue_rebate=#{blueRebate},</if>
+			<if test="blueTimes!=null">blue_times=#{blueTimes},</if>
+			<if test="oddRebate!=null">odd_rebate=#{oddRebate},</if>
+			<if test="oddTimes!=null">odd_times=#{oddTimes},</if>
+			<if test="evenRebate!=null">even_rebate=#{evenRebate},</if>
+			<if test="evenTimes!=null">even_times=#{evenTimes},</if>
+			
 			<if test="memo!=null">MEMO=#{memo}</if>
 		</set>
 		where id=#{id}

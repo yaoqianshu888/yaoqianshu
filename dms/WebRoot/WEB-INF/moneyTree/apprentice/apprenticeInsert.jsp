@@ -25,6 +25,56 @@
 			ldDialog.alert("包肖返点：请输入数字");
 			return false;
 		}
+		
+		if (!isDecimal(document.getElementById('apprentice.mainZodiacTimes').value)) {
+			ldDialog.alert("主生肖倍数：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.mainZodiacRebate').value)) {
+			ldDialog.alert("主生肖返点：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.redTimes').value)) {
+			ldDialog.alert("红波倍数：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.redRebate').value)) {
+			ldDialog.alert("红波返点：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.greenTimes').value)) {
+			ldDialog.alert("绿波倍数：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.greenRebate').value)) {
+			ldDialog.alert("绿波返点：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.blueTimes').value)) {
+			ldDialog.alert("蓝波倍数：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.blueRebate').value)) {
+			ldDialog.alert("蓝波返点：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.oddTimes').value)) {
+			ldDialog.alert("单数倍数：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.oddRebate').value)) {
+			ldDialog.alert("单数返点：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.evenTimes').value)) {
+			ldDialog.alert("双数倍数：请输入数字");
+			return false;
+		}
+		if (!isDecimal(document.getElementById('apprentice.evenRebate').value)) {
+			ldDialog.alert("双数返点：请输入数字");
+			return false;
+		}
+		
 		if (!checkData(false, 'apprentice.memo', "备注", 1, 255)) {
 			return false;
 		}
@@ -106,6 +156,116 @@
 							value="${apprentice.zodiacRebate}" class="ldText" maxlength="30" /> %
 					</td>
 				</tr>
+				
+				<tr>
+					<td width="90" align="right">
+						<FONT color=red>*</FONT>主生肖倍数：
+					</td>
+					<td>
+						<input type="text" name="apprentice.mainZodiacTimes" id="apprentice.mainZodiacTimes" 
+							value="${apprentice.mainZodiacTimes}" class="ldText" maxlength="30" /> 
+					</td>
+				</tr>
+				<tr>
+					<td width="90" align="right">
+						<FONT color=red>*</FONT>主生肖返点：
+					</td>
+					<td>
+						<input type="text" name="apprentice.mainZodiacRebate" id="apprentice.mainZodiacRebate" 
+							value="${apprentice.mainZodiacRebate}" class="ldText" maxlength="30" /> %
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>红波倍数：
+					</td>
+					<td>
+						<input type="text" name="apprentice.redTimes" id="apprentice.redTimes" 
+							value="${apprentice.redTimes}" class="ldText" maxlength="30" /> 
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>红波返点：
+					</td>
+					<td>
+						<input type="text" name="apprentice.redRebate" id="apprentice.redRebate" 
+							value="${apprentice.redRebate}" class="ldText" maxlength="30" /> %
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>绿波倍数：
+					</td>
+					<td>
+						<input type="text" name="apprentice.greenTimes" id="apprentice.greenTimes" 
+							value="${apprentice.greenTimes}" class="ldText" maxlength="30" /> 
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>绿波返点：
+					</td>
+					<td>
+						<input type="text" name="apprentice.greenRebate" id="apprentice.greenRebate" 
+							value="${apprentice.greenRebate}" class="ldText" maxlength="30" /> %
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>蓝波倍数：
+					</td>
+					<td>
+						<input type="text" name="apprentice.blueTimes" id="apprentice.blueTimes" 
+							value="${apprentice.blueTimes}" class="ldText" maxlength="30" /> 
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>蓝波返点：
+					</td>
+					<td>
+						<input type="text" name="apprentice.blueRebate" id="apprentice.blueRebate" 
+							value="${apprentice.blueRebate}" class="ldText" maxlength="30" /> %
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>单数倍数：
+					</td>
+					<td>
+						<input type="text" name="apprentice.oddTimes" id="apprentice.oddTimes" 
+							value="${apprentice.oddTimes}" class="ldText" maxlength="30" /> 
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>单数返点：
+					</td>
+					<td>
+						<input type="text" name="apprentice.oddRebate" id="apprentice.oddRebate" 
+							value="${apprentice.oddRebate}" class="ldText" maxlength="30" /> %
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>双数倍数：
+					</td>
+					<td>
+						<input type="text" name="apprentice.evenTimes" id="apprentice.evenTimes" 
+							value="${apprentice.evenTimes}" class="ldText" maxlength="30" /> 
+					</td>
+				</tr>
+				<tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>双数返点：
+					</td>
+					<td>
+						<input type="text" name="apprentice.evenRebate" id="apprentice.evenRebate" 
+							value="${apprentice.evenRebate}" class="ldText" maxlength="30" /> %
+					</td>
+				</tr>
+				
 				<tr>
 					<td align="right">备注：</td>
 					<td>

@@ -7,6 +7,9 @@
     <param-value>classpath:/com/landicorp/config/applicationContext.xml,classpath:/com/landicorp/config/models/applicationContext-*.xml,classpath:/com/landicorp/config/spring-quartz.xml
 		</param-value>
   </context-param>
+  <listener>   
+        <listener-class>com.landicorp.moneytree.timer.SendMessageTimer</listener-class>   
+  </listener>  
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>

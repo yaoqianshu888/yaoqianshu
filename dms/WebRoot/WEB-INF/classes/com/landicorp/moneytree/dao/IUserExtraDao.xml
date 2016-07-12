@@ -59,4 +59,11 @@
             
 	</select>
 	
+	<select id="getByFinishTime"  resultMap="userExtra">
+		select *
+		from
+		t_moneytree_user_extra
+            
+	</select>
+	
 </mapper>

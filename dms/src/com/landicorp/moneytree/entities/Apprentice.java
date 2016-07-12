@@ -19,6 +19,117 @@ public class Apprentice extends BaseEntity { // 下家
 	private String wordTimes;// 字倍数
 	private String zodiacRebate;// 包肖返点
 	private String zodiacTimes; // 包肖倍数
+	
+	private String mainZodiacRebate;  //主包销返点
+	private String mainZodiacTimes; // 主包肖倍数
+	private String redRebate;  //红波返点
+	private String redTimes;  //红波倍数
+	private String greenRebate;  //绿波返点
+	private String greenTimes;  //绿波倍数
+	private String blueRebate;  //蓝波返点
+	private String blueTimes;  //蓝波倍数
+	private String oddRebate;   //单数返点
+	private String oddTimes;   //单数倍数
+	private String evenRebate;  //双数返点
+	private String evenTimes;   //双数倍数
+	
+	
+	
+	public String getMainZodiacRebate() {
+		return mainZodiacRebate;
+	}
+
+	public void setMainZodiacRebate(String mainZodiacRebate) {
+		this.mainZodiacRebate = mainZodiacRebate;
+	}
+
+	public String getMainZodiacTimes() {
+		return mainZodiacTimes;
+	}
+
+	public void setMainZodiacTimes(String mainZodiacTimes) {
+		this.mainZodiacTimes = mainZodiacTimes;
+	}
+
+	public String getRedRebate() {
+		return redRebate;
+	}
+
+	public void setRedRebate(String redRebate) {
+		this.redRebate = redRebate;
+	}
+
+	public String getRedTimes() {
+		return redTimes;
+	}
+
+	public void setRedTimes(String redTimes) {
+		this.redTimes = redTimes;
+	}
+
+	public String getGreenRebate() {
+		return greenRebate;
+	}
+
+	public void setGreenRebate(String greenRebate) {
+		this.greenRebate = greenRebate;
+	}
+
+	public String getGreenTimes() {
+		return greenTimes;
+	}
+
+	public void setGreenTimes(String greenTimes) {
+		this.greenTimes = greenTimes;
+	}
+
+	public String getBlueRebate() {
+		return blueRebate;
+	}
+
+	public void setBlueRebate(String blueRebate) {
+		this.blueRebate = blueRebate;
+	}
+
+	public String getBlueTimes() {
+		return blueTimes;
+	}
+
+	public void setBlueTimes(String blueTimes) {
+		this.blueTimes = blueTimes;
+	}
+
+	public String getOddRebate() {
+		return oddRebate;
+	}
+
+	public void setOddRebate(String oddRebate) {
+		this.oddRebate = oddRebate;
+	}
+
+	public String getOddTimes() {
+		return oddTimes;
+	}
+
+	public void setOddTimes(String oddTimes) {
+		this.oddTimes = oddTimes;
+	}
+
+	public String getEvenRebate() {
+		return evenRebate;
+	}
+
+	public void setEvenRebate(String evenRebate) {
+		this.evenRebate = evenRebate;
+	}
+
+	public String getEvenTimes() {
+		return evenTimes;
+	}
+
+	public void setEvenTimes(String evenTimes) {
+		this.evenTimes = evenTimes;
+	}
 
 	public Integer getId() {
 		return id;
