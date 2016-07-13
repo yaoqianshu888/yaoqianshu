@@ -242,7 +242,7 @@
 				</tr>
 				<tr>
 					<td><img title="08" src="moneyTree/images/num08.gif" /></td>
-					<td>${totalCharge[9] }</td>
+					<td>${totalCharge[7] }</td>
 					<td><img title="20" src="moneyTree/images/num20.gif" /></td>
 					<td>${totalCharge[19] }</td>
 					<td><img title="32" src="moneyTree/images/num32.gif" /></td>
@@ -401,7 +401,7 @@
 				</tr>
 				<tr>
 					<td><img title="08" src="moneyTree/images/num08.gif" /></td>
-					<td>${reportedCharge[9] }</td>
+					<td>${reportedCharge[7] }</td>
 					<td><img title="20" src="moneyTree/images/num20.gif" /></td>
 					<td>${reportedCharge[19] }</td>
 					<td><img title="32" src="moneyTree/images/num32.gif" /></td>
