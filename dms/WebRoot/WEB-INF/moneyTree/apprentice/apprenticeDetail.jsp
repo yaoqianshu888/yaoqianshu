@@ -14,7 +14,7 @@
 				</td>
 				<td>${ apprentice.apprenticeName}</td>
 			</tr>
-			
+			<!--  
 			<tr>
 				<td width="70" class="right evenTrBgColor">
 					主生肖倍数：
@@ -87,7 +87,7 @@
 				</td>
 				<td>${ apprentice.evenRebate} %</td>
 			</tr>
-			
+			-->
 			<tr>
 				<td width="70" class="right evenTrBgColor">
 					创建人：

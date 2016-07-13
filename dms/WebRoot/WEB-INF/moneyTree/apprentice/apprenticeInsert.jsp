@@ -25,6 +25,8 @@
 			ldDialog.alert("包肖返点：请输入数字");
 			return false;
 		}
+		/*
+		
 		
 		if (!isDecimal(document.getElementById('apprentice.mainZodiacTimes').value)) {
 			ldDialog.alert("主生肖倍数：请输入数字");
@@ -74,7 +76,7 @@
 			ldDialog.alert("双数返点：请输入数字");
 			return false;
 		}
-		
+		*/
 		if (!checkData(false, 'apprentice.memo', "备注", 1, 255)) {
 			return false;
 		}
@@ -156,7 +158,7 @@
 							value="${apprentice.zodiacRebate}" class="ldText" maxlength="30" /> %
 					</td>
 				</tr>
-				
+				<!-- 
 				<tr>
 					<td width="90" align="right">
 						<FONT color=red>*</FONT>主生肖倍数：
@@ -265,7 +267,7 @@
 							value="${apprentice.evenRebate}" class="ldText" maxlength="30" /> %
 					</td>
 				</tr>
-				
+				 -->
 				<tr>
 					<td align="right">备注：</td>
 					<td>

@@ -23,6 +23,7 @@
 		<property name="locations">
 			<list>
 				<value>classpath:/com/landicorp/config/jdbc.properties</value>
+				<value>classpath:/com/landicorp/config/config-memcache.properties</value>
 			</list>
 		</property>
 	</bean>

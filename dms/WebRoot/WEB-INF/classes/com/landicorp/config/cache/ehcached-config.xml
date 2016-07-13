@@ -13,6 +13,8 @@
 		<property name="overflowToDisk" value="false" />
 		<property name="diskPersistent" value="false" />
 		<property name="timeToIdleSeconds" value="0" />
+		<property name="timeToLiveSeconds" value="0" />
+		<property name="diskExpiryThreadIntervalSeconds" value="0" />
 		<property name="cacheName" value="systemCache" />
 	</bean>
 	<!-- cache -->
