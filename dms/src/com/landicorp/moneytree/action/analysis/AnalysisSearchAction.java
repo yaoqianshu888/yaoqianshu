@@ -303,14 +303,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 				Comparator<ChargeRecord> comparator = new Comparator<ChargeRecord>() {
 					public int compare(ChargeRecord s1, ChargeRecord s2) {
-						float num1 = 0.0f;
-						float num2 = 0.0f;
-
-						if (!s1.getChargeMoney().isEmpty() && s1.getChargeMoney() != null && !"".equals(s1.getChargeMoney())) {
-							num1 = Float.valueOf(s1.getChargeMoney());
-						} else if (!s2.getChargeMoney().isEmpty() && s2.getChargeMoney() != null && !"".equals(s2.getChargeMoney())) {
-							num2 = Float.valueOf(s2.getChargeMoney());
-						}
+						float num1 = Float.valueOf(s1.getChargeMoney());
+						float num2 = Float.valueOf(s2.getChargeMoney());
 
 						// 先排年龄
 						if (num1 != num2) {
@@ -474,10 +468,10 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 */
 	private void calculateAnalysis() {
 		AnalysisRecord analysisRecord = new AnalysisRecord(0, 0, 0, 0, 0, 0, 0);
-		
+
 		analysisRecord.setLoseMaxValue(Float.valueOf(profitSituation.get(0).getChargeMoney()));
 		analysisRecord.setLoseMaxNum(Integer.valueOf(profitSituation.get(0).getChargeNumber()));
-		
+
 		analysisRecord.setWinMaxValue(Float.valueOf(profitSituation.get(48).getChargeMoney()));
 		analysisRecord.setWinMaxNum(Integer.valueOf(profitSituation.get(48).getChargeNumber()));
 
@@ -565,7 +559,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		for (ChargeRecord chargeRecord : chargeRecordList) {
 			float money = 0.0f;
-			if (!chargeRecord.getChargeMoney().isEmpty() && chargeRecord.getChargeMoney() != null && !"".equals(chargeRecord.getChargeMoney())) {
+			if (!chargeRecord.getChargeMoney().isEmpty() && chargeRecord.getChargeMoney() != null
+					&& !"".equals(chargeRecord.getChargeMoney())) {
 				money = Float.valueOf(chargeRecord.getChargeMoney());
 			}
 			String[] temp = chargeRecord.getChargeNumber().split(",");
@@ -594,7 +589,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				// 超过吃数金额上报
 				reportedCharge[i] = totalCharge[i] - eatValue;
 			} else {
-				reportedCharge[i] = 0;
+				// TODO 比如说 1岁875 上报情况上面1岁显示 -25
+				reportedCharge[i] = totalCharge[i] - eatValue;
 			}
 
 		}
@@ -642,12 +638,18 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	private float calculateReportedMoney(int resultNum) {
 		totalReportedMoney = 0;
 		for (float tempReported : reportedCharge) {
-			totalReportedMoney += tempReported;
+			if (tempReported > 0.0f) {
+				totalReportedMoney += tempReported;
+			}
 		}
 
-		// 开奖号码上报金额*倍数+上报总金额*返点-上报总金额
-		return reportedCharge[resultNum - 1] * Float.valueOf(userExtra.getTimes())
-				+ totalReportedMoney * Float.valueOf(userExtra.getRebate()) * 0.01f - totalReportedMoney;
+		if (reportedCharge[resultNum - 1] > 0) {
+			// 开奖号码上报金额*倍数+上报总金额*返点-上报总金额
+			return reportedCharge[resultNum - 1] * Float.valueOf(userExtra.getTimes())
+					+ totalReportedMoney * Float.valueOf(userExtra.getRebate()) * 0.01f - totalReportedMoney;
+		} else {
+			return totalReportedMoney * Float.valueOf(userExtra.getRebate()) * 0.01f - totalReportedMoney;
+		}
 	}
 
 	/**
@@ -698,7 +700,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		for (ChargeRecord chargeRecord : oneApprenticeChargeList) {
 			float chargeMoney = 0.0f;
 
-			if (!chargeRecord.getChargeMoney().isEmpty() && chargeRecord.getChargeMoney() != null && !"".equals(chargeRecord.getChargeMoney())) {
+			if (!chargeRecord.getChargeMoney().isEmpty() && chargeRecord.getChargeMoney() != null
+					&& !"".equals(chargeRecord.getChargeMoney())) {
 				chargeMoney = Float.valueOf(chargeRecord.getChargeMoney());
 			}
 			// 记录下家下注的钱
