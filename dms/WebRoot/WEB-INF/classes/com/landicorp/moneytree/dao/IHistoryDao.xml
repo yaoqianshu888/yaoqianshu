@@ -137,7 +137,7 @@
 		*
 		FROM t_moneytree_history 
 		where click_no='${history.clickNo}'
-		ORDER BY ID DESC
+		ORDER BY numgroup_id 
 		
 	</select>
 	
