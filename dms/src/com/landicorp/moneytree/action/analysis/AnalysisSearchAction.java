@@ -590,7 +590,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				reportedCharge[i] = totalCharge[i] - eatValue;
 			} else {
 				// TODO 比如说 1岁875 上报情况上面1岁显示 -25
-				reportedCharge[i] = totalCharge[i] - eatValue;
+//				reportedCharge[i] = totalCharge[i] - eatValue;
+				reportedCharge[i] = 0;
 			}
 
 		}
