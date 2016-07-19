@@ -29,9 +29,12 @@
 			return false;
 		}
 		var isNo=0;
+		var inputValue="";
 		$("input:[type='text']").each(function(){
 			if ($(this).val()!='' && !isDecimal($(this).val())) {
 				isNo=1;  //出错
+			}else if($(this).val()!='' && isDecimal($(this).val())){
+				inputValue+=$(this).attr("name")+":"+$(this).val()+","
 			}
 		});
 		if(isNo==1){
@@ -39,7 +42,20 @@
 			return false;
 		}
 		
-		document.subForm.submit();
+		ldDialog.openMini("${basePath}moneyJinliang/chargeNumber!confirmNum.action?conNum="+inputValue,
+			"确认提交", 
+			function(window) {
+				var returnValue = window.returnValue;
+				if (returnValue == undefined) {//无返回值 直接关闭 
+					return true;
+				} else {//有返回值 处理一些事
+					//ldDialog.tips("处理成功！");
+					document.subForm.submit();
+					return true;
+				}
+		});
+		
+	
 	}
 	
 	function showDetail(id,apprenticeName){
@@ -109,40 +125,12 @@
 						</div>
 					</div>
 			</div>
-				<div style="width:24%;float:left;margin-left:10px">
-				<div style="margin-bottom:5px">
-				<form action="${basePath}moneyJinliang/chargeNumber!searchApprenticeByInfo.action"
-							  method="post">
-					<input name="apprentice.apprenticeName" class="ldText" style="width:100px" id="apprentice.apprenticeName"
-						value="${apprentice.apprenticeName}" />
-					<input id="searchBtn" type="submit" class="ldBtnBlue" value="查询" />
-					<input type="hidden" value="0" name="pager.curPageNum" />
-					<input type="hidden" name="pagenum" value="3"/>
-				</form>
+				<div style="width:24%;float:left;margin-left:10px;height:600px">
+				
+				<iframe class="contentFrame" width="100%" height="100%"
+								src="${basePath}moneyJinliang/chargeNumber!searchApprenticeByInfo.action?apprentice.apprenticeName="
+								frameborder="0" scrolling="no"></iframe>
 				</div>
-				<table style="border:1px solid #dadada;width:100%" cellspacing="6" cellpadding="1">
-				<tr>
-					<td style="font-weight:bold;">请选择下家：</td>
-					<td><span id="choseName" style="color:red"></span></td>
-				</tr>
-				<c:forEach items="${apprenticeList }" var="item" varStatus="status">
-					<tr>
-						<td><input type="button" value="${ item.apprenticeName}" class="ldBtnGray" onclick="chooseApprentice(${item.id},'${item.apprenticeName}')"/></td>
-						<td><input type="button" value="明细查询" class="ldBtnGray" onclick="showDetail(${item.id},'${item.apprenticeName}')"/></td>
-					</tr>
-				</c:forEach>
-				</table>
-				<div class="toolbarR">
-						<div class="ldPager">
-						<form action="${basePath}moneyJinliang/chargeNumber!searchApprenticeByInfo.action"
-							  method="post" name="pagerForm">
-							    <input name="apprentice.apprenticeName" type="hidden"
-								value="${apprentice.apprenticeName}" /> 
-							<ld:pager type="form" action="pagerForm" />
-						</form>
-						</div>
-				</div>
-			</div>
 			<form method="post" name="subForm" id="subForm" action="${basePath}moneyJinliang/chargeNumber!submitNumber.action">
 			<div style="width:50%;float:left;margin-left:5px;">
 					<input type="hidden" name="apprentice.id" id="apprentice.id" value=""/>

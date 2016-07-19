@@ -23,6 +23,8 @@
 		<action name="chargeNumber" class="chargeNumberAction">
 			<result name="success">/WEB-INF/moneyTree/chargeNumber/chargeNumber.jsp</result>
 			<result name="detail">/WEB-INF/moneyTree/chargeNumber/numberDetail.jsp</result>
+			<result name="confirm">/WEB-INF/moneyTree/chargeNumber/confirmDetail.jsp</result>
+			<result name="list">/WEB-INF/moneyTree/chargeNumber/apprenticeList.jsp</result>
 		</action>
 		<action name="chargeDetail" class="chargeDetailAction">
 			<result name="success">/WEB-INF/moneyTree/chargeNumber/chargeDetail.jsp</result>

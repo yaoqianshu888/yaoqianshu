@@ -2,6 +2,8 @@ package com.landicorp.moneytree.action.chargeNumber;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +11,13 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+
+
+
+
 
 
 
@@ -36,9 +43,36 @@ public class ChargeNumberAction extends BaseActionSupport {
     private IHistoryService historyService;
     private String insertOk; //插入数据成功
     private List<List<History>> histories;
+    private String conNum;
+    private List<History> historyList;
+    private Double total;//合计
     
     
-    public List<List<History>> getHistories() {
+    public Double getTotal() {
+		return total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
+	}
+
+	public List<History> getHistoryList() {
+		return historyList;
+	}
+
+	public void setHistoryList(List<History> historyList) {
+		this.historyList = historyList;
+	}
+
+	public String getConNum() {
+		return conNum;
+	}
+
+	public void setConNum(String conNum) {
+		this.conNum = conNum;
+	}
+
+	public List<List<History>> getHistories() {
         return histories;
     }
 
@@ -154,7 +188,7 @@ public class ChargeNumberAction extends BaseActionSupport {
     }
     
     public String searchApprenticeByInfo(){
-     
+    	
         apprentice.setUser(getSessionUser());
         apprenticeList=apprenticeService.getApprenticeListByApprentice(apprentice, getPager());
         
@@ -166,7 +200,7 @@ public class ChargeNumberAction extends BaseActionSupport {
         prePeriod=periodService.getPrePeriod();
         nowPeriod=periodService.getNowPeriod();
         
-        return SUCCESS;
+        return "list";
     }
     
     public String submitNumber() throws IOException{
@@ -229,7 +263,7 @@ public class ChargeNumberAction extends BaseActionSupport {
         history=new History();
         history.setApprentice(apprentice);
         history.setPeriod(nowPeriod);
-        List<History> historyList=historyService.getAllHistoryByApIdAndPeId(history);
+        historyList=historyService.getAllHistoryByApIdAndPeId(history);
         histories=new ArrayList<List<History>>();
         
         if(historyList.size()>0){
@@ -257,5 +291,39 @@ public class ChargeNumberAction extends BaseActionSupport {
         }
         
         return "detail";
+    }
+    
+    public String confirmNum(){
+    	//System.out.println(conNum);
+    	total=0.0;
+    	if(!conNum.equals("")){
+	    	String[] str=conNum.split(",");
+	        Numgroup numgroup=new Numgroup();
+	        historyList=new ArrayList<History>();
+	        
+	        for(int i=0;i<str.length;i++){
+	        	History history=new History();
+	        	numgroup=numgroupService.getById(Integer.valueOf(str[i].split(":")[0]));
+	        	history.setNumgroup(numgroup);
+	        	history.setChargeNumber(str[i].split(":")[1]);
+	        	historyList.add(history);
+	        	total+=Double.valueOf(str[i].split(":")[1]);
+	        }
+    	}
+    	Collections.sort(historyList, new Comparator<History>() {
+			public int compare(History arg0, History arg1) {
+				int hits0 = arg0.getNumgroup().getId();
+				int hits1 = arg1.getNumgroup().getId();
+				if (hits1 > hits0) {
+					return -1;
+				} else if (hits1 == hits0) {
+					return 0;
+				} else {
+					return 1;
+				}
+			}
+		});
+    	
+    	return "confirm";
     }
 }
