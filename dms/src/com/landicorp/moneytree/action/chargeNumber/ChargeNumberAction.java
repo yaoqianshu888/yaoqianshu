@@ -250,6 +250,8 @@ public class ChargeNumberAction extends BaseActionSupport {
                 history.setClickNo(UUid);
                 historyService.add(history);
                 
+                historyService.saveTmp(history);  //新增到临时表中
+                
                 insertOk="1";  //提交成功
             }
             

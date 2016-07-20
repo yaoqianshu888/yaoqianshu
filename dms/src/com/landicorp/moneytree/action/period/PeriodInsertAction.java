@@ -9,12 +9,21 @@ import org.apache.struts2.ServletActionContext;
 
 import com.landicorp.core.action.BaseActionSupport;
 import com.landicorp.moneytree.entities.Period;
+import com.landicorp.moneytree.service.IHistoryService;
 import com.landicorp.moneytree.service.IPeriodService;
 
 public class PeriodInsertAction extends BaseActionSupport {
     private Period period;
     private IPeriodService periodService;
-    public Period getPeriod() {
+    private IHistoryService historyService;
+    
+    public IHistoryService getHistoryService() {
+		return historyService;
+	}
+	public void setHistoryService(IHistoryService historyService) {
+		this.historyService = historyService;
+	}
+	public Period getPeriod() {
         return period;
     }
     public void setPeriod(Period period) {
@@ -43,6 +52,7 @@ public class PeriodInsertAction extends BaseActionSupport {
             periodService.setPrePreiod();
             period.setIsNow(1);
             periodService.add(period);
+            historyService.deleteTmp();
             returnValue="新增成功";
             code=1;
             setWindowReturnValue(returnValue);

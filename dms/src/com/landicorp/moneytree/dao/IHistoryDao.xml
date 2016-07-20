@@ -66,6 +66,22 @@
 			LAST_INSERT_ID() as value  
 		</selectKey>
 	</insert>
+	
+	<!-- 新增到临时表中 -->
+	<insert id="saveTmp" parameterType="history">
+		insert into t_moneytree_tmp_history
+		(
+		<include refid="keyColumns" />
+		) values(
+		<include refid="valueColumns" />
+		)
+		<!-- 配置Mysql主键自动增长 -->
+		<selectKey resultType="int" keyProperty="id">
+			select
+			LAST_INSERT_ID() as value  
+		</selectKey>
+	</insert>
+	
 	<update id="update" parameterType="history">
 		update t_moneytree_history
 		<set>
@@ -88,6 +104,11 @@
 			separator="," close=")">
 			#{item}
 		</foreach>
+	</delete>
+	
+	<!-- 删除临时表 -->
+	<delete id="deleteTmp">
+		delete from t_moneytree_tmp_history
 	</delete>
 	
 	<delete id="deleteByClickNo" parameterType="string">

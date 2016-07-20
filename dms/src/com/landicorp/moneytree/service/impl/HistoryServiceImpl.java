@@ -79,4 +79,14 @@ public class HistoryServiceImpl extends AbstractBaseServiceImpl<History, Integer
         historyDao.deleteByClickNo(item);
     }
 
+	@Override
+	public void saveTmp(History history) {
+		historyDao.saveTmp(history);
+	}
+
+	@Override
+	public void deleteTmp() {
+		historyDao.deleteTmp();
+	}
+
 }
