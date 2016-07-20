@@ -97,6 +97,15 @@
 		where id=#{id}
 	</update>
 	
+	<!-- 更新临时表数据 -->
+	<update id="updateTmp" parameterType="history">
+		update t_moneytree_tmp_history
+		<set>
+			<if test="chargeNumber!=null">charge_number=#{chargeNumber}</if>
+		</set>
+		where user_id=#{user.id} and period_id=#{period.id} and apprentice_id=#{apprentice.id} and numgroup_id=#{numgroup.id}
+	</update>
+	
 	<delete id="delete" parameterType="int">
 		delete from t_moneytree_history where
 		id in
@@ -106,7 +115,17 @@
 		</foreach>
 	</delete>
 	
-	<!-- 删除临时表 -->
+	<!-- 根据clickid删除临时表数据 -->
+	<delete id="deleteTmpByClickNo" parameterType="string">
+		delete from t_moneytree_tmp_history where
+		click_no in
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			'${item}'
+		</foreach>
+	</delete>
+	
+	<!-- 删除临时表所有数据 -->
 	<delete id="deleteTmp">
 		delete from t_moneytree_tmp_history
 	</delete>

@@ -60,7 +60,7 @@
 	
 	function showDetail(id,apprenticeName){
 		ldDialog.openMedium("${basePath}moneyJinliang/chargeNumber!showDetail.action?apprentice.id="+id,
-			"明细查询("+apprenticeName+")     当前期:  "+${prePeriod.period }, 
+			"明细查询("+apprenticeName+")     当前期:  "+${nowPeriod.period }, 
 			function(window) {
 				var returnValue = window.returnValue;
 				if (returnValue == undefined) {//无返回值 直接关闭 
