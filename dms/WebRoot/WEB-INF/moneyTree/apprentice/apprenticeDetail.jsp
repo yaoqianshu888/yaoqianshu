@@ -4,7 +4,7 @@
 <html>
 <head>
 <%@include file="/headDeclare.jsp"%>
-</head>
+</head>   
 <body>
 	<div class="dialogTop">
 		<table width="400" border="0" cellspacing="10" cellpadding="0" class="ld-detailTable">

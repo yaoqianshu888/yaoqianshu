@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<%@include file="/headDeclare.jsp"%>
+<%@include file="/headDeclare.jsp"%>  
 <script type="text/javascript">
 	function checkSubmit() {
 		if (!checkData(true, 'apprentice.apprenticeName', "下家名称", 2, 30)) {

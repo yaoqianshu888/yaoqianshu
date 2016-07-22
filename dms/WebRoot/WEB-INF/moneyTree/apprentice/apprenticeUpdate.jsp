@@ -5,7 +5,7 @@
 <head>
 <%@include file="/headDeclare.jsp"%>
 <script type="text/javascript">
-	function checkSubmit() {
+	function checkSubmit() {  
 		if (!checkData(true, 'apprentice.apprenticeName', "下家名称", 2, 30)) {
 			return false;
 		}

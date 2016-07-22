@@ -39,7 +39,7 @@ public class ApprenticeUpdateAction extends BaseActionSupport {
         response.setCharacterEncoding("UTF-8"); 
         String reason="";
         int code=0;
-        String returnValue="";
+        String returnValue="";   
         try {
             Apprentice insertPrDoc=apprenticeService.getById(apprentice.getId());
             
