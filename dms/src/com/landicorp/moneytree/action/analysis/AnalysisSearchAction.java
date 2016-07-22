@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +36,15 @@ import com.landicorp.moneytree.service.IUserExtraService;
 public class AnalysisSearchAction extends BaseActionSupport {
 	private ChargeRecord chargeRecord;
 	private List<ChargeRecord> chargeRecordList;
+	private Map<Integer, List<ChargeRecord>> chargeRecordListByApprentice = new HashMap<Integer, List<ChargeRecord>>();
+
 	private IAnalysisService analysisService;
 
 	private Period nowPeriod;
 	private Period prePeriod;
 	private IPeriodService periodService;
+
+	private Map<Integer, Apprentice> apprenticeList = new HashMap<Integer, Apprentice>();
 
 	private IApprenticeService apprenticeService;
 
@@ -78,6 +84,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	 * 查询的期数
 	 */
 	private int periodValue;
+
 	/**
 	 * 英葵情况记录
 	 */
@@ -91,6 +98,8 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	private float totalReportedMoney;
 
 	private float totalChargeMoney;
+
+	Set<Integer> allApprenticeId;
 
 	public ChargeRecord getChargeRecord() {
 		return chargeRecord;
@@ -253,6 +262,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 	}
 
 	public String getAnalysis() {
+		System.out.println("A-----------开始分析-----------时间：" + new Date().getTime());
 
 		Period period = new Period();
 
@@ -283,23 +293,32 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			// 总统计，总体收数情况
 			period = analysisTotal();
 
+			// 获取所有下家的ID
+			getAllChargeRecordByApprentice(period);
+
 			for (int i = 0; i < eatList.size(); i++) {
+
 				// 根据吃数值，进行上报数统计
 				analysisReported((float) eatList.get(i).getEatValue());
 
 				// 假设每个号码为中奖号码时的英葵情况，计算，存储结果
 				profitSituation = new ArrayList<ChargeRecord>();
 
+				System.out.println("G-----------开始根据不同中奖号码calculateMoney--吃数值" + i + "----时间：" + new Date().getTime());
 				for (int j = 0; j < 49; j++) {
+
+					// System.out.println("G-----------开始--吃数值"+i+"---号码----"+j+"----时间："+new
+					// Date().getTime());
+
 					ChargeRecord tempRecord = new ChargeRecord();
-					if (j == 23) {
-						System.out.println("");
-					}
 					tempRecord.setChargeNumber((j + 1) + "");
 					tempRecord.setChargeMoney(calculateMoney((j + 1), period) + "");
 
 					profitSituation.add(tempRecord);
+					// System.out.println("G-----------结束--吃数值"+i+"---号码----"+j+"----时间："+new
+					// Date().getTime());
 				}
+				System.out.println("G-----------结束calculateMoney--吃数值" + i + "----时间：" + new Date().getTime());
 
 				Comparator<ChargeRecord> comparator = new Comparator<ChargeRecord>() {
 					public int compare(ChargeRecord s1, ChargeRecord s2) {
@@ -317,13 +336,38 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				Collections.sort(profitSituation, comparator);
 
 				calculateAnalysis();
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return SUCCESS;
 		}
+		System.out.println("A-----------结束分析-----------时间：" + new Date().getTime());
 
 		return SUCCESS;
+	}
+
+	private void getAllChargeRecordByApprentice(Period period) {
+
+		allApprenticeId = new HashSet<Integer>();
+
+		// TODO 直接获取所有的下家
+		for (ChargeRecord chargeRecord : chargeRecordList) {
+
+			allApprenticeId.add(chargeRecord.getApprenticeId());
+		}
+
+		for (Integer tempApprenticeId : allApprenticeId) {
+			// 获取某个下家的本期收数情况
+			List<ChargeRecord> oneApprenticeChargeList = new ArrayList<ChargeRecord>();
+
+			oneApprenticeChargeList = analysisService.getApprenticeChargeRecord(getSessionUser().getId(),
+					Integer.valueOf(period.getId()), tempApprenticeId);
+
+			chargeRecordListByApprentice.put(tempApprenticeId, oneApprenticeChargeList);
+			apprenticeList.put(tempApprenticeId, apprenticeService.getById(tempApprenticeId));
+		}
+
 	}
 
 	public String getApprenticeAnalysis() {
@@ -393,6 +437,9 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			e.printStackTrace();
 			return "apprenticeData";
 		}
+
+		// 获取所有下家的ID
+		getAllChargeRecordByApprentice(period);
 
 		try {
 			calculateAllApprenticeMoney(Integer.valueOf(period.getLotteryResult()), period);
@@ -590,7 +637,7 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				reportedCharge[i] = totalCharge[i] - eatValue;
 			} else {
 				// TODO 比如说 1岁875 上报情况上面1岁显示 -25
-//				reportedCharge[i] = totalCharge[i] - eatValue;
+				// reportedCharge[i] = totalCharge[i] - eatValue;
 				reportedCharge[i] = 0;
 			}
 
@@ -621,7 +668,9 @@ public class AnalysisSearchAction extends BaseActionSupport {
 		}
 
 		try {
+			System.out.println("M-----------开始所有下家--号码" + resultNum + "----时间：" + new Date().getTime());
 			apprenticeMoney = calculateAllApprenticeMoney(resultNum, period);
+			System.out.println("M-----------结束所有下家--号码" + resultNum + "----时间：" + new Date().getTime());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -664,16 +713,11 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		apprenticeDataList = new ArrayList<ApprenticeData>();
 
-		// 获得本期有购买的所有下家
-		Set<Integer> allApprenticeId = new HashSet<Integer>();
-
-		for (ChargeRecord chargeRecord : chargeRecordList) {
-			allApprenticeId.add(chargeRecord.getApprenticeId());
-		}
-
 		// 计算出应给每个下家的金额,并计算总金额
 		for (Integer itemId : allApprenticeId) {
+			System.out.println("N-----------开始--号码" + resultNum + "--下家--" + itemId + "----时间：" + new Date().getTime());
 			result += calculateOneApprenticeMoney(itemId, resultNum, period);
+			System.out.println("N-----------结束--号码" + resultNum + "--下家--" + itemId + "----时间：" + new Date().getTime());
 		}
 
 		return result;
@@ -689,13 +733,12 @@ public class AnalysisSearchAction extends BaseActionSupport {
 
 		// 根据下家id获取下家信息
 		Apprentice apprentice = new Apprentice();
-		apprentice = apprenticeService.getById(apprenticeId);
+		apprentice = apprenticeList.get(apprenticeId);
 
 		// 获取某个下家的本期收数情况
 		List<ChargeRecord> oneApprenticeChargeList = new ArrayList<ChargeRecord>();
 
-		oneApprenticeChargeList = analysisService.getApprenticeChargeRecord(getSessionUser().getId(),
-				Integer.valueOf(period.getId()), apprenticeId);
+		oneApprenticeChargeList =chargeRecordListByApprentice.get(apprenticeId); 
 
 		// 遍历一个下家本期所有的购买记录
 		for (ChargeRecord chargeRecord : oneApprenticeChargeList) {
@@ -715,11 +758,35 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			float itemChargeMoney = chargeMoney / tempCharge.length;
 
 			// 统计返点金额。无论是否中奖均有返点
-			if (chargeRecord.getGroupId() >= 50 && chargeRecord.getGroupId() <= 61) {
+			if (chargeRecord.getGroupId() >= 51 && chargeRecord.getGroupId() <= 61) {
 				// 如果是生肖,用生肖的返点
 
 				rebateResult += chargeMoney * Float.valueOf(apprentice.getZodiacRebate()) * 0.01f;
-			} else {
+			}else if(chargeRecord.getGroupId() == 50){
+				// 如果是主生肖返点
+
+				rebateResult += chargeMoney * Float.valueOf(apprentice.getMainZodiacRebate()) * 0.01f;
+			} else if(chargeRecord.getGroupId() == 50){
+				// 如果是红波返点
+
+				rebateResult += chargeMoney * Float.valueOf(apprentice.getRedRebate()) * 0.01f;
+			} else if(chargeRecord.getGroupId() == 50){
+				// 如果是蓝波返点
+
+				rebateResult += chargeMoney * Float.valueOf(apprentice.getBlueRebate()) * 0.01f;
+			} else if(chargeRecord.getGroupId() == 50){
+				// 如果是绿波返点
+
+				rebateResult += chargeMoney * Float.valueOf(apprentice.getGreenRebate()) * 0.01f;
+			} else if(chargeRecord.getGroupId() == 50){
+				// 如果是包单返点
+
+				rebateResult += chargeMoney * Float.valueOf(apprentice.getOddRebate()) * 0.01f;
+			}  else if(chargeRecord.getGroupId() == 50){
+				// 如果是包双返点
+
+				rebateResult += chargeMoney * Float.valueOf(apprentice.getEvenRebate()) * 0.01f;
+			}else {
 				// 如果是字,用字的返点
 
 				rebateResult += chargeMoney * Float.valueOf(apprentice.getWordRebate()) * 0.01f;
@@ -728,10 +795,34 @@ public class AnalysisSearchAction extends BaseActionSupport {
 			// 统计中奖金额。遍历一组记录中的号码是否中奖
 			for (String tempChargeItem : tempCharge) {
 				if (tempChargeItem.equals(resultNum + "")) {
-					if (chargeRecord.getGroupId() >= 50 && chargeRecord.getGroupId() <= 61) {
+					if (chargeRecord.getGroupId() >= 51 && chargeRecord.getGroupId() <= 61) {
 						// 如果是生肖,用生肖的倍数
 						timesResult += itemChargeMoney * Float.valueOf(apprentice.getZodiacTimes());
-					} else {
+					} else if(chargeRecord.getGroupId() == 50){
+						// 如果是主生肖倍数
+
+						timesResult += itemChargeMoney * Float.valueOf(apprentice.getMainZodiacTimes()) * 0.01f;
+					} else if(chargeRecord.getGroupId() == 50){
+						// 如果是红波倍数
+
+						timesResult += itemChargeMoney * Float.valueOf(apprentice.getRedTimes()) * 0.01f;
+					} else if(chargeRecord.getGroupId() == 50){
+						// 如果是蓝波倍数
+
+						timesResult += itemChargeMoney * Float.valueOf(apprentice.getBlueTimes()) * 0.01f;
+					} else if(chargeRecord.getGroupId() == 50){
+						// 如果是绿波倍数
+
+						timesResult += itemChargeMoney * Float.valueOf(apprentice.getGreenTimes()) * 0.01f;
+					} else if(chargeRecord.getGroupId() == 50){
+						// 如果是包单倍数
+
+						timesResult += itemChargeMoney * Float.valueOf(apprentice.getOddTimes()) * 0.01f;
+					}  else if(chargeRecord.getGroupId() == 50){
+						// 如果是包双倍数
+
+						timesResult += itemChargeMoney * Float.valueOf(apprentice.getEvenTimes()) * 0.01f;
+					}else {
 						// 如果是字,用字的倍数
 						timesResult += itemChargeMoney * Float.valueOf(apprentice.getWordTimes());
 					}
