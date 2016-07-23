@@ -128,7 +128,7 @@
 	<select id="getAllEatCount" resultType="int" parameterType="map">
 		select count(*) from t_moneytree_eat where
 		user_id=#{eat.user.id} and
-		status=1
+		status=1 ORDER BY ID DESC
 	</select>
 
 </mapper>
