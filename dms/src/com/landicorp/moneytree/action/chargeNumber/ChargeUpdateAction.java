@@ -76,13 +76,8 @@ public class ChargeUpdateAction extends BaseActionSupport {
                 history.setId(Integer.valueOf(name));
                 history.setLastModifyTime(new Date());
                 
-                //修改临时表
-                History historyTmp=new History();
-                historyTmp=historyService.getById(history.getId());
-                historyTmp.setChargeNumber(v[0]);
-                
+               
                 historyService.update(history);
-                historyService.updateTmp(historyTmp);
             }
             returnValue="修改成功";
             code=1;

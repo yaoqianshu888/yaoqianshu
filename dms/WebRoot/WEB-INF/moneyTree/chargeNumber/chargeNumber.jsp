@@ -98,17 +98,17 @@
 	  }
   	setInterval(GetRTime,0);
 	
-	//回车提交表单
-	document.onkeydown = function(evt){
-   　	 var evt = window.event?window.event:evt;
-    　	if (evt.keyCode==13) {
-          checkSubmit();
-    	　}
-   }
+	
+
    
-   //键盘上下左右控制光标
+   
    document.onkeydown=function(e){
 	  e=window.event||e;
+	  //回车提交表单
+	  if (e.keyCode==13) {
+          checkSubmit();
+    	　}
+	  //键盘上下左右控制光标
 	  var act = document.activeElement.name;
 	  switch(e.keyCode){
 	    case 37: //左键

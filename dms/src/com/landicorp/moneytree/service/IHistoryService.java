@@ -18,8 +18,6 @@ public interface IHistoryService extends IBaseService<History, Integer> {
     public List<History> getAllHistoryByClickNo(History history); 
     public void deleteByClickNo(String[] item);  //根据当前点击号删除历史记录
     
-    public void saveTmp(History history);  //新增历史到临时表中
-    public void deleteTmp();  //删除临时表中的所有记录
-    public void updateTmp(History history); //更新临时表数据 
-    public void deleteTmpByClickNo(String[] item); //根据id删除临时表数据
+    
+  
 }

@@ -52,7 +52,7 @@ public class PeriodInsertAction extends BaseActionSupport {
             periodService.setPrePreiod();
             period.setIsNow(1);
             periodService.add(period);
-            historyService.deleteTmp();
+           
             returnValue="新增成功";
             code=1;
             setWindowReturnValue(returnValue);

@@ -32,7 +32,6 @@ public class ChargeDeleteAction extends BaseActionSupport {
         String returnValue="";
         try {
             historyService.deleteByClickNo(delete);
-            historyService.deleteTmpByClickNo(delete);
             returnValue="修改成功";
             code=1;
             setWindowReturnValue(returnValue);

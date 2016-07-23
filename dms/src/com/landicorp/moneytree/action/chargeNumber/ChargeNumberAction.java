@@ -250,8 +250,6 @@ public class ChargeNumberAction extends BaseActionSupport {
                 history.setClickNo(UUid);
                 historyService.add(history);
                 
-                historyService.saveTmp(history);  //新增到临时表中
-                
                 insertOk="1";  //提交成功
             }
             
@@ -311,7 +309,7 @@ public class ChargeNumberAction extends BaseActionSupport {
 	        	historyList.add(history);
 	        	total+=Double.valueOf(str[i].split(":")[1]);
 	        }
-    	}
+    	
     	Collections.sort(historyList, new Comparator<History>() {
 			public int compare(History arg0, History arg1) {
 				int hits0 = arg0.getNumgroup().getId();
@@ -325,7 +323,7 @@ public class ChargeNumberAction extends BaseActionSupport {
 				}
 			}
 		});
-    	
+    	}
     	return "confirm";
     }
 }
