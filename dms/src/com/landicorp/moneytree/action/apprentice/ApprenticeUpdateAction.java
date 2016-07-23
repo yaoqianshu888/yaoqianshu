@@ -61,6 +61,7 @@ public class ApprenticeUpdateAction extends BaseActionSupport {
             insertPrDoc.setOddTimes(apprentice.getOddTimes());
             insertPrDoc.setEvenRebate(apprentice.getEvenRebate());
             insertPrDoc.setEvenTimes(apprentice.getEvenTimes());
+            insertPrDoc.setSort(apprentice.getSort());
             insertPrDoc.setLastModifier(getSessionUser());
             insertPrDoc.setLastModifyTime(new Date());
             apprenticeService.update(insertPrDoc);

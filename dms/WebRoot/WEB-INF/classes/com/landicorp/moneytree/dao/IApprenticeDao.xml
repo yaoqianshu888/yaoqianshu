@@ -30,7 +30,7 @@
 		<result property="oddTimes" column="odd_times" />
 		<result property="evenRebate" column="even_rebate" />
 		<result property="evenTimes" column="even_times" />
-		
+		<result property="sort" column="sort" />
 		<association property="creator" column="creator"
 			javaType="com.landicorp.core.entities.User" select="com.landicorp.core.dao.IUserDao.getById" />
 		<association property="lastModifier" column="LAST_MODIFIER"
@@ -40,7 +40,7 @@
 	</resultMap>
 	<sql id="keyColumns">apprentice_name,user_id,status,word_rebate,CREATE_TIME,
 		CREATOR,LAST_MODIFY_TIME,LAST_MODIFIER,MEMO,word_times,zodiac_rebate,zodiac_times,main_zodiac_rebate,main_zodiac_times
-		,red_rebate,red_times,green_rebate,green_times,blue_rebate,blue_times,odd_rebate,odd_times,even_rebate,even_times
+		,red_rebate,red_times,green_rebate,green_times,blue_rebate,blue_times,odd_rebate,odd_times,even_rebate,even_times,sort
 		</sql>
 	<sql id="valueColumns">#{apprenticeName, jdbcType=VARCHAR},#{user.id,
 		jdbcType=NUMERIC},
@@ -49,7 +49,7 @@
 		#{memo, jdbcType=VARCHAR},#{wordTimes, jdbcType=VARCHAR},#{zodiacRebate, jdbcType=VARCHAR},#{zodiacTimes, jdbcType=VARCHAR},
 		#{mainZodiacRebate, jdbcType=VARCHAR},#{mainZodiacTimes, jdbcType=VARCHAR},#{redRebate, jdbcType=VARCHAR},#{redTimes, jdbcType=VARCHAR}
 		,#{greenRebate, jdbcType=VARCHAR},#{greenTimes, jdbcType=VARCHAR},#{blueRebate, jdbcType=VARCHAR},#{blueTimes, jdbcType=VARCHAR}
-		,#{oddRebate, jdbcType=VARCHAR},#{oddTimes, jdbcType=VARCHAR},#{evenRebate, jdbcType=VARCHAR},#{evenTimes, jdbcType=VARCHAR}
+		,#{oddRebate, jdbcType=VARCHAR},#{oddTimes, jdbcType=VARCHAR},#{evenRebate, jdbcType=VARCHAR},#{evenTimes, jdbcType=VARCHAR},#{sort,jdbcType=NUMERIC}
 	</sql>
 	
 	<sql id="whereColumns">
@@ -106,7 +106,7 @@
 			<if test="oddTimes!=null">odd_times=#{oddTimes},</if>
 			<if test="evenRebate!=null">even_rebate=#{evenRebate},</if>
 			<if test="evenTimes!=null">even_times=#{evenTimes},</if>
-			
+			<if test="sort!=null">sort=#{sort},</if>
 			<if test="memo!=null">MEMO=#{memo}</if>
 		</set>
 		where id=#{id}
@@ -145,7 +145,7 @@
 			<include refid="whereColumns" />
 			 
 		</where>		
-		order by t1.ID desc
+		order by t1.sort desc
 		<include refid="Sql.pager" />
 	</select>
 	<select id="getApprenticeCountByApprentice" parameterType="map" resultType="int">
@@ -158,7 +158,7 @@
 		SELECT
 		*
 		FROM t_moneytree_apprentice where user_id=#{apprentice.user.id} and status=1
-		ORDER BY ID DESC
+		ORDER BY sort DESC
 		<include refid="Sql.pager" />
 	</select>
 	

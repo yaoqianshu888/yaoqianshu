@@ -33,8 +33,17 @@ public class Apprentice extends BaseEntity { // 下家
 	private String evenRebate;  //双数返点
 	private String evenTimes;   //双数倍数
 	
+	private Integer sort;  //排序
 	
 	
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
 	public String getMainZodiacRebate() {
 		return mainZodiacRebate;
 	}
