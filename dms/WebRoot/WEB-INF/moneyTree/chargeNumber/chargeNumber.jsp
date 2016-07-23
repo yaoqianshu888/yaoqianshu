@@ -105,6 +105,62 @@
           checkSubmit();
     	　}
    }
+   
+   //键盘上下左右控制光标
+   document.onkeydown=function(e){
+	  e=window.event||e;
+	  var act = document.activeElement.name;
+	  switch(e.keyCode){
+	    case 37: //左键
+	       if(parseInt(act)<=12){
+	      	act=parseInt(act)+49;
+	      }else if(parseInt(act)==50){
+	     	 act=parseInt(act)-2;
+	      }else if(parseInt(act)==51){
+	     	 act=parseInt(act)-2;
+	      }else if(parseInt(act)>49){
+	     	 act=parseInt(act)-14;
+	      }
+	      else{
+	      	act=parseInt(act)-12;
+	      }
+	      $("[name='"+act+"']").focus();
+	      
+	      break;
+	    case 38: //向上键
+	      if(parseInt(act)==1){
+	      	act=parseInt(act)+61;
+	      }if(parseInt(act)==50){
+	      	act=parseInt(act)-1;
+	      }else{
+	      	act=parseInt(act)-1;
+	      }
+	      
+	      $("[name='"+act+"']").focus();
+	      break;
+	    case 39: //右键
+	       if(parseInt(act)>49){
+	      	act=parseInt(act)-49;
+	      }else if(parseInt(act)==49){
+	     	 act=parseInt(act)+2;
+	      }else if(parseInt(act)==48){
+	     	 act=parseInt(act)+2;
+	      }else if(parseInt(act)+12>49){
+	      	act=parseInt(act)+14;
+	      }
+	      else{
+	      	act=parseInt(act)+12;
+	      }
+	      $("[name='"+act+"']").focus();
+	      break;
+	    case 40: //向下键
+	       act=parseInt(act)+1;
+	      $("[name='"+act+"']").focus();
+	      break;
+	    default:
+	      break;
+	  }
+	}
 
 </script>
 <style >
