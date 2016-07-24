@@ -107,7 +107,7 @@
 			<include refid="whereColumns" />
 
 		</where>
-		order by t1.ID desc
+		order by t1.eat_value desc
 		<include refid="Sql.pager" />
 	</select>
 	<select id="getEatCountByEat" parameterType="map" resultType="int">
@@ -121,14 +121,14 @@
 		*
 		FROM t_moneytree_eat where user_id=#{eat.user.id}
 		and status=1
-		ORDER BY ID DESC
+		ORDER BY eat_value DESC
 		<include refid="Sql.pager" />
 	</select>
 
 	<select id="getAllEatCount" resultType="int" parameterType="map">
 		select count(*) from t_moneytree_eat where
 		user_id=#{eat.user.id} and
-		status=1 ORDER BY ID DESC
+		status=1 ORDER BY eat_value DESC
 	</select>
 
 </mapper>

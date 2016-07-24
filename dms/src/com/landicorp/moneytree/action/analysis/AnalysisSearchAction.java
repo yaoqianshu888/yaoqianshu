@@ -304,7 +304,6 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				// 假设每个号码为中奖号码时的英葵情况，计算，存储结果
 				profitSituation = new ArrayList<ChargeRecord>();
 
-				System.out.println("G-----------开始根据不同中奖号码calculateMoney--吃数值" + i + "----时间：" + new Date().getTime());
 				for (int j = 0; j < 49; j++) {
 
 					// System.out.println("G-----------开始--吃数值"+i+"---号码----"+j+"----时间："+new
@@ -318,7 +317,6 @@ public class AnalysisSearchAction extends BaseActionSupport {
 					// System.out.println("G-----------结束--吃数值"+i+"---号码----"+j+"----时间："+new
 					// Date().getTime());
 				}
-				System.out.println("G-----------结束calculateMoney--吃数值" + i + "----时间：" + new Date().getTime());
 
 				Comparator<ChargeRecord> comparator = new Comparator<ChargeRecord>() {
 					public int compare(ChargeRecord s1, ChargeRecord s2) {
