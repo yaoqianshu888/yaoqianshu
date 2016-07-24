@@ -141,6 +141,7 @@
 							<th>字返点</th>
 							<th>包肖倍数</th>
 							<th>包肖返点</th>
+							<th>排序</th>
 							<th>操作</th>
 						</tr>
 						
@@ -155,6 +156,7 @@
 							<td><span style="font-weight:bold;">${ item.wordRebate} %</span></td>
 							<td><span style="font-weight:bold;">${ item.zodiacTimes}</span></td>
 							<td><span style="font-weight:bold;">${ item.zodiacRebate} %</span></td>
+							<td><span style="font-weight:bold;">${ item.sort} </span></td>
 							<td>
 								<ld:check mark="apprenticeDetail">
 									<input type="button" value="详情" class="ldBtnLink" onclick="showItem(${item.id});" />&nbsp;

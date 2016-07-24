@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<%@include file="/headDeclare.jsp"%>  
+<%@include file="/headDeclare.jsp"%>
 <script type="text/javascript">
 	function checkSubmit() {
 		if (!checkData(true, 'apprentice.apprenticeName', "下家名称", 2, 30)) {
@@ -76,7 +76,10 @@
 			ldDialog.alert("双数返点：请输入数字");
 			return false;
 		}
-		
+		if (!isInteger(document.getElementById('apprentice.sort').value)) {
+			ldDialog.alert("排序：请输入整数");
+			return false;
+		}
 		if (!checkData(false, 'apprentice.memo', "备注", 1, 255)) {
 			return false;
 		}
@@ -267,7 +270,15 @@
 							value="${apprentice.evenRebate}" class="ldText" maxlength="30" /> %
 					</td>
 				</tr>
-				 
+				 <tr>
+					<td width="70" align="right">
+						<FONT color=red>*</FONT>排序：
+					</td>
+					<td>
+						<input type="text" name="apprentice.sort" id="apprentice.sort" 
+							value="${apprentice.sort}" class="ldText" maxlength="30" /> %
+					</td>
+				</tr>
 				<tr>
 					<td align="right">备注：</td>
 					<td>
