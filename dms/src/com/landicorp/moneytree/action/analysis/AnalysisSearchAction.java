@@ -764,23 +764,23 @@ public class AnalysisSearchAction extends BaseActionSupport {
 				// 如果是主生肖返点
 
 				rebateResult += chargeMoney * Float.valueOf(apprentice.getMainZodiacRebate()) * 0.01f;
-			} else if(chargeRecord.getGroupId() == 50){
+			} else if(chargeRecord.getGroupId() == 64){
 				// 如果是红波返点
 
 				rebateResult += chargeMoney * Float.valueOf(apprentice.getRedRebate()) * 0.01f;
-			} else if(chargeRecord.getGroupId() == 50){
+			} else if(chargeRecord.getGroupId() == 65){
 				// 如果是蓝波返点
 
 				rebateResult += chargeMoney * Float.valueOf(apprentice.getBlueRebate()) * 0.01f;
-			} else if(chargeRecord.getGroupId() == 50){
+			} else if(chargeRecord.getGroupId() == 66){
 				// 如果是绿波返点
 
 				rebateResult += chargeMoney * Float.valueOf(apprentice.getGreenRebate()) * 0.01f;
-			} else if(chargeRecord.getGroupId() == 50){
+			} else if(chargeRecord.getGroupId() == 62){
 				// 如果是包单返点
 
 				rebateResult += chargeMoney * Float.valueOf(apprentice.getOddRebate()) * 0.01f;
-			}  else if(chargeRecord.getGroupId() == 50){
+			}  else if(chargeRecord.getGroupId() == 63){
 				// 如果是包双返点
 
 				rebateResult += chargeMoney * Float.valueOf(apprentice.getEvenRebate()) * 0.01f;
@@ -800,23 +800,23 @@ public class AnalysisSearchAction extends BaseActionSupport {
 						// 如果是主生肖倍数
 
 						timesResult += itemChargeMoney * Float.valueOf(apprentice.getMainZodiacTimes()) * 0.01f;
-					} else if(chargeRecord.getGroupId() == 50){
+					} else if(chargeRecord.getGroupId() == 64){
 						// 如果是红波倍数
 
 						timesResult += itemChargeMoney * Float.valueOf(apprentice.getRedTimes()) * 0.01f;
-					} else if(chargeRecord.getGroupId() == 50){
+					} else if(chargeRecord.getGroupId() == 65){
 						// 如果是蓝波倍数
 
 						timesResult += itemChargeMoney * Float.valueOf(apprentice.getBlueTimes()) * 0.01f;
-					} else if(chargeRecord.getGroupId() == 50){
+					} else if(chargeRecord.getGroupId() == 66){
 						// 如果是绿波倍数
 
 						timesResult += itemChargeMoney * Float.valueOf(apprentice.getGreenTimes()) * 0.01f;
-					} else if(chargeRecord.getGroupId() == 50){
+					} else if(chargeRecord.getGroupId() == 62){
 						// 如果是包单倍数
 
 						timesResult += itemChargeMoney * Float.valueOf(apprentice.getOddTimes()) * 0.01f;
-					}  else if(chargeRecord.getGroupId() == 50){
+					}  else if(chargeRecord.getGroupId() == 63){
 						// 如果是包双倍数
 
 						timesResult += itemChargeMoney * Float.valueOf(apprentice.getEvenTimes()) * 0.01f;
